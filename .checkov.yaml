@@ -1,0 +1,28 @@
+# Checkov runs alongside Trivy rather than instead of it — the two catch
+# different things and a mature IaC stack typically runs both (see the
+# root README's tooling notes).
+framework:
+  - terraform
+
+directory:
+  - modules
+  - bootstrap
+  - live
+
+# scenarios/ have required variables with no defaults (e.g. sagemaker
+# container_image, cdc-pipeline source_db_password) by design — Checkov's
+# graph-based checks don't need real values, but skip it here anyway since
+# these are recipes, not deployable stacks on their own.
+skip-path:
+  - scenarios
+
+# soft-fail (report, don't block) rather than hard-fail: this repo's modules
+# are intentionally minimal (see the "가능한 디폴트값" design decision and each
+# module's "Not yet included" section) — Checkov correctly flags real gaps
+# (e.g. Redshift not KMS-encrypted, SNS/SQS not encrypted) that are accepted
+# trade-offs at the scaffold stage, not bugs. Findings still surface in
+# PR/commit output for visibility; flip to false per-project once a scenario
+# graduates from scaffold to a real production workload.
+soft-fail: true
+
+compact: true

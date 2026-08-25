@@ -1,0 +1,42 @@
+# iam-github-oidc
+
+Lets GitHub Actions assume an IAM role via OIDC federation instead of long-lived AWS access keys — the practical-level baseline for CI credentials (see plan's SRE/security notes).
+
+## Status
+
+Implemented (minimal). Used by CI workflows in `.github/workflows/`.
+
+## Inputs
+
+See `variables.tf`. Key ones: `github_org`, `github_repo`, `allowed_ref`, `role_name`, `policy_arns`.
+
+`create_oidc_provider` defaults to `true` — set it to `false` on the second and later calls in the same AWS account, since an account can only have one `token.actions.githubusercontent.com` OIDC provider.
+
+## Outputs
+
+`role_arn`, `oidc_provider_arn`.
+
+## Usage note
+
+Create two roles in practice: a narrow-permission `plan` role for PR checks and a broader `apply` role restricted to `allowed_ref = "refs/heads/main"`. Don't reuse one role for both.
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_allowed_ref"></a> [allowed\_ref](#input\_allowed\_ref) | Git ref allowed to assume this role, e.g. refs/heads/main. Use "*" to allow any branch/PR (not recommended for the apply role). | `string` | `"refs/heads/main"` | no |
+| <a name="input_create_oidc_provider"></a> [create\_oidc\_provider](#input\_create\_oidc\_provider) | Whether to create the GitHub OIDC provider. Set to false if it already exists in this account (an AWS account can only have one). | `bool` | `true` | no |
+| <a name="input_github_org"></a> [github\_org](#input\_github\_org) | GitHub organization or user that owns the repo allowed to assume this role | `string` | n/a | yes |
+| <a name="input_github_repo"></a> [github\_repo](#input\_github\_repo) | Repository name (without org prefix) allowed to assume this role | `string` | n/a | yes |
+| <a name="input_policy_arns"></a> [policy\_arns](#input\_policy\_arns) | List of managed policy ARNs to attach to the role | `list(string)` | `[]` | no |
+| <a name="input_role_name"></a> [role\_name](#input\_role\_name) | Name of the IAM role GitHub Actions will assume | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the role | `map(string)` | `{}` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_oidc_provider_arn"></a> [oidc\_provider\_arn](#output\_oidc\_provider\_arn) | ARN of the GitHub OIDC provider used |
+| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN of the IAM role GitHub Actions assumes via OIDC |
+<!-- END_TF_DOCS -->

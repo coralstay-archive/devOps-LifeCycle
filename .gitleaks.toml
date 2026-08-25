@@ -1,0 +1,12 @@
+title = "aws-launcher gitleaks config"
+
+[extend]
+# Start from gitleaks' maintained default rule set and layer overrides below.
+useDefault = true
+
+[allowlist]
+description = "Files that legitimately contain placeholder-looking strings"
+paths = [
+  '''\.terraform/.*''',
+  '''\.terraform\.lock\.hcl''',
+]

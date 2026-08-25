@@ -1,0 +1,21 @@
+# Trivy config/IaC scan settings.
+# Run with: trivy config --config .trivy.yaml .
+scan:
+  scanners:
+    - misconfig
+    - secret
+  # scenarios/ have required variables with no defaults by design (see
+  # .checkov.yaml's note) and aren't deployable stacks on their own.
+  skip-dirs:
+    - scenarios
+
+severity:
+  - CRITICAL
+  - HIGH
+  - MEDIUM
+
+# Findings are real (this repo's modules are intentionally minimal — see
+# each module's "Not yet included" section), so CI reports them via
+# --exit-code 1 for visibility but the step is non-blocking
+# (continue-on-error in terraform-ci.yml), same posture as Checkov's
+# soft-fail. Flip that per-project once a scenario graduates to production.

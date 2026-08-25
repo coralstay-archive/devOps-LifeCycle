@@ -1,0 +1,48 @@
+name: terraform-apply
+
+# Applies Terraform changes on merge to main. Gated behind the "production"
+# GitHub Environment so a human has to approve before apply runs (configure
+# required reviewers on that Environment in repo settings).
+#
+# NOTE (scaffolding): hardcoded to live/example-dev, same caveat as
+# terraform-ci.yml — matrix this over live/* once more stacks exist.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "modules/**"
+      - "live/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TF_WORKING_DIR: live/example-dev
+  AWS_REGION: ap-northeast-2
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_APPLY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: terraform init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: terraform apply
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -auto-approve

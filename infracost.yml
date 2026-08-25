@@ -1,0 +1,12 @@
+# Infracost multi-project config.
+# Usage: infracost breakdown --config-file infracost.yml
+#        infracost diff --config-file infracost.yml --compare-to infracost-base.json
+version: 0.1
+
+projects:
+  - path: live/example-dev
+    name: example-dev
+
+# Add one entry per live/<project> as scenarios get deployed.
+# scenarios/* are excluded on purpose — they have no tfvars/backend and
+# aren't meant to be cost-estimated directly.

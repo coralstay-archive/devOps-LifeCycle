@@ -1,0 +1,33 @@
+# alb
+
+Application Load Balancer + one target group (IP target type, for Fargate). Pass `target_group_arn` output into `ecs-service`. Without `certificate_arn`, HTTP forwards directly (fine for `live/example-dev`-style testing); set `certificate_arn` (from the `acm` module) in anything real to get HTTPS + HTTP→HTTPS redirect.
+
+## Status
+
+Implemented (minimal). One target group only — for multiple services behind one ALB, use listener rules (not yet included).
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ACM certificate ARN. If set, adds an HTTPS listener and redirects HTTP to it. If null, HTTP forwards directly. | `string` | `null` | no |
+| <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | n/a | `string` | `"/"` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_public_subnet_ids"></a> [public\_subnet\_ids](#input\_public\_subnet\_ids) | n/a | `list(string)` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_target_port"></a> [target\_port](#input\_target\_port) | n/a | `number` | `8080` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_arn"></a> [arn](#output\_arn) | n/a |
+| <a name="output_arn_suffix"></a> [arn\_suffix](#output\_arn\_suffix) | n/a |
+| <a name="output_dns_name"></a> [dns\_name](#output\_dns\_name) | n/a |
+| <a name="output_listener_arn"></a> [listener\_arn](#output\_listener\_arn) | The externally-facing listener: HTTPS if certificate\_arn was set, else HTTP |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
+| <a name="output_target_group_arn"></a> [target\_group\_arn](#output\_target\_group\_arn) | n/a |
+| <a name="output_target_group_name"></a> [target\_group\_name](#output\_target\_group\_name) | n/a |
+<!-- END_TF_DOCS -->

@@ -1,0 +1,25 @@
+# glue
+
+Catalog database + one crawler pointed at an S3 path (on-demand by default; set `crawler_schedule` for periodic re-crawls). Uses the broad `AmazonS3ReadOnlyAccess` managed policy for simplicity — scope it to the specific bucket in anything handling sensitive data.
+
+## Status
+
+Implemented (minimal). ETL jobs (`aws_glue_job`) not included — add when `etl-batch` needs actual transform logic, not just cataloging.
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_crawler_schedule"></a> [crawler\_schedule](#input\_crawler\_schedule) | cron() expression. Leave null to run on-demand only. | `string` | `null` | no |
+| <a name="input_database_name"></a> [database\_name](#input\_database\_name) | n/a | `string` | n/a | yes |
+| <a name="input_s3_target_path"></a> [s3\_target\_path](#input\_s3\_target\_path) | e.g. s3://my-bucket/raw/ | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_crawler_name"></a> [crawler\_name](#output\_crawler\_name) | n/a |
+| <a name="output_database_name"></a> [database\_name](#output\_database\_name) | n/a |
+<!-- END_TF_DOCS -->
