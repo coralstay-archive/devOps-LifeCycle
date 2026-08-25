@@ -6,6 +6,11 @@ One rule (schedule or event pattern — pick one) + one target. Set `target_is_l
 
 Implemented (minimal). Single target only — for fan-out to multiple targets, add more `aws_cloudwatch_event_target` resources.
 
+## 공식문서
+
+- [Amazon EventBridge 사용 설명서](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html)
+- Terraform: [`aws_cloudwatch_event_rule`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

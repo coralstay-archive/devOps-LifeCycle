@@ -10,6 +10,11 @@ Implemented (minimal). Pair with the `alb` module for `target_group_arn`.
 
 Service auto scaling policy, blue/green (CodeDeploy) — see `codedeploy` module for `scenarios/blue-green-deployment`.
 
+## 공식문서
+
+- [Amazon ECS 개발자 안내서](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
+- Terraform: [`aws_ecs_service`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service), [`aws_ecs_task_definition`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

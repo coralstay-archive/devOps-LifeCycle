@@ -6,6 +6,11 @@ One function from a local zip (`filename`), basic-execution IAM role, explicit l
 
 Implemented (minimal). No VPC attachment, no layers, no provisioned concurrency — add when a scenario needs them.
 
+## 공식문서
+
+- [AWS Lambda 개발자 안내서](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
+- Terraform: [`aws_lambda_function`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

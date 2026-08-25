@@ -6,6 +6,11 @@ A single secret. For RDS master passwords, prefer `rds-postgres`'s built-in `man
 
 Implemented (minimal). No rotation configured — add `aws_secretsmanager_secret_rotation` when a secret needs it.
 
+## 공식문서
+
+- [AWS Secrets Manager 사용 설명서](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html)
+- Terraform: [`aws_secretsmanager_secret`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

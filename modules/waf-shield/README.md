@@ -6,6 +6,12 @@ Web ACL with the AWS Managed Common Rule Set, associated with an ALB by default 
 
 Implemented (minimal): one managed rule group.
 
+## 공식문서
+
+- [AWS WAF 개발자 안내서](https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html)
+- [AWS Shield 개발자 안내서](https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html)
+- Terraform: [`aws_wafv2_web_acl`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

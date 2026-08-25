@@ -6,6 +6,11 @@ State machine + IAM role. Ships with a placeholder single-Pass-state definition 
 
 Implemented (minimal).
 
+## 공식문서
+
+- [AWS Step Functions 개발자 안내서](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html)
+- Terraform: [`aws_sfn_state_machine`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sfn_state_machine)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

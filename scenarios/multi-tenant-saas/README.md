@@ -13,4 +13,5 @@ vpc, eks, rds-postgres, observability
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS 백서: SaaS Tenant Isolation Strategies](https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/saas-tenant-isolation-strategies.html)
+- 관련 모듈 문서: `vpc`, `eks`, `rds-postgres`, `observability`

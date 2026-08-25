@@ -13,4 +13,5 @@ s3-bucket, glue, athena
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS 백서: Storage Best Practices for Data and Analytics Applications — 데이터 레이크 기초](https://docs.aws.amazon.com/whitepapers/latest/building-data-lakes/data-lake-foundation.html)
+- 관련 모듈 문서: `s3-bucket`, `glue`, `athena`

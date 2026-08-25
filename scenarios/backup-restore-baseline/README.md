@@ -13,4 +13,5 @@ vpc, rds-postgres, aws-backup
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS Backup 개발자 안내서](https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html)
+- 관련 모듈 문서: `vpc`, `rds-postgres`, `aws-backup`

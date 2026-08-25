@@ -15,4 +15,5 @@ vpc, eks, elasticache-redis, msk-kafka, observability
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [Well-Architected: Reliability Pillar](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/reliability-pillar.html)
+- 관련 모듈 문서: `eks`(Karpenter 링크 포함), `elasticache-redis`, `msk-kafka`, `observability`

@@ -15,4 +15,5 @@ vpc (x2, 리전별), route53
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS Prescriptive Guidance: Multi-Region Fundamentals](https://docs.aws.amazon.com/prescriptive-guidance/latest/aws-multi-region-fundamentals/)
+- 관련 모듈 문서: `vpc`, `route53`

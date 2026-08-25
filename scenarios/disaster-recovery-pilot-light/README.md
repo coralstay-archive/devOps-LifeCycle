@@ -13,4 +13,5 @@ vpc, rds-postgres, s3-bucket, aws-backup
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS 백서: Disaster Recovery of Workloads on AWS — 클라우드에서의 DR 옵션](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html)
+- 관련 모듈 문서: `vpc`, `rds-postgres`, `s3-bucket`, `aws-backup`

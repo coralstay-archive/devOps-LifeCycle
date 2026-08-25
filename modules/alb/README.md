@@ -6,6 +6,11 @@ Application Load Balancer + one target group (IP target type, for Fargate). Pass
 
 Implemented (minimal). One target group only — for multiple services behind one ALB, use listener rules (not yet included).
 
+## 공식문서
+
+- [Application Load Balancer 소개](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html)
+- Terraform: [`aws_lb`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb), [`aws_lb_target_group`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group), [`aws_lb_listener`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

@@ -13,4 +13,4 @@ sns-sqs, lambda
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- 관련 모듈 문서: `sns-sqs`, `lambda`

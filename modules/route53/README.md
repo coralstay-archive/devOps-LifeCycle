@@ -6,6 +6,11 @@ Hosted zone (new or existing) + a map of DNS records.
 
 Implemented (minimal).
 
+## 공식문서
+
+- [Amazon Route 53 개발자 안내서](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html)
+- Terraform: [`aws_route53_zone`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_zone), [`aws_route53_record`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

@@ -13,4 +13,5 @@ vpc, vpc-endpoints
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS PrivateLink 개요](https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html)
+- 관련 모듈 문서: `vpc`, `vpc-endpoints`

@@ -13,4 +13,4 @@ composed — 1개 토픽이 `queue_names` 변수(기본값: orders, notification
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [Amazon SNS: 팬아웃 시나리오](https://docs.aws.amazon.com/sns/latest/dg/sns-common-scenarios.html)

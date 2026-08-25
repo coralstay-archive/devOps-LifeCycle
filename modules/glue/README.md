@@ -6,6 +6,11 @@ Catalog database + one crawler pointed at an S3 path (on-demand by default; set 
 
 Implemented (minimal). ETL jobs (`aws_glue_job`) not included — add when `etl-batch` needs actual transform logic, not just cataloging.
 
+## 공식문서
+
+- [AWS Glue 개발자 안내서](https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html)
+- Terraform: [`aws_glue_crawler`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_crawler), [`aws_glue_catalog_database`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_database)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

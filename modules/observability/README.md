@@ -27,6 +27,12 @@ alarms = {
 
 Prometheus/Grafana (AMP/AMG) for EKS scenarios, error-budget-burn-rate composite alarms. Add when an EKS-based scenario needs them.
 
+## 공식문서
+
+- [Amazon CloudWatch 사용 설명서](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html)
+- [Amazon Managed Service for Prometheus](https://docs.aws.amazon.com/prometheus/latest/userguide/what-is-Amazon-Managed-Service-Prometheus.html)
+- Terraform: [`aws_cloudwatch_dashboard`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_dashboard), [`aws_cloudwatch_metric_alarm`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

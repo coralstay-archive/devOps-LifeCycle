@@ -6,6 +6,11 @@ Vault + daily plan (05:00 UTC default, 35-day retention default) + a selection c
 
 Implemented (minimal): one schedule/rule. Add tag-based selection (`selection_tag`) instead of explicit ARNs if you'd rather back up "everything tagged X".
 
+## 공식문서
+
+- [AWS Backup 개발자 안내서](https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html)
+- Terraform: [`aws_backup_plan`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/backup_plan)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

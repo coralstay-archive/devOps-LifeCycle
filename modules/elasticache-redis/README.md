@@ -10,6 +10,12 @@ Implemented (minimal). Cluster Mode (sharding) intentionally left out — this i
 
 See `variables.tf` / `outputs.tf`.
 
+## 공식문서
+
+- [ElastiCache for Redis 사용 설명서](https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/WhatIs.html)
+- [캐싱 전략](https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/Strategies.html)
+- Terraform: [`aws_elasticache_replication_group`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_replication_group)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

@@ -6,6 +6,11 @@ Single-table, on-demand billing (no capacity planning needed), point-in-time rec
 
 Implemented (minimal). No range key, no GSIs/LSIs — add when a scenario's access patterns need them.
 
+## 공식문서
+
+- [Amazon DynamoDB 개발자 안내서](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)
+- Terraform: [`aws_dynamodb_table`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

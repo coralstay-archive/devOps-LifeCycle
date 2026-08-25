@@ -13,4 +13,5 @@ s3-bucket, cloudfront
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [Amazon S3: 정적 웹사이트 호스팅](https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteHosting.html)
+- 관련 모듈 문서: `s3-bucket`, `cloudfront`

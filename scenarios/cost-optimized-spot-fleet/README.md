@@ -13,4 +13,6 @@ vpc, ecs-service
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [EC2 스팟 인스턴스 사용 설명서](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html)
+- [ECS Fargate 용량 공급자(Fargate Spot 포함)](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-capacity-providers.html)
+- 관련 모듈 문서: `vpc`, `ecs-service`

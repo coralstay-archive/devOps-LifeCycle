@@ -15,4 +15,5 @@ vpc, alb, ecs-service, codedeploy (+ 원시 `aws_lb_target_group.green`, 이유�
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [Amazon ECS 블루/그린 배포 만들기](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deploy-blue-green-service.html)
+- 관련 모듈 문서: `vpc`, `alb`, `ecs-service`, `codedeploy`

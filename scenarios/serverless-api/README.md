@@ -13,4 +13,5 @@ dynamodb, lambda, api-gateway
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS 백서: Serverless Multi-Tier Architectures with API Gateway and Lambda](https://docs.aws.amazon.com/whitepapers/latest/serverless-multi-tier-architectures-api-gateway-lambda/welcome.html)
+- 관련 모듈 문서: `lambda`, `dynamodb`, `api-gateway`

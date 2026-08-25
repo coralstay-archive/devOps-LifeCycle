@@ -10,6 +10,12 @@ Implemented (minimal): OpenSearch Serverless side only.
 
 The actual `aws_bedrockagent_knowledge_base` wiring (linking a Bedrock foundation model + this collection into a queryable knowledge base) — that resource is newer/more version-sensitive in the AWS provider, added as a follow-up once `llm-rag-service` is tackled directly.
 
+## 공식문서
+
+- [Amazon Bedrock: 지식 기반 만들기](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-create.html)
+- [OpenSearch Serverless 개발자 안내서](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html)
+- Terraform: [`aws_opensearchserverless_collection`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/opensearchserverless_collection)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

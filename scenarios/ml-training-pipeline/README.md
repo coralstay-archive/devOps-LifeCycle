@@ -13,4 +13,4 @@ s3-bucket, step-functions
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- 관련 모듈 문서: `s3-bucket`, `step-functions` (`sagemaker` 모듈 문서의 SageMaker 개발자 안내서도 참고)

@@ -6,6 +6,11 @@ S3 + DynamoDB gateway endpoints (free) plus interface endpoints for ECR/CloudWat
 
 Implemented (minimal). Add more `interface_services` (e.g. `secretsmanager`, `sts`) as a scenario needs them.
 
+## 공식문서
+
+- [AWS PrivateLink 개요](https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html)
+- Terraform: [`aws_vpc_endpoint`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

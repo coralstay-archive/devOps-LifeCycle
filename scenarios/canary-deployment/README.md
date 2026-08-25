@@ -13,4 +13,5 @@ vpc, eks, observability
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [Argo Rollouts 공식 문서](https://argoproj.github.io/argo-rollouts/) (AWS 서비스는 아니지만 카나리 배포의 표준 OSS 도구)
+- 관련 모듈 문서: `vpc`, `eks`, `observability`

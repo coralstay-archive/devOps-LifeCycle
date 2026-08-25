@@ -6,6 +6,11 @@ Managed RabbitMQ (default) or ActiveMQ, single-instance deployment. **Only use t
 
 Implemented (minimal): single-instance, no active/standby HA (use `deployment_mode = "ACTIVE_STANDBY_MULTI_AZ"` for that, not yet parameterized here).
 
+## 공식문서
+
+- [Amazon MQ 개발자 안내서](https://docs.aws.amazon.com/amazon-mq/latest/developerguide/welcome.html)
+- Terraform: [`aws_mq_broker`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/mq_broker)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

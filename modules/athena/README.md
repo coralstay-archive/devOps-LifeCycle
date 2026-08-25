@@ -6,6 +6,11 @@ One workgroup pointed at an S3 results bucket. Query the tables a `glue` crawler
 
 Implemented (minimal).
 
+## 공식문서
+
+- [Amazon Athena 사용 설명서](https://docs.aws.amazon.com/athena/latest/ug/what-is.html)
+- Terraform: [`aws_athena_workgroup`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/athena_workgroup)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

@@ -18,6 +18,11 @@ See `variables.tf`. Key ones: `name`, `cidr_block`, `availability_zones`, `enabl
 
 VPC endpoints (S3/ECR gateway/interface endpoints), flow logs, IPv6. Add when a scenario needs them.
 
+## 공식문서
+
+- [Amazon VPC 사용 설명서](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
+- Terraform: [`aws_vpc`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc), [`aws_subnet`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet), [`aws_nat_gateway`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway), [`aws_route_table`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

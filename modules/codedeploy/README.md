@@ -6,6 +6,12 @@ ECS blue/green deployment group. Needs two target groups (blue/green) already cr
 
 Implemented (minimal): all-at-once traffic shift, auto-terminate old task set after 5 minutes.
 
+## 공식문서
+
+- [AWS CodeDeploy 사용 설명서](https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html)
+- [Amazon ECS 블루/그린 배포 만들기](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deploy-blue-green-service.html)
+- Terraform: [`aws_codedeploy_deployment_group`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codedeploy_deployment_group)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

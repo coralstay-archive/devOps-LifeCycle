@@ -6,6 +6,12 @@ One SNS topic fanning out to one SQS queue (the default AWS "message queue" patt
 
 Implemented (minimal). No dead-letter queue yet — add `aws_sqs_queue` with `redrive_policy` when a scenario needs retry handling.
 
+## 공식문서
+
+- [Amazon SNS 개발자 안내서](https://docs.aws.amazon.com/sns/latest/dg/welcome.html)
+- [Amazon SQS 개발자 안내서](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html)
+- Terraform: [`aws_sns_topic`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic), [`aws_sqs_queue`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

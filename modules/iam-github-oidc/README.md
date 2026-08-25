@@ -20,6 +20,12 @@ See `variables.tf`. Key ones: `github_org`, `github_repo`, `allowed_ref`, `role_
 
 Create two roles in practice: a narrow-permission `plan` role for PR checks and a broader `apply` role restricted to `allowed_ref = "refs/heads/main"`. Don't reuse one role for both.
 
+## 공식문서
+
+- [IAM: OIDC 자격증명 공급자 생성](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html)
+- [GitHub Actions: AWS용 OpenID Connect 구성](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services)
+- Terraform: [`aws_iam_openid_connect_provider`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_openid_connect_provider)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

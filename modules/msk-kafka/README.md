@@ -16,6 +16,11 @@ Implemented (minimal): cluster + TLS encryption in transit, no topics.
 
 MSK Serverless option, SASL/IAM auth, per-topic partition/retention management, auto-scaling storage policy.
 
+## 공식문서
+
+- [Amazon MSK 개발자 안내서](https://docs.aws.amazon.com/msk/latest/developerguide/what-is-msk.html)
+- Terraform: [`aws_msk_cluster`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_cluster)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

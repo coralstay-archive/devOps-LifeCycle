@@ -6,6 +6,11 @@ CDN in front of an S3 origin via Origin Access Control (OAC — the current reco
 
 Implemented (minimal): S3 origin only, no custom error pages, no cache invalidation automation.
 
+## 공식문서
+
+- [Amazon CloudFront 개발자 안내서](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+- Terraform: [`aws_cloudfront_distribution`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_distribution)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

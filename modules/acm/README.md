@@ -6,6 +6,11 @@ DNS-validated ACM certificate, using a Route53 zone (pass `zone_id` from the `ro
 
 Implemented (minimal).
 
+## 공식문서
+
+- [AWS Certificate Manager 개요](https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html)
+- Terraform: [`aws_acm_certificate`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

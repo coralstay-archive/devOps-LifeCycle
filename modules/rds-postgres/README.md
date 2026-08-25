@@ -14,6 +14,11 @@ See `variables.tf` / `outputs.tf`. Pass in security group IDs (e.g. from `ecs-se
 
 Read replicas, Aurora option, parameter group tuning, cross-region backup. Add when a scenario needs them.
 
+## 공식문서
+
+- [Amazon RDS for PostgreSQL 사용 설명서](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html)
+- Terraform: [`aws_db_instance`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

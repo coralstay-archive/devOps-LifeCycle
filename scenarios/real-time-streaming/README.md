@@ -13,4 +13,4 @@ vpc, msk-kafka, observability
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- 관련 모듈 문서: `vpc`, `msk-kafka`, `observability` (컨슈머 애플리케이션 설계는 msk-kafka 모듈 문서의 MSK 개발자 안내서 참고)

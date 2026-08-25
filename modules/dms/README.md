@@ -10,6 +10,12 @@ Implemented (minimal): one source, one target, one task, capturing all tables by
 
 `source_password` is a plain sensitive variable here for simplicity. In practice, read it from the `secrets-manager` module instead of passing it as a bare tfvar.
 
+## 공식문서
+
+- [AWS DMS 사용 설명서](https://docs.aws.amazon.com/dms/latest/userguide/)
+- [AWS DMS 모범 사례](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_BestPractices.html)
+- Terraform: [`aws_dms_replication_instance`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_replication_instance), [`aws_dms_replication_task`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_replication_task)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

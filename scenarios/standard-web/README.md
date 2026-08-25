@@ -17,4 +17,5 @@ vpc, ecr, alb, ecs-service, rds-postgres, observability
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html)
+- 관련 모듈 문서: `vpc`, `ecr`, `alb`, `ecs-service`, `rds-postgres`, `observability`

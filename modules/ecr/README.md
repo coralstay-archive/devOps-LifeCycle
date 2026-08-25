@@ -6,6 +6,11 @@ Container image repository: scan-on-push, immutable tags (prevents accidentally 
 
 Implemented (minimal).
 
+## 공식문서
+
+- [Amazon ECR 사용 설명서](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html)
+- Terraform: [`aws_ecr_repository`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

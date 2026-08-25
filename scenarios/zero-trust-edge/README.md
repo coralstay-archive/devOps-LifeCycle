@@ -13,4 +13,5 @@ vpc, alb, waf-shield
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS 제로 트러스트](https://aws.amazon.com/security/zero-trust/)
+- 관련 모듈 문서: `vpc`, `alb`, `waf-shield`

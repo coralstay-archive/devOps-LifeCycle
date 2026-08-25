@@ -15,4 +15,5 @@ vpc, rds-postgres, msk-kafka, dms
 
 ## 참고자료
 
-TBD — 추후 공식문서/책 컨텍스트로 채울 예정.
+- [AWS DMS 모범 사례 (CDC 포함)](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_BestPractices.html)
+- 관련 모듈 문서: `vpc`, `rds-postgres`, `msk-kafka`, `dms`

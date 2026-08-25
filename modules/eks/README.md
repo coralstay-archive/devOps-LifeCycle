@@ -12,6 +12,13 @@ Implemented (minimal): base cluster + managed node group only.
 
 IRSA, private-only API endpoint toggle, multiple node groups: also not included.
 
+## 공식문서
+
+- [Amazon EKS 사용 설명서](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html)
+- [EKS Best Practices: Karpenter](https://docs.aws.amazon.com/eks/latest/best-practices/karpenter.html)
+- [Karpenter 공식 문서](https://karpenter.sh/docs/)
+- Terraform: [`aws_eks_cluster`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster), [`aws_eks_node_group`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_node_group)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

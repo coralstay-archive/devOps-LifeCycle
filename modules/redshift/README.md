@@ -6,6 +6,11 @@ Single-node cluster (cheapest option — bump `node_type`/`cluster_type` to mult
 
 Implemented (minimal).
 
+## 공식문서
+
+- [Amazon Redshift 관리 안내서](https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html)
+- Terraform: [`aws_redshift_cluster`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/redshift_cluster)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

@@ -10,6 +10,12 @@ Implemented (minimal): OU structure only.
 
 Control Tower itself isn't a plain Terraform resource — it's a separate AWS service you enable via the console/API, after which it manages its own guardrails. This module only creates OUs; it doesn't set up Control Tower, SCPs, or account vending. Add SCPs (`aws_organizations_policy` + `aws_organizations_policy_attachment`) when `multi-account-landing-zone` needs actual guardrails, not just structure.
 
+## 공식문서
+
+- [AWS Organizations 사용 설명서](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html)
+- [AWS Control Tower: 랜딩존 계획](https://docs.aws.amazon.com/controltower/latest/userguide/planning-your-deployment.html)
+- Terraform: [`aws_organizations_organizational_unit`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

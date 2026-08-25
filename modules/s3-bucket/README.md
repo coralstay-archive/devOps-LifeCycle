@@ -18,6 +18,11 @@ See `variables.tf`. Key ones: `bucket_name`, `versioning_enabled`, `force_destro
 
 Lifecycle rules, replication, access logging, KMS (currently SSE-S3/AES256, not SSE-KMS). Add when a scenario needs them.
 
+## 공식문서
+
+- [Amazon S3 사용 설명서](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)
+- Terraform: [`aws_s3_bucket`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket), [`aws_s3_bucket_versioning`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning), [`aws_s3_bucket_public_access_block`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

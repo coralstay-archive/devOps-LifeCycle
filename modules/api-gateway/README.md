@@ -6,6 +6,11 @@ HTTP API (v2, cheaper/simpler than REST API v1) with a single Lambda proxy integ
 
 Implemented (minimal). One route only — add more `aws_apigatewayv2_route`/`aws_apigatewayv2_integration` pairs for multiple endpoints, or use `$default` (current default) to proxy everything to one Lambda that does its own routing.
 
+## 공식문서
+
+- [API Gateway: HTTP API](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api.html)
+- Terraform: [`aws_apigatewayv2_api`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_api)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 

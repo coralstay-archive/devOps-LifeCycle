@@ -6,6 +6,11 @@ Customer-managed KMS key with automatic annual rotation, plus an alias. Uses AWS
 
 Implemented (minimal).
 
+## 공식문서
+
+- [AWS KMS 개발자 안내서](https://docs.aws.amazon.com/kms/latest/developerguide/overview.html)
+- Terraform: [`aws_kms_key`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key)
+
 <!-- BEGIN_TF_DOCS -->
 ## Inputs
 
