@@ -27,3 +27,8 @@ infracost.json
 
 # k6
 tools/loadtest/*.json
+
+# TLA+ tooling (downloaded, not vendored — see specs/README.md)
+.tla-tools/
+*.tla.out
+states/

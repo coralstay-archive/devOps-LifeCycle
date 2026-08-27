@@ -47,6 +47,7 @@ flowchart LR
 - [SRE principles applied to every scenario](#-sre-principles-applied-to-every-scenario)
 - [Modules (36)](#-modules-36)
 - [Scenarios (30)](#-scenarios-30)
+- [Formal specifications (TLA+)](#-formal-specifications-tla)
 - [Reference example](#-reference-example)
 - [Learning backlog](#-learning-backlog)
 
@@ -205,6 +206,17 @@ All 30 are **composed** — module calls wired together, `terraform validate` pa
 
 </details>
 
+## 📐 Formal specifications (TLA+)
+
+`specs/` has a [TLA+](https://lamport.azurewebsites.net/tla/tla.html) spec + TLC model-checker config for **every one of the 30 scenarios**, modeling *runtime* behavior that `precondition`/`postcondition` can't reach (those only see one `plan`/`apply` snapshot). Each spec is small on purpose: a handful of state variables and one or two properties that capture that scenario's actual interesting risk — e.g. Lambda concurrency limits (`serverless-api`), SQS at-least-once + idempotency (`event-driven-microservices`), DMS Full Load → CDC ordering (`cdc-pipeline`), asynchronous multi-region replication (`multi-region-active-active`).
+
+TLC found two real bugs this way, not just style nits:
+
+- **`serverless-api`**: the first cut let `warmInstances` grow past `MaxConcurrency` — TLC's counter-example caught it immediately.
+- **`observability-only-baseline`**: a naive liveness claim ("burning eventually fires the alarm") had a flapping counter-example TLC found; the fix was correcting the property to require *sustained* burning, which also matches how CloudWatch's evaluation-period alarms actually behave.
+
+See [`specs/README.md`](specs/README.md) for the tool setup (`tla2tools.jar` is downloaded, not vendored) and how to run TLC yourself. Why TLA+ lives at the scenario scope and not the module scope: [`decision-2`](backlog/decisions) vs [`decision-3`](backlog/decisions).
+
 ## 🔍 Reference example
 
 `live/example-dev` is a minimal, actually-`plan`-able stack (vpc + s3-bucket only) proving the pipeline end to end. `scenarios/standard-web` now has the fuller composition (ALB+ECS+RDS+observability); `example-dev` stays as the simplest possible smoke test of the CI/CD plumbing itself.
@@ -215,9 +227,9 @@ This repo doubles as a learning project, tracked with the [Backlog.md](https://g
 
 **Structure — Epic → Story → Task:**
 
-- **16 milestones** (epics) — one per module tier / scenario category (e.g. "Foundation Modules", "Web/API Scenarios")
-- **66 parent tasks** (stories), type `spike` — one per module (36) and scenario (30), each with the official-doc links as `--doc` references, the module/scenario path as `--ref`, and its study points as checkable Acceptance Criteria
-- **66 child tasks**, type `task` — one hands-on "type the code out and comment it" exercise per story
+- **17 milestones** (epics) — one per module tier / scenario category (e.g. "Foundation Modules", "Web/API Scenarios"), plus **Formal Specifications (TLA+)** covering all 30 scenario-level specs
+- **96 parent tasks** (stories), type `spike` — one per module (36), scenario (30), and TLA+ spec (30), each with the official-doc links as `--doc` references, the module/scenario/spec path as `--ref`, and its study points as checkable Acceptance Criteria
+- **96 child tasks**, type `task`/`docs` — one hands-on exercise per story (for TLA+ stories: a concrete follow-up question against the official TLA+ docs, e.g. fairness operators, `EXCEPT` function updates, model values)
 
 Run `backlog board` for a Kanban view, or `backlog task list --plain -m "Foundation Modules"` to see one epic's stories.
 
@@ -226,7 +238,7 @@ Run `backlog board` for a Kanban view, or `backlog task list --plain -m "Foundat
 | Directory | Created via | Use it for |
 |---|---|---|
 | `backlog/docs/` | `backlog doc create "title" -p some/path` | Prose learning notes — what you actually figured out after reading the docs, as opposed to the task's checklist of what to figure out. See `backlog/docs/learning-notes/vpc/` for a starter template — copy the pattern per module as you work through it. |
-| `backlog/decisions/` | `backlog decision create "title" -s accepted` | ADR-style decision records — *why* we chose X over Y. Two real ones already in there: switching to S3-native state locking, and choosing `precondition`/`postcondition` over TLA+. Worth writing one whenever a non-obvious call gets made, not just for learning-project decisions. |
+| `backlog/decisions/` | `backlog decision create "title" -s accepted` | ADR-style decision records — *why* we chose X over Y. Three real ones already in there: switching to S3-native state locking, choosing `precondition`/`postcondition` over TLA+ at the module scope, and adopting TLA+ at the scenario scope instead. Worth writing one whenever a non-obvious call gets made, not just for learning-project decisions. |
 | `backlog/drafts/` | `backlog draft create "title"` | Half-formed task ideas not ready to commit to yet — promote with `backlog draft promote <id>` once scoped. |
-| `backlog/milestones/` | `backlog milestone add "title"` | The epics themselves (see above) — rarely touched directly once the 16 exist. |
+| `backlog/milestones/` | `backlog milestone add "title"` | The epics themselves (see above) — rarely touched directly once the 17 exist. |
 
