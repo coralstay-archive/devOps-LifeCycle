@@ -1,3 +1,6 @@
+# ElastiCache needs to know which subnets it's allowed to place cache nodes
+# in — this is a separate resource from the VPC's own subnet list because
+# it's ElastiCache-specific metadata, not a general networking construct.
 resource "aws_elasticache_subnet_group" "this" {
   name       = "${var.name}-subnet-group"
   subnet_ids = var.private_subnet_ids
@@ -10,6 +13,9 @@ resource "aws_security_group" "this" {
   tags        = var.tags
 }
 
+# Deliberately scoped by referenced_security_group_id (an app's SG), not a
+# CIDR block — Redis should never be reachable from "anywhere in the VPC,"
+# only from the specific services that legitimately need it.
 resource "aws_vpc_security_group_ingress_rule" "redis" {
   for_each                     = toset(var.allowed_security_group_ids)
   security_group_id            = aws_security_group.this.id
@@ -35,12 +41,17 @@ resource "aws_elasticache_replication_group" "this" {
   subnet_group_name  = aws_elasticache_subnet_group.this.name
   security_group_ids = [aws_security_group.this.id]
 
+  # Automatic failover only makes sense with a replica to fail over to — a
+  # single-node "replication group" has nothing to promote if the primary
+  # dies, so this only turns on when num_cache_nodes > 1.
   automatic_failover_enabled = var.num_cache_nodes > 1
   at_rest_encryption_enabled = true
   transit_encryption_enabled = true
 
   tags = var.tags
 
+  # 0 or negative nodes isn't just "no replicas," it's "no cache at all" —
+  # a config error, not a valid minimal deployment.
   lifecycle {
     precondition {
       condition     = var.num_cache_nodes >= 1

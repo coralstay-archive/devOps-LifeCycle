@@ -211,5 +211,22 @@ All 30 are **composed** — module calls wired together, `terraform validate` pa
 
 ## 🎓 Learning backlog
 
-This repo doubles as a learning project. [`LEARNING_BACKLOG.md`](./LEARNING_BACKLOG.md) tracks what to study for each of the 36 modules and 30 scenarios, in module → scenario order — pulled straight from each README's *"Not yet included"* / *"알려진 제약"* sections, since the documented gaps **are** the next things to learn.
+This repo doubles as a learning project, tracked with the [Backlog.md](https://github.com/MrLesk/Backlog.md) CLI in `backlog/` — not a plain markdown file, so status/relationships stay structured. Always go through the `backlog` CLI to read or change it (`backlog task list --plain`, `backlog board`, `backlog overview`), not by hand-editing files under `backlog/`.
+
+**Structure — Epic → Story → Task:**
+
+- **16 milestones** (epics) — one per module tier / scenario category (e.g. "Foundation Modules", "Web/API Scenarios")
+- **66 parent tasks** (stories), type `spike` — one per module (36) and scenario (30), each with the official-doc links as `--doc` references, the module/scenario path as `--ref`, and its study points as checkable Acceptance Criteria
+- **66 child tasks**, type `task` — one hands-on "type the code out and comment it" exercise per story
+
+Run `backlog board` for a Kanban view, or `backlog task list --plain -m "Foundation Modules"` to see one epic's stories.
+
+**Other `backlog/` directories, and what they're for:**
+
+| Directory | Created via | Use it for |
+|---|---|---|
+| `backlog/docs/` | `backlog doc create "title" -p some/path` | Prose learning notes — what you actually figured out after reading the docs, as opposed to the task's checklist of what to figure out. See `backlog/docs/learning-notes/vpc/` for a starter template — copy the pattern per module as you work through it. |
+| `backlog/decisions/` | `backlog decision create "title" -s accepted` | ADR-style decision records — *why* we chose X over Y. Two real ones already in there: switching to S3-native state locking, and choosing `precondition`/`postcondition` over TLA+. Worth writing one whenever a non-obvious call gets made, not just for learning-project decisions. |
+| `backlog/drafts/` | `backlog draft create "title"` | Half-formed task ideas not ready to commit to yet — promote with `backlog draft promote <id>` once scoped. |
+| `backlog/milestones/` | `backlog milestone add "title"` | The epics themselves (see above) — rarely touched directly once the 16 exist. |
 

@@ -5,6 +5,9 @@ module "vpc" {
   availability_zones = var.availability_zones
 }
 
+# node_desired_size/node_max_size raised above the eks module's defaults
+# (2/4) to 3/6 — multiple tenants sharing one cluster need more headroom
+# than a single-tenant deployment would.
 module "eks" {
   source = "../../modules/eks"
 

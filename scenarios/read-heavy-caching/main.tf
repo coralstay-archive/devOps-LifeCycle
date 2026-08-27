@@ -5,6 +5,9 @@ module "vpc" {
   availability_zones = var.availability_zones
 }
 
+# num_cache_nodes=3 (1 primary + 2 replicas) overrides the module's default
+# of 2 — the whole point of "read-heavy" is having enough replicas to spread
+# read traffic across, not just one.
 module "redis" {
   source = "../../modules/elasticache-redis"
 

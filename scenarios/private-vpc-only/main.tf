@@ -1,3 +1,7 @@
+# enable_nat_gateway = false is the actual scenario-defining choice — no NAT
+# means no outbound internet path at all unless the endpoints module below
+# fills the specific gaps (S3, DynamoDB, ECR, Logs) that would otherwise
+# require it.
 module "vpc" {
   source = "../../modules/vpc"
 
@@ -7,6 +11,9 @@ module "vpc" {
   enable_nat_gateway = false
 }
 
+# route_table_ids comes from vpc's private_route_table_ids output
+# specifically (not the public one) — gateway endpoints only need to be
+# reachable from the private subnets that have no other route out.
 module "endpoints" {
   source = "../../modules/vpc-endpoints"
 

@@ -13,6 +13,8 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
   ip_protocol       = "tcp"
 }
 
+# Only opened when there's actually a cert to serve HTTPS with — no point
+# accepting 443 traffic the ALB has nothing to terminate TLS for.
 resource "aws_vpc_security_group_ingress_rule" "https" {
   count             = var.certificate_arn == null ? 0 : 1
   security_group_id = aws_security_group.this.id
@@ -37,6 +39,10 @@ resource "aws_lb" "this" {
 
   tags = var.tags
 
+  # Not a style preference — the ALB API itself refuses to create a load
+  # balancer that isn't spread across at least two AZs, for the same
+  # single-AZ-failure reason NAT gateways get one per AZ elsewhere in this
+  # repo.
   lifecycle {
     precondition {
       condition     = length(var.public_subnet_ids) >= 2
@@ -45,6 +51,9 @@ resource "aws_lb" "this" {
   }
 }
 
+# One target group, IP-target-type (required for Fargate's awsvpc
+# networking — instance-target-type wouldn't work since tasks don't have
+# their own EC2 instance ID).
 resource "aws_lb_target_group" "this" {
   name        = var.name
   port        = var.target_port
@@ -59,6 +68,9 @@ resource "aws_lb_target_group" "this" {
   tags = var.tags
 }
 
+# The HTTP listener's behavior depends on whether HTTPS exists at all: if
+# there's no cert, HTTP has to actually serve traffic (forward); if there is
+# a cert, HTTP's only job is to bounce everything to HTTPS.
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
   port              = 80
@@ -85,6 +97,8 @@ resource "aws_lb_listener" "http" {
   }
 }
 
+# Only exists at all when a certificate is provided — count-gated the same
+# way as the https ingress rule above, for the same reason.
 resource "aws_lb_listener" "https" {
   count             = var.certificate_arn == null ? 0 : 1
   load_balancer_arn = aws_lb.this.arn

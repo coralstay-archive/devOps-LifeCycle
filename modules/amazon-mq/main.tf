@@ -5,6 +5,9 @@ resource "aws_security_group" "this" {
   tags        = var.tags
 }
 
+# Port 5671 = AMQP over TLS. Scoped to specific app security groups, same
+# pattern as every other datastore module in this repo (rds-postgres,
+# elasticache-redis, msk-kafka) — never opened to a CIDR range.
 resource "aws_vpc_security_group_ingress_rule" "amqp_tls" {
   for_each                     = toset(var.allowed_security_group_ids)
   security_group_id            = aws_security_group.this.id
@@ -20,6 +23,9 @@ resource "aws_vpc_security_group_egress_rule" "all" {
   ip_protocol       = "-1"
 }
 
+# SINGLE_INSTANCE deployment (no HA) — see this module's README for when
+# you'd actually reach for this instead of sns-sqs (short version: only for
+# AMQP/MQTT/STOMP protocol compatibility with something pre-existing).
 resource "aws_mq_broker" "this" {
   broker_name         = var.name
   engine_type         = var.engine_type
@@ -37,6 +43,8 @@ resource "aws_mq_broker" "this" {
 
   tags = var.tags
 
+  # RabbitMQ and ActiveMQ are the only two engines Amazon MQ supports —
+  # anything else would be rejected by the API.
   lifecycle {
     precondition {
       condition     = contains(["RabbitMQ", "ActiveMQ"], var.engine_type)

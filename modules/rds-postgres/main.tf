@@ -1,3 +1,6 @@
+# RDS needs to know which subnets are candidates for placing DB instances —
+# needs >= 2 AZs represented for Multi-AZ failover to actually have
+# somewhere to fail over to.
 resource "aws_db_subnet_group" "this" {
   name       = "${var.identifier}-subnet-group"
   subnet_ids = var.private_subnet_ids
@@ -13,6 +16,9 @@ resource "aws_security_group" "this" {
   tags = var.tags
 }
 
+# Scoped to specific app security groups (allowed_security_group_ids), not a
+# CIDR range — a database should never be reachable just by virtue of being
+# "in the VPC."
 resource "aws_vpc_security_group_ingress_rule" "postgres" {
   for_each = toset(var.allowed_security_group_ids)
 
@@ -46,14 +52,20 @@ resource "aws_db_instance" "this" {
   # avoids ever putting a DB password in state/plan output directly.
   manage_master_user_password = true
 
-  multi_az                  = var.multi_az
-  backup_retention_period   = 7
+  multi_az                = var.multi_az
+  backup_retention_period = 7
+  # deletion_protection tracks skip_final_snapshot's inverse deliberately:
+  # if you've said "it's fine to skip the final snapshot," you've already
+  # accepted losing this data, so there's no reason deletion_protection
+  # should still be blocking you.
   deletion_protection       = !var.skip_final_snapshot
   skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.identifier}-final"
 
   tags = var.tags
 
+  # RDS's actual minimum for gp2/gp3 storage on PostgreSQL — below this the
+  # API itself would reject the request.
   lifecycle {
     precondition {
       condition     = var.allocated_storage >= 20

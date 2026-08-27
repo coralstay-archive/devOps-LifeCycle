@@ -5,6 +5,10 @@ resource "aws_security_group" "this" {
   tags        = var.tags
 }
 
+# Port 9094 specifically: the TLS listener. MSK also exposes a plaintext
+# listener on a different port, but this module only opens the encrypted one
+# (see encryption_info below) since there's no reason to allow plaintext
+# broker traffic.
 resource "aws_vpc_security_group_ingress_rule" "kafka_tls" {
   for_each                     = toset(var.allowed_security_group_ids)
   security_group_id            = aws_security_group.this.id
@@ -37,6 +41,9 @@ resource "aws_msk_cluster" "this" {
     }
   }
 
+  # client_broker = "TLS" rejects plaintext connections outright;
+  # in_cluster = true also encrypts inter-broker replication traffic, not
+  # just client-facing traffic.
   encryption_info {
     encryption_in_transit {
       client_broker = "TLS"
@@ -46,6 +53,10 @@ resource "aws_msk_cluster" "this" {
 
   tags = var.tags
 
+  # This isn't a style preference — MSK's API itself rejects a broker count
+  # that isn't a clean multiple of the subnet (AZ) count, because it can't
+  # spread brokers evenly across AZs otherwise. Catching it here beats
+  # waiting for the apply to fail deep into cluster creation.
   lifecycle {
     precondition {
       condition     = var.number_of_broker_nodes % length(var.private_subnet_ids) == 0

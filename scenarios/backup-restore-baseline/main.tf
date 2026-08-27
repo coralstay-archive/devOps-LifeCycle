@@ -5,6 +5,9 @@ module "vpc" {
   availability_zones = var.availability_zones
 }
 
+# Full default instance size here (unlike disaster-recovery-pilot-light's
+# deliberately-shrunk standby) — this scenario is about the backup policy
+# itself, not about minimizing standby cost.
 module "rds" {
   source = "../../modules/rds-postgres"
 
@@ -13,6 +16,9 @@ module "rds" {
   private_subnet_ids = module.vpc.private_subnet_ids
 }
 
+# Same rds.arn -> resource_arns wiring as disaster-recovery-pilot-light —
+# the two scenarios share this exact connection pattern because they share
+# the same underlying AWS Backup mechanism, just for different purposes.
 module "backup" {
   source        = "../../modules/aws-backup"
   name          = var.name

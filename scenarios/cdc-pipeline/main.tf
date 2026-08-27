@@ -21,6 +21,11 @@ module "target_kafka" {
   private_subnet_ids = module.vpc.private_subnet_ids
 }
 
+# The actual CDC wiring: source_server_name is parsed out of source_db's
+# endpoint (which comes back as "host:port" — split(":", ...)[0] takes just
+# the host, since DMS wants server_name and port as separate arguments).
+# target_kafka_broker is target_kafka's bootstrap_brokers_tls output
+# directly, connecting DMS to the Kafka cluster this scenario just created.
 module "dms" {
   source = "../../modules/dms"
 

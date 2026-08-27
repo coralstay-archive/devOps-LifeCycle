@@ -1,3 +1,6 @@
+# The role Lambda assumes to run the function — separate from what the
+# function is allowed to do, which is handled below by the basic-execution
+# policy attachment.
 resource "aws_iam_role" "this" {
   name = "${var.function_name}-role"
 
@@ -13,11 +16,17 @@ resource "aws_iam_role" "this" {
   tags = var.tags
 }
 
+# Minimum viable permission: write logs to CloudWatch. Anything beyond that
+# (DynamoDB access, S3, etc.) is workload-specific and deliberately not
+# baked into this generic module.
 resource "aws_iam_role_policy_attachment" "basic_execution" {
   role       = aws_iam_role.this.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# Declared explicitly (with a real retention period) instead of letting
+# Lambda auto-create it — Lambda's auto-created log group defaults to never
+# expiring, which quietly accumulates cost forever.
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/lambda/${var.function_name}"
   retention_in_days = var.log_retention_days
@@ -25,8 +34,11 @@ resource "aws_cloudwatch_log_group" "this" {
 }
 
 resource "aws_lambda_function" "this" {
-  function_name    = var.function_name
-  filename         = var.filename
+  function_name = var.function_name
+  filename      = var.filename
+  # Forces Terraform to detect code changes: without a source_code_hash tied
+  # to the actual zip contents, Terraform has no way to know the deployment
+  # package changed and would skip updating the function.
   source_code_hash = filebase64sha256(var.filename)
   handler          = var.handler
   runtime          = var.runtime
@@ -40,6 +52,8 @@ resource "aws_lambda_function" "this" {
 
   tags = var.tags
 
+  # 128-10240 MB is Lambda's actual valid range, not a value this module
+  # invented — outside it the API rejects the function outright.
   lifecycle {
     precondition {
       condition     = var.memory_size >= 128 && var.memory_size <= 10240
@@ -47,5 +61,8 @@ resource "aws_lambda_function" "this" {
     }
   }
 
+  # Explicit dependency: the log group should exist before the function
+  # starts writing to it, even though nothing in the function's own
+  # arguments references the log group to make that ordering implicit.
   depends_on = [aws_cloudwatch_log_group.this]
 }

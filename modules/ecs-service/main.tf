@@ -1,8 +1,15 @@
+# The logical grouping ECS services/tasks run inside. Cheap and mostly
+# inert on its own — the interesting parts are the task definition and
+# service below.
 resource "aws_ecs_cluster" "this" {
   name = "${var.name}-cluster"
   tags = var.tags
 }
 
+# The EXECUTION role: used by the ECS agent itself to pull the container
+# image and write logs — not the same as a "task role" (which your
+# application code would use to call other AWS APIs, and which this minimal
+# module doesn't create since it depends on what the app actually needs).
 resource "aws_iam_role" "execution" {
   name = "${var.name}-ecs-execution"
 
@@ -30,6 +37,9 @@ resource "aws_security_group" "service" {
   tags        = var.tags
 }
 
+# Fargate tasks use awsvpc networking, meaning each task gets its own ENI —
+# so the security group has to allow the container port directly, there's no
+# host-level port mapping to reason about like with EC2 launch type.
 resource "aws_vpc_security_group_ingress_rule" "container_port" {
   security_group_id = aws_security_group.service.id
   cidr_ipv4         = "0.0.0.0/0"
@@ -44,6 +54,10 @@ resource "aws_vpc_security_group_egress_rule" "all" {
   ip_protocol       = "-1"
 }
 
+# Fargate specifically (requires_compatibilities), awsvpc networking mode
+# (mandatory for Fargate). The container_definitions JSON is intentionally
+# minimal — no health check, no logging driver config — since those are
+# workload-specific.
 resource "aws_ecs_task_definition" "this" {
   family                   = var.name
   requires_compatibilities = ["FARGATE"]
@@ -76,6 +90,9 @@ resource "aws_ecs_service" "this" {
     security_groups = [aws_security_group.service.id]
   }
 
+  # Only attach a load balancer if the caller actually gave us one — running
+  # standalone (e.g. a worker service with no inbound traffic) is a valid
+  # use case this dynamic block has to support.
   dynamic "load_balancer" {
     for_each = var.target_group_arn == null ? [] : [1]
     content {
@@ -87,6 +104,8 @@ resource "aws_ecs_service" "this" {
 
   tags = var.tags
 
+  # An empty subnet list would mean "nowhere to run this service" — ECS
+  # would reject it, but with a less specific error than this.
   lifecycle {
     precondition {
       condition     = length(var.private_subnet_ids) > 0

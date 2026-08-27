@@ -5,6 +5,10 @@ module "vpc" {
   availability_zones = var.availability_zones
 }
 
+# Base cluster only — see this module's README for why the actual canary
+# traffic-shifting mechanism (Argo Rollouts or App Mesh) isn't wired in yet.
+# What exists here is deliberately just "the platform a canary tool would
+# run on top of," not a working canary deployment.
 module "eks" {
   source = "../../modules/eks"
 

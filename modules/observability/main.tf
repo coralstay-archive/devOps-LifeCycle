@@ -1,7 +1,14 @@
+# One topic all alarms fan into — keeps notification wiring (email, and
+# whatever Slack/PagerDuty integration gets added later) in one place instead
+# of per-alarm.
 resource "aws_sns_topic" "alarms" {
   name = "${var.name}-alarms"
   tags = var.tags
 
+  # Cheap sanity check that the resource actually produced a usable ARN —
+  # mainly here as the pattern other modules follow (see s3-bucket's
+  # bucket_arn precondition for the same idea on an output instead of a
+  # resource).
   lifecycle {
     postcondition {
       condition     = startswith(self.arn, "arn:aws:sns:")
@@ -10,6 +17,8 @@ resource "aws_sns_topic" "alarms" {
   }
 }
 
+# Optional — most real setups would route through Slack/PagerDuty instead,
+# but email is the zero-setup default so this module works out of the box.
 resource "aws_sns_topic_subscription" "email" {
   count     = var.alarm_email == null ? 0 : 1
   topic_arn = aws_sns_topic.alarms.arn
@@ -17,6 +26,9 @@ resource "aws_sns_topic_subscription" "email" {
   endpoint  = var.alarm_email
 }
 
+# A generic alarm factory: the caller supplies a map of alarm configs (metric
+# name, threshold, etc.) via var.alarms, and this for_each turns each map
+# entry into one CloudWatch alarm wired to the shared SNS topic above.
 resource "aws_cloudwatch_metric_alarm" "this" {
   for_each = var.alarms
 
@@ -36,6 +48,9 @@ resource "aws_cloudwatch_metric_alarm" "this" {
   tags = var.tags
 }
 
+# A minimal starter dashboard — just a markdown widget pointing back at the
+# stack's SLO.md, rather than trying to guess useful metric widgets before
+# any real alarms exist. Extend this once var.alarms is populated for real.
 resource "aws_cloudwatch_dashboard" "this" {
   dashboard_name = var.name
 

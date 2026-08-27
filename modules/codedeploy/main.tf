@@ -18,6 +18,9 @@ resource "aws_iam_role_policy_attachment" "this" {
   policy_arn = "arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS"
 }
 
+# compute_platform = "ECS" specifically — CodeDeploy also supports EC2/
+# on-premises and Lambda platforms, but this module is scoped to ECS
+# blue/green only.
 resource "aws_codedeploy_app" "this" {
   name             = var.name
   compute_platform = "ECS"
@@ -29,6 +32,9 @@ resource "aws_codedeploy_deployment_group" "this" {
   service_role_arn       = aws_iam_role.this.arn
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
 
+  # BLUE_GREEN + WITH_TRAFFIC_CONTROL: CodeDeploy manages two ECS task sets
+  # and shifts the ALB target group traffic between them, rather than ECS's
+  # own default rolling-update behavior.
   deployment_style {
     deployment_type   = "BLUE_GREEN"
     deployment_option = "WITH_TRAFFIC_CONTROL"
@@ -38,6 +44,9 @@ resource "aws_codedeploy_deployment_group" "this" {
     deployment_ready_option {
       action_on_timeout = "CONTINUE_DEPLOYMENT"
     }
+    # Old (blue) tasks are kept alive for 5 minutes after the new (green)
+    # tasks take over traffic — a safety window to roll back into if
+    # something looks wrong, before they're actually terminated.
     terminate_blue_instances_on_deployment_success {
       action                           = "TERMINATE"
       termination_wait_time_in_minutes = 5
@@ -49,6 +58,8 @@ resource "aws_codedeploy_deployment_group" "this" {
     service_name = var.ecs_service_name
   }
 
+  # The core of blue/green: one listener, two target groups. CodeDeploy
+  # shifts which target group the listener sends production traffic to.
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
@@ -65,6 +76,9 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   tags = var.tags
 
+  # The single most common copy-paste mistake with this pattern: pointing
+  # blue and green at the same target group, which makes "shifting traffic
+  # between them" meaningless.
   lifecycle {
     precondition {
       condition     = var.target_group_blue_name != var.target_group_green_name

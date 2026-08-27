@@ -1,9 +1,16 @@
+# Gateway endpoints (S3, DynamoDB) are free and work by adding routes to
+# existing route tables — no ENIs, no hourly cost, unlike interface
+# endpoints below. This is why private subnets can reach S3/DynamoDB with
+# zero NAT gateway involved.
 resource "aws_vpc_endpoint" "s3" {
   vpc_id          = var.vpc_id
   service_name    = "com.amazonaws.${var.region}.s3"
   route_table_ids = var.route_table_ids
   tags            = var.tags
 
+  # A gateway endpoint attached to zero route tables is provisioned but
+  # unreachable from anywhere — traffic only routes through it if a route
+  # table actually points at it.
   lifecycle {
     precondition {
       condition     = length(var.route_table_ids) > 0
@@ -19,6 +26,9 @@ resource "aws_vpc_endpoint" "dynamodb" {
   tags            = var.tags
 }
 
+# Interface endpoints (ECR, CloudWatch Logs, etc.) work differently from
+# gateway endpoints: they're actual ENIs in your subnets with a security
+# group, which is why they need one (unlike the gateway endpoints above).
 resource "aws_security_group" "interface_endpoints" {
   name        = "vpc-endpoints-sg"
   description = "Allow HTTPS from within the VPC to interface endpoints"
@@ -34,6 +44,11 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   ip_protocol       = "tcp"
 }
 
+# Defaults to ECR (api + dkr, both needed to pull images) and CloudWatch
+# Logs — enough for ECS/EKS tasks in fully private subnets (no NAT) to pull
+# images and ship logs, which is the core use case (private-vpc-only).
+# private_dns_enabled = true means normal AWS SDK/CLI calls resolve to these
+# endpoints automatically, no client-side URL changes needed.
 resource "aws_vpc_endpoint" "interface" {
   for_each            = toset(var.interface_services)
   vpc_id              = var.vpc_id

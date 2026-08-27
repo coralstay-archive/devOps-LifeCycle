@@ -5,6 +5,9 @@ module "vpc" {
   availability_zones = var.availability_zones
 }
 
+# Left at the module's default (1 primary + 1 replica) — session data
+# doesn't need read-heavy-caching's extra replica count, just enough HA to
+# survive a single node failure without dropping every active session.
 module "redis" {
   source = "../../modules/elasticache-redis"
 

@@ -13,6 +13,10 @@ module "job" {
   timeout       = 60
 }
 
+# target_arn wired to job's function_arn output, and target_is_lambda = true
+# tells the eventbridge module to also grant EventBridge permission to
+# invoke it — without that flag, the rule would exist but every scheduled
+# trigger would fail silently with an access-denied.
 module "schedule" {
   source = "../../modules/eventbridge"
 

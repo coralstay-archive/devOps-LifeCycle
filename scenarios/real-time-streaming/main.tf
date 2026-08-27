@@ -5,6 +5,9 @@ module "vpc" {
   availability_zones = var.availability_zones
 }
 
+# private_subnet_ids from vpc feeds msk-kafka's own internal precondition
+# (broker count must be a multiple of subnet count) — with vpc's default 2
+# AZs and this module's default 2 brokers, that's satisfied automatically.
 module "kafka" {
   source = "../../modules/msk-kafka"
 

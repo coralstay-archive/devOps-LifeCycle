@@ -12,6 +12,10 @@ output "private_subnet_ids" {
   description = "IDs of private subnets, one per AZ"
   value       = aws_subnet.private[*].id
 
+  # Runtime invariant, not just a test assertion: if this ever drifts (e.g. a
+  # future refactor breaks the count math), every module that fans private
+  # subnets out per-AZ (rds-postgres, msk-kafka, etc.) would silently get the
+  # wrong topology. Catching it here, at the source, fails loudly instead.
   precondition {
     condition     = length(aws_subnet.private) == length(var.availability_zones)
     error_message = "Expected exactly one private subnet per availability zone."
