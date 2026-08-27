@@ -13,9 +13,13 @@ A reusable Terraform launchpad for AWS — atomic modules, composed scenarios, a
 ![Status](https://img.shields.io/badge/status-scaffolding-yellow?style=flat-square)
 ![Security scans](https://img.shields.io/badge/security-Trivy%20%2B%20Checkov-blueviolet?style=flat-square)
 ![Policy as code](https://img.shields.io/badge/policy--as--code-OPA%2FConftest-005571?style=flat-square)
-![License](https://img.shields.io/badge/license-private-lightgrey?style=flat-square)
+![License](https://img.shields.io/badge/license-unlicensed-lightgrey?style=flat-square)
 
 </div>
+
+---
+
+> 🎓 **This is a learning repo, built together with Claude.** Every module, scenario, and TLA+ spec here was written in an ongoing pairing session between the repo owner and [Claude](https://claude.com/claude-code) — the design decisions, the deliberate bugs found and fixed along the way, and the [`backlog.md`](#-learning-backlog) learning tasks are all part of that process, not a finished product to copy blindly. Read the `backlog/decisions/` folder for the *why* behind the non-obvious calls.
 
 ---
 
@@ -126,7 +130,7 @@ Organized by **scope**, not by "module vs scenario" — nearly every tool here r
 | Checkov (2nd opinion) | Same category, different detection coverage — a mature IaC stack runs two in parallel | ⚠️ non-blocking, see note |
 | Conftest (OPA/Rego), `policy/` | *This repo's own* rules, not generic ones (e.g. no public S3 buckets, no matter how a future scenario tries) | `deny` ✅ / `warn` ❌ |
 | Infracost | Cost diff — informational PR comment | ❌ not blocking |
-| k6 (`tools/loadtest/`) | Rehearses traffic spikes against each stack's `SLO.md` thresholds | manual, not wired into CI yet |
+| k6 (`tools/loadtest/`, `.github/workflows/loadtest.yml`) | Rehearses traffic spikes against each stack's `SLO.md` thresholds | manual `workflow_dispatch` — no AWS credentials, see `tools/loadtest/README.md` |
 | Scheduled `terraform plan -detailed-exitcode` (drift detection) | Real infra silently diverging from code (driftctl is unmaintained — this is the practical current alternative) | opens a tracking issue, doesn't block PRs |
 
 > **Why Trivy/Checkov are non-blocking here:** this repo's modules are intentionally minimal (see each module's *"Not yet included"* section) — e.g. Redshift isn't KMS-encrypted, SNS/SQS aren't encrypted by default. Both scanners correctly flag these as real findings; they're accepted trade-offs at the scaffold stage, not bugs. They still run and report on every PR for visibility (`continue-on-error`). Flip a specific project to blocking once a scenario graduates from scaffold to a real production workload.

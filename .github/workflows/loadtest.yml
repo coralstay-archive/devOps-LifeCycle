@@ -1,0 +1,45 @@
+name: Load Test
+
+# Manual-only, and deliberately so: this hits a real, already-deployed HTTP
+# endpoint with real traffic (the "spike" scenario in basic-load.js ramps to
+# 500 VUs), so it must never fire automatically on push/PR. On a public repo,
+# an automatic trigger would let anyone with a fork open a PR and get free
+# GitHub-Actions compute to hammer an arbitrary URL — workflow_dispatch
+# requires write access to this repo to run at all, which closes that off.
+#
+# Security note: this job needs ZERO AWS credentials. k6 only performs plain
+# HTTP requests against whatever target_url a human supplies — it never
+# calls the AWS API, so unlike every other workflow here it requests no
+# id-token (no OIDC role assumption) and no secrets. Residual risk this
+# can't technically prevent: a collaborator could point target_url at a
+# third party's endpoint and load-test it without their consent — only
+# point this at endpoints you're actually authorized to load test.
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: "Full URL of an already-deployed endpoint (e.g. https://<alb-dns-name>) — you must be authorized to load test it"
+        required: true
+      smoke_test:
+        description: "Run a 10s/1-VU smoke check instead of the full steady-state+spike scenario (use this to verify the target is reachable before a real run)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  k6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run k6 load test
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tools/loadtest/basic-load.js
+        env:
+          TARGET_URL: ${{ inputs.target_url }}
+          # basic-load.js reads this to swap in a short single-VU run —
+          # see the K6_SMOKE_TEST branch there for exactly what changes.
+          K6_SMOKE_TEST: ${{ inputs.smoke_test }}
