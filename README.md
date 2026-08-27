@@ -48,6 +48,7 @@ flowchart LR
 - [Testing modules](#-testing-modules)
 - [Custom policy checks](#-custom-policy-checks)
 - [Tech stack & techniques](#-tech-stack--techniques)
+- [Repo metrics](#-repo-metrics)
 - [SRE principles applied to every scenario](#-sre-principles-applied-to-every-scenario)
 - [Modules (36)](#-modules-36)
 - [Scenarios (30)](#-scenarios-30)
@@ -140,6 +141,25 @@ Organized by **scope**, not by "module vs scenario" — nearly every tool here r
 | Tool | Runs |
 |---|---|
 | pre-commit | fmt, validate, tflint, terraform-docs, trivy, checkov, gitleaks — before every commit |
+
+## 📊 Repo metrics
+
+What the tools above actually find when run against this repo right now — not aspirational, a real snapshot:
+
+| Metric | Result |
+|---|---|
+| tflint (whole repo) | **0 findings** |
+| checkov (36 modules) | 246 passed / 79 failed (75.7%) — failures are the documented *"Not yet included"* trade-offs per module, not gaps that slipped through unnoticed |
+| trivy config (36 modules) | 52 misconfigurations flagged — same category as checkov, second-opinion scanner |
+| `precondition`/`postcondition` blocks | 38 (35 precondition + 3 postcondition) — real AWS-API invariants enforced on every `plan`/`apply` |
+| `terraform test` files | 3 (`vpc`, `s3-bucket`, `iam-github-oidc`) |
+| Conftest policies (`policy/`) | 2 (1 `deny`, 1 `warn`) |
+| gitleaks (full git history) | 0 leaks |
+| TLA+ / TLC (66 specs: 30 scenarios + 36 modules) | 376 states generated, 227 distinct, **0 failing** |
+| Lines of code ([tokei](https://github.com/XAMPPRocky/tokei)) | 6,030 HCL · 3,925 TLA+ (`tokei` doesn't recognize `.tla`, counted separately) · 316 backlog learning-task files (11,736 lines) |
+| Infracost | not run — needs a personal `infracost auth login` (browser-based, can't be done on someone else's behalf); run it yourself, then `infracost breakdown --path live/<project>` |
+
+> **On the checkov/trivy failures:** they're real findings, not false positives — this repo's modules are intentionally minimal (see each module's own *"Not yet included"* section for the specific trade-off). Nobody has yet cross-checked that all 79+52 findings actually have a matching README note versus something that just slipped through — that audit is still open.
 
 ## 🎯 SRE principles applied to every scenario
 
