@@ -8,7 +8,7 @@ Implemented (minimal): single-instance, no active/standby HA (use `deployment_mo
 
 ## 런타임 불변식 (precondition/postcondition)
 
-`aws_mq_broker.this`에 `precondition`을 달아, `engine_type`이 RabbitMQ 또는 ActiveMQ인지 검증한다 — Amazon MQ가 지원하는 유일한 엔진들.
+`aws_mq_broker.this`에 두 개의 `precondition`을 달았다: `engine_type`이 RabbitMQ 또는 ActiveMQ인지(Amazon MQ가 지원하는 유일한 엔진들), 그리고 `password`가 12~250자인지(Amazon MQ API 자체의 요구사항 — `specs/modules/amazon-mq/spec.tla`로 이 모듈의 입출력 동작을 정리하다가 이 검증이 빠져 있는 걸 발견해 추가했다).
 
 ## 공식문서
 

@@ -218,7 +218,9 @@ TLC found real bugs this way, not just style nits — including a bug *in a bug 
 
 The lesson generalizes: `"No error has been found"` only means something if the property was checked against a real counter-example first. All 4 temporal `PROPERTY` declarations in the repo were audited this way — the other 2 (`multi-region-active-active`, `pub-sub-fanout`) use the built-in `~>` leads-to operator, which doesn't have this trap, and both were confirmed to actually fail without their fairness conditions.
 
-See [`specs/README.md`](specs/README.md) for the tool setup (`tla2tools.jar` is downloaded, not vendored) and how to run TLC yourself. Why TLA+ lives at the scenario scope and not the module scope: [`decision-2`](backlog/decisions) vs [`decision-3`](backlog/decisions).
+`specs/modules/` does the same thing for every one of the **36 modules**, but from a different angle: no concurrency, no state machine — each module is specified as input (`variables.tf`) → operation (the AWS API calls `main.tf` triggers) → output (`outputs.tf` + what it must always guarantee), checked by TLC against one concrete example rather than proved for every input. Writing these surfaced 3 real gaps, fixed directly: `dms` allowed `target_engine_name = "kafka"` with no broker set, `redshift` never exposed the `master_password_secret_arn` its own `manage_master_password = true` already creates, and `amazon-mq` never validated its own 12-character minimum password length.
+
+See [`specs/README.md`](specs/README.md) and [`specs/modules/README.md`](specs/modules/README.md) for tool setup (`tla2tools.jar` is downloaded, not vendored) and how to run TLC yourself. Why TLA+ applies differently at each scope: [`decision-2`](backlog/decisions) (module-scope precondition/postcondition, not concurrency modeling) vs [`decision-3`](backlog/decisions) (scenario-scope runtime state machines) vs [`decision-4`](backlog/decisions) (module-scope input/operation/output).
 
 ## 🔍 Reference example
 
@@ -230,9 +232,9 @@ This repo doubles as a learning project, tracked with the [Backlog.md](https://g
 
 **Structure — Epic → Story → Task:**
 
-- **17 milestones** (epics) — one per module tier / scenario category (e.g. "Foundation Modules", "Web/API Scenarios"), plus **Formal Specifications (TLA+)** covering all 30 scenario-level specs
-- **96 parent tasks** (stories), type `spike` — one per module (36), scenario (30), and TLA+ spec (30), each conceptual (what to understand, why it matters), left `To Do` for you to actually work through — nothing is pre-completed
-- **126 child tasks**, type `task`/`docs` — module/scenario stories get one hands-on child (type the code out, then run the *actual* toolchain: `terraform validate`, `tflint`, `terraform-docs`, `terraform test` where it exists, `checkov`/`trivy`); TLA+ stories get two: one hands-on child (type `spec.tla` out, run TLC with the exact command, and for specs where TLC caught something during authoring, a guided step to reproduce that exact failure yourself) plus one docs-deepening child (a concrete follow-up question against the official TLA+ docs — fairness operators, `EXCEPT` function updates, model values, leads-to `~>`)
+- **17 milestones** (epics) — one per module tier / scenario category (e.g. "Foundation Modules", "Web/API Scenarios"), plus **Formal Specifications (TLA+)** covering all 30 scenario-level specs and all 36 module-level specs
+- **132 parent tasks** (stories), type `spike` — one per module (36), scenario (30), scenario-level TLA+ spec (30), and module-level TLA+ spec (36), each conceptual (what to understand, why it matters), left `To Do` for you to actually work through — nothing is pre-completed
+- **162 child tasks**, type `task`/`docs` — module/scenario stories get one hands-on child (type the code out, then run the *actual* toolchain: `terraform validate`, `tflint`, `terraform-docs`, `terraform test` where it exists, `checkov`/`trivy`); scenario-level TLA+ stories get two children: one hands-on (type `spec.tla` out, run TLC, and for specs where TLC caught something during authoring, a guided step to reproduce that exact failure yourself) plus one docs-deepening child; module-level TLA+ stories get one hands-on child (type `spec.tla` out, run TLC, then deliberately break `Provision` and confirm TLC catches it)
 
 Run `backlog board` for a Kanban view, or `backlog task list --plain -m "Foundation Modules"` to see one epic's stories.
 
@@ -241,7 +243,7 @@ Run `backlog board` for a Kanban view, or `backlog task list --plain -m "Foundat
 | Directory | Created via | Use it for |
 |---|---|---|
 | `backlog/docs/` | `backlog doc create "title" -p some/path` | Prose learning notes — what you actually figured out after reading the docs, as opposed to the task's checklist of what to figure out. See `backlog/docs/learning-notes/vpc/` for a starter template — copy the pattern per module as you work through it. |
-| `backlog/decisions/` | `backlog decision create "title" -s accepted` | ADR-style decision records — *why* we chose X over Y. Three real ones already in there: switching to S3-native state locking, choosing `precondition`/`postcondition` over TLA+ at the module scope, and adopting TLA+ at the scenario scope instead. Worth writing one whenever a non-obvious call gets made, not just for learning-project decisions. |
+| `backlog/decisions/` | `backlog decision create "title" -s accepted` | ADR-style decision records — *why* we chose X over Y. Four real ones already in there: switching to S3-native state locking, choosing `precondition`/`postcondition` over TLA+ concurrency-modeling at the module scope, adopting TLA+ for scenario-scope runtime state machines, and adopting a *different* use of TLA+ (input/operation/output, no concurrency) at the module scope too. Worth writing one whenever a non-obvious call gets made, not just for learning-project decisions. |
 | `backlog/drafts/` | `backlog draft create "title"` | Half-formed task ideas not ready to commit to yet — promote with `backlog draft promote <id>` once scoped. |
 | `backlog/milestones/` | `backlog milestone add "title"` | The epics themselves (see above) — rarely touched directly once the 17 exist. |
 

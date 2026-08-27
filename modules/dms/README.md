@@ -12,7 +12,7 @@ Implemented (minimal): one source, one target, one task, capturing all tables by
 
 ## 런타임 불변식 (precondition/postcondition)
 
-`aws_dms_endpoint.source`에 `precondition`을 달아, `source_port`가 유효한 TCP 포트 범위(1-65535)인지 검증한다.
+`aws_dms_endpoint.source`에 `precondition`을 달아, `source_port`가 유효한 TCP 포트 범위(1-65535)인지 검증한다. `aws_dms_endpoint.target`에도 `precondition`을 달아, `target_engine_name`이 "kafka"면 `target_kafka_broker`가 반드시 설정되어 있는지 검증한다(`specs/modules/dms/spec.tla`로 이 모듈의 입출력 동작을 정리하다가, 이 조합을 막는 검증이 빠져 있던 걸 발견해 추가했다).
 
 ## 공식문서
 

@@ -50,5 +50,12 @@ resource "aws_mq_broker" "this" {
       condition     = contains(["RabbitMQ", "ActiveMQ"], var.engine_type)
       error_message = "engine_type must be RabbitMQ or ActiveMQ — Amazon MQ's only supported engines."
     }
+
+    # Amazon MQ's own API requirement, not a style preference — a shorter
+    # password fails at broker-creation time with a less specific error.
+    precondition {
+      condition     = length(var.password) >= 12 && length(var.password) <= 250
+      error_message = "password must be 12-250 characters — Amazon MQ's API requirement."
+    }
   }
 }

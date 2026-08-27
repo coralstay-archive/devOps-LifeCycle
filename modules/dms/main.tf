@@ -57,6 +57,17 @@ resource "aws_dms_endpoint" "target" {
   }
 
   tags = var.tags
+
+  # target_kafka_broker defaults to null, and target_engine_name defaults
+  # to "kafka" — nothing before this stopped someone from applying that
+  # combination, which plans fine and then fails at DMS endpoint-creation
+  # time with a much less specific error than this.
+  lifecycle {
+    precondition {
+      condition     = var.target_engine_name != "kafka" || var.target_kafka_broker != null
+      error_message = "target_kafka_broker must be set when target_engine_name is \"kafka\" — kafka_settings.broker can't be null."
+    }
+  }
 }
 
 # full-load-and-cdc: does the initial bulk copy AND keeps streaming ongoing

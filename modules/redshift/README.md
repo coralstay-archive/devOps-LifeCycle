@@ -36,4 +36,5 @@ Implemented (minimal).
 | ---- | ----------- |
 | <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | n/a |
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | n/a |
+| <a name="output_master_password_secret_arn"></a> [master\_password\_secret\_arn](#output\_master\_password\_secret\_arn) | ARN of the Secrets Manager secret holding the master password |
 <!-- END_TF_DOCS -->
