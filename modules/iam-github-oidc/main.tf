@@ -51,6 +51,13 @@ resource "aws_iam_role" "this" {
   assume_role_policy = data.aws_iam_policy_document.trust.json
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.allowed_ref == "*" || can(regex("^refs/", var.allowed_ref))
+      error_message = "allowed_ref must be \"*\" or a real git ref (e.g. refs/heads/main, refs/tags/v1.0.0) — a bare branch name silently never matches GitHub's actual sub claim."
+    }
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "this" {

@@ -43,7 +43,7 @@ flowchart LR
 - [One-time setup](#-one-time-setup)
 - [Testing modules](#-testing-modules)
 - [Custom policy checks](#-custom-policy-checks)
-- [Tooling](#-tooling)
+- [Tech stack & techniques](#-tech-stack--techniques)
 - [SRE principles applied to every scenario](#-sre-principles-applied-to-every-scenario)
 - [Modules (36)](#-modules-36)
 - [Scenarios (30)](#-scenarios-30)
@@ -84,24 +84,45 @@ Extend this pattern as more modules get picked up from the [learning backlog](#-
 
 `policy/` holds Conftest (OPA/Rego) policies run against `terraform plan` JSON — the layer generic scanners can't cover, since Trivy/Checkov catch *known* misconfigurations while Conftest enforces *this repo's own* rules (e.g. no public S3 buckets, no matter how a future scenario tries to declare one). See `policy/README.md` for the deny-vs-warn convention.
 
-## 🧰 Tooling
+## 🧱 Tech stack & techniques
 
-| Purpose | Tool | Blocking in CI? |
+Everything used in this repo, gathered in one place — this list *is* the syllabus for the [learning backlog](#-learning-backlog): each row is something to actually understand, not just install.
+
+**Core**
+
+| Purpose | Tool/technique | Blocking in CI? |
 |---|---|:---:|
-| IaC | Terraform | — |
-| Lint | TFLint (+ AWS ruleset) | ✅ |
-| Docs | terraform-docs — auto-generates every module's Inputs/Outputs table (`<!-- BEGIN_TF_DOCS -->` block) | ✅ fails on stale docs |
-| Security/compliance scan | Trivy (config scan) | ⚠️ see below |
-| Security/compliance scan (2nd opinion) | Checkov | ⚠️ see below |
-| Custom policy-as-code | Conftest (OPA/Rego), `policy/` | `deny` ✅ / `warn` ❌ |
-| Module unit tests | `terraform test` (native, `mock_provider`) | ✅ for modules with `tests/` |
-| Cost estimation | Infracost | ❌ informational PR comment |
-| Secret scanning | gitleaks | ✅ |
-| Drift detection | scheduled `terraform plan -detailed-exitcode` (driftctl is unmaintained — this is the practical current alternative) | opens a tracking issue, doesn't block PRs |
+| IaC language & runtime | Terraform >= 1.5 (>= 1.11 for `live/*` stacks, see below), HCL, AWS provider `~> 5.0` | — |
+| State backend | S3 (versioned, encrypted) | — |
+| State locking | **S3-native locking** (`use_lockfile = true`, Terraform >= 1.11) — DynamoDB-based locking is upstream-deprecated; `bootstrap/` doesn't create a lock table anymore | — |
+
+**Verification — three different layers, on purpose**
+
+| Layer | Tool/technique | What it checks | Blocking? |
+|---|---|---|:---:|
+| Syntax/type | `terraform validate`, `terraform fmt` | Does the HCL even parse and format correctly | ✅ |
+| Lint | TFLint (+ AWS ruleset) | AWS-specific footguns (deprecated arguments, invalid instance types, etc.) | ✅ |
+| **Runtime invariants** | `precondition`/`postcondition` (`lifecycle` blocks), inline in `vpc`, `s3-bucket`, `iam`, `iam-github-oidc`, `ec2` | "This value must always hold" — checked on **every** plan/apply, not just in test suites. The in-ecosystem alternative to something like TLA+: Terraform modules are declarative resource graphs, not concurrent algorithms, so there's no meaningful state space for a model checker to explore — but the *goal* TLA+ serves (explicit, checked invariants) maps directly onto `precondition`/`postcondition` and `check` blocks | ✅ (fails the apply) |
+| Unit tests | `terraform test` (native, `mock_provider`) — no AWS credentials, runs in seconds | Module behavior across input combinations, offline | ✅ for modules with `tests/` |
+| Security/compliance scan | Trivy (config scan) | Known AWS misconfigurations | ⚠️ non-blocking, see note |
+| Security/compliance scan (2nd opinion) | Checkov | Same category, different detection coverage — a mature IaC stack runs two in parallel | ⚠️ non-blocking, see note |
+| Custom policy-as-code | Conftest (OPA/Rego), `policy/` | *This repo's own* rules, not generic ones (e.g. no public S3 buckets, no matter how a future scenario tries) | `deny` ✅ / `warn` ❌ |
+| Drift detection | scheduled `terraform plan -detailed-exitcode` (driftctl is unmaintained — this is the practical current alternative) | Real infra silently diverging from code | opens a tracking issue, doesn't block PRs |
 
 > **Why Trivy/Checkov are non-blocking here:** this repo's modules are intentionally minimal (see each module's *"Not yet included"* section) — e.g. Redshift isn't KMS-encrypted, SNS/SQS aren't encrypted by default. Both scanners correctly flag these as real findings; they're accepted trade-offs at the scaffold stage, not bugs. They still run and report on every PR for visibility (`continue-on-error`). Flip a specific project to blocking once a scenario graduates from scaffold to a real production workload.
->
-> A mature IaC stack typically runs **two** security scanners in parallel since their detection coverage differs — that's Trivy + Checkov here, not redundancy.
+
+**Docs, cost, and everything else**
+
+| Purpose | Tool/technique |
+|---|---|
+| Docs | terraform-docs — auto-generates every module's Inputs/Outputs table (`<!-- BEGIN_TF_DOCS -->` block), fails CI on drift |
+| Cost estimation | Infracost — informational PR comment, not blocking |
+| Secret scanning | gitleaks |
+| Load testing | k6 (`tools/loadtest/`) — rehearses traffic spikes against each stack's `SLO.md` thresholds |
+| CI/CD | GitHub Actions (`terraform-ci`, `terraform-apply`, `drift-detect`) |
+| CI credentials | GitHub OIDC federation (`iam-github-oidc`) — no long-lived AWS keys ever hit GitHub |
+| Version control | Git + GitHub (`gh` CLI for repo/PR management) |
+| Local dev orchestration | pre-commit (runs fmt/validate/tflint/terraform-docs/trivy/checkov/gitleaks before every commit) |
 
 ## 🎯 SRE principles applied to every scenario
 

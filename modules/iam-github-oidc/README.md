@@ -20,6 +20,10 @@ See `variables.tf`. Key ones: `github_org`, `github_repo`, `allowed_ref`, `role_
 
 Create two roles in practice: a narrow-permission `plan` role for PR checks and a broader `apply` role restricted to `allowed_ref = "refs/heads/main"`. Don't reuse one role for both.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_iam_role.this`에 `precondition`을 달아, `allowed_ref`가 `"*"`이거나 `refs/`로 시작하는 실제 git ref인지 검증한다 — `"main"`처럼 브랜치 이름만 넣는 실수를 막는다(GitHub OIDC의 실제 `sub` 클레임은 항상 `refs/heads/main` 형태라 브랜치 이름만으론 절대 매치되지 않는다).
+
 ## 공식문서
 
 - [IAM: OIDC 자격증명 공급자 생성](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html)

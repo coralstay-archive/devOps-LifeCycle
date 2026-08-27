@@ -14,6 +14,10 @@ Auto Scaling Group (this is a single fixed instance, not a fleet), additional EB
 
 `key_name` defaults to `null`. Prefer **SSM Session Manager** (via an instance profile with `AmazonSSMManagedInstanceCore`) over SSH key pairs — no open port 22, no key distribution problem, and every session is logged in CloudTrail.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_instance.this`에 `precondition`을 달아, `root_volume_size`가 8GB 이상인지 검증한다(Amazon Linux 2023의 최소 루트 볼륨 크기).
+
 ## 공식문서
 
 - [Amazon EC2 사용 설명서](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html)

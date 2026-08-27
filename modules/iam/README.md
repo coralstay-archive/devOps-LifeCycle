@@ -22,6 +22,10 @@ Implemented (minimal).
 
 Federated/OIDC trust (see `iam-github-oidc` instead), permission boundaries, resource-based policy conditions beyond the basic `sts:AssumeRole` trust statement.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_iam_role.this`에 `precondition`을 달아, `assume_role_services`가 최소 1개는 있는지 검증한다 — 아무도 assume 못 하는 역할은 항상 설정 실수다.
+
 ## 공식문서
 
 - [IAM 사용 설명서](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)

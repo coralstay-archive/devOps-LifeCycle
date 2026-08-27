@@ -1,4 +1,14 @@
-mock_provider "aws" {}
+# override_resource gives aws_s3_bucket.this.arn a realistic value — the mock
+# would otherwise generate a schema-valid-but-fake string that trips the
+# module's own bucket_arn output precondition (see outputs.tf).
+mock_provider "aws" {
+  override_resource {
+    target = aws_s3_bucket.this
+    values = {
+      arn = "arn:aws:s3:::test-bucket-12345"
+    }
+  }
+}
 
 run "defaults_are_versioned_and_fully_blocked_from_public_access" {
   variables {

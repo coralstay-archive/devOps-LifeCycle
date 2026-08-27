@@ -12,11 +12,11 @@
 
 | | 모듈 | 핵심 개념 | 학습 포인트 |
 |---|---|---|---|
-| ⬜ | `vpc` | 네트워크 격리 단위 | CIDR 설계, public/private 서브넷 계층, AZ당 NAT 비용/이중화 트레이드오프, VPC 엔드포인트, Flow Logs |
-| ⬜ | `s3-bucket` | 객체 스토리지 | 버저닝+수명주기, SSE-S3 vs SSE-KMS, 버킷 정책 vs ACL, 복제, 액세스 로깅 |
-| ⬜ | `iam-github-oidc` | CI 자격증명 연합 | OIDC 연합 원리, `sts:AssumeRoleWithWebIdentity`, 신뢰정책의 `sub`/`aud` 조건, plan/apply 역할 분리 이유 |
-| ⬜ | `iam` | 범용 IAM 역할 | 신뢰정책(trust policy) vs 권한정책(permission policy) 구분, managed vs inline policy 트레이드오프, 최소권한 원칙 |
-| ⬜ | `ec2` | 원시 가상머신 | IMDSv2가 막는 SSRF 공격 경로, SSH 키 대신 SSM Session Manager를 쓰는 이유, 언제 EC2 대신 ECS/EKS를 써야 하는지 |
+| ⬜ | `vpc` | 네트워크 격리 단위 | CIDR 설계, public/private 서브넷 계층, AZ당 NAT 비용/이중화 트레이드오프, VPC 엔드포인트, Flow Logs, one subnet per AZ 불변식을 precondition으로 표현하기 |
+| ⬜ | `s3-bucket` | 객체 스토리지 | 버저닝+수명주기, SSE-S3 vs SSE-KMS, 버킷 정책 vs ACL, 복제, 액세스 로깅, 출력값 precondition, mock_provider의 override_resource 필요성 |
+| ⬜ | `iam-github-oidc` | CI 자격증명 연합 | OIDC 연합 원리, `sts:AssumeRoleWithWebIdentity`, 신뢰정책의 `sub`/`aud` 조건, plan/apply 역할 분리 이유, allowed_ref 형식을 precondition으로 강제하기 |
+| ⬜ | `iam` | 범용 IAM 역할 | 신뢰정책(trust policy) vs 권한정책(permission policy) 구분, managed vs inline policy 트레이드오프, 최소권한 원칙, assume_role_services 최소 1개 precondition |
+| ⬜ | `ec2` | 원시 가상머신 | IMDSv2가 막는 SSRF 공격 경로, SSH 키 대신 SSM Session Manager를 쓰는 이유, 언제 EC2 대신 ECS/EKS를 써야 하는지, root_volume_size 최소값 precondition |
 
 ### 컴퓨트/네트워크
 

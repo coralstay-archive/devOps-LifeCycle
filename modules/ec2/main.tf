@@ -31,4 +31,11 @@ resource "aws_instance" "this" {
   }
 
   tags = merge(var.tags, { Name = var.name })
+
+  lifecycle {
+    precondition {
+      condition     = var.root_volume_size >= 8
+      error_message = "root_volume_size must be at least 8 GB (Amazon Linux 2023's minimum root volume size)."
+    }
+  }
 }

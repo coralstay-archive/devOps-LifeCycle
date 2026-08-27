@@ -11,6 +11,11 @@ output "public_subnet_ids" {
 output "private_subnet_ids" {
   description = "IDs of private subnets, one per AZ"
   value       = aws_subnet.private[*].id
+
+  precondition {
+    condition     = length(aws_subnet.private) == length(var.availability_zones)
+    error_message = "Expected exactly one private subnet per availability zone."
+  }
 }
 
 output "private_route_table_ids" {

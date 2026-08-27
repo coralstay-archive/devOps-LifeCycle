@@ -18,6 +18,10 @@ See `variables.tf`. Key ones: `name`, `cidr_block`, `availability_zones`, `enabl
 
 VPC endpoints (S3/ECR gateway/interface endpoints), flow logs, IPv6. Add when a scenario needs them.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`private_subnet_ids` 출력에 `precondition`을 달아, private 서브넷 개수가 항상 AZ 개수와 정확히 일치하는지 매 plan/apply마다 검증한다 (TLA+ 같은 별도 형식검증 도구 대신 Terraform 자체 기능으로 불변식을 표현한 예시 — `terraform test`가 "배포 전 한 번" 검증한다면, 이건 "매 적용마다" 검증한다).
+
 ## 공식문서
 
 - [Amazon VPC 사용 설명서](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)

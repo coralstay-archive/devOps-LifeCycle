@@ -18,6 +18,10 @@ See `variables.tf`. Key ones: `bucket_name`, `versioning_enabled`, `force_destro
 
 Lifecycle rules, replication, access logging, KMS (currently SSE-S3/AES256, not SSE-KMS). Add when a scenario needs them.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`bucket_arn` 출력에 `precondition`을 달아, 값이 항상 유효한 S3 ARN 형태(`arn:aws:s3:::`로 시작)인지 검증한다. (참고: `terraform test`의 mock_provider는 이 값을 가짜 문자열로 대체하므로, 테스트 파일에서 `override_resource`로 실제 ARN 형태 값을 지정해줘야 한다 — `tests/s3-bucket.tftest.hcl` 참고.)
+
 ## 공식문서
 
 - [Amazon S3 사용 설명서](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)
