@@ -210,10 +210,13 @@ All 30 are **composed** — module calls wired together, `terraform validate` pa
 
 `specs/` has a [TLA+](https://lamport.azurewebsites.net/tla/tla.html) spec + TLC model-checker config for **every one of the 30 scenarios**, modeling *runtime* behavior that `precondition`/`postcondition` can't reach (those only see one `plan`/`apply` snapshot). Each spec is small on purpose: a handful of state variables and one or two properties that capture that scenario's actual interesting risk — e.g. Lambda concurrency limits (`serverless-api`), SQS at-least-once + idempotency (`event-driven-microservices`), DMS Full Load → CDC ordering (`cdc-pipeline`), asynchronous multi-region replication (`multi-region-active-active`).
 
-TLC found two real bugs this way, not just style nits:
+TLC found real bugs this way, not just style nits — including a bug *in a bug fix*:
 
 - **`serverless-api`**: the first cut let `warmInstances` grow past `MaxConcurrency` — TLC's counter-example caught it immediately.
-- **`observability-only-baseline`**: a naive liveness claim ("burning eventually fires the alarm") had a flapping counter-example TLC found; the fix was correcting the property to require *sustained* burning, which also matches how CloudWatch's evaluation-period alarms actually behave.
+- **`observability-only-baseline`**: a naive liveness claim ("burning eventually fires the alarm") had a flapping counter-example TLC found; the fix was correcting the property to require *sustained* burning — except the first rewrite of that fix (`[]burning => <>Firing`) was itself **vacuously true** (`burning` starts `FALSE`, so `[]burning` is false at t=0 for every behavior, making the whole implication trivially true regardless of what the spec actually does). The real fix is `(<>[]burning) => (<>Firing)`, confirmed non-vacuous by checking it holds *with* fairness and fails *without* it.
+- **`ml-training-pipeline`**: the same vacuous-property mistake, found by auditing every `PROPERTY` in the repo after the bug above — `(state = "Completed") => [](state = "Completed")` without an outer `[]` is vacuously true the same way. Confirmed by injecting a deliberate `Completed -> InProgress` bug into `Next` and watching TLC still report "No error" until the outer `[]` was added.
+
+The lesson generalizes: `"No error has been found"` only means something if the property was checked against a real counter-example first. All 4 temporal `PROPERTY` declarations in the repo were audited this way — the other 2 (`multi-region-active-active`, `pub-sub-fanout`) use the built-in `~>` leads-to operator, which doesn't have this trap, and both were confirmed to actually fail without their fairness conditions.
 
 See [`specs/README.md`](specs/README.md) for the tool setup (`tla2tools.jar` is downloaded, not vendored) and how to run TLC yourself. Why TLA+ lives at the scenario scope and not the module scope: [`decision-2`](backlog/decisions) vs [`decision-3`](backlog/decisions).
 

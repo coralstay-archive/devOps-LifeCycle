@@ -42,10 +42,22 @@ java -jar ../../.tla-tools/tla2tools.jar -config spec.cfg spec.tla
 
 `Model checking completed. No error has been found.`이 나오면 그 스펙에 정의된
 모든 불변식(INVARIANT)/속성(PROPERTY)이 TLC가 탐색한 전체 상태 공간에서 성립한다는
-뜻이다. TLC가 실제로 반례를 찾아낸 사례는 `serverless-api`(동시성 한도를 넘는
+뜻 — **이지만, "No error"만 보고 안심하면 안 된다는 것도 이 저장소가 직접 겪은
+교훈이다.** TLC가 실제로 반례를 찾아낸 사례는 `serverless-api`(동시성 한도를 넘는
 `warmInstances` 버그)와 `observability-only-baseline`(naive한 활성 속성이 두 번
 연속으로 틀렸던 사례 — 처음엔 flapping을 못 잡았고, 고친 버전은 공허하게 항상
-참이 되는 죽은 속성이었다) — 두 스토리 설명에 그 과정이 남아있다.
+참이 되는 죽은 속성이었다)다. 그리고 `ml-training-pipeline`은 "No error"가
+**공허한(vacuous) 속성** 때문에 나온 거짓 안심이었던 세 번째 사례다 —
+`(state = "Completed") => [](state = "Completed")`처럼 바깥쪽 `[]` 없이 쓴
+안정성(stability) 속성은, Init에서 state가 항상 "Completed"가 아닌 값으로
+시작하는 한 t=0에서 이미 거짓이라 전체 behavior에서 공허하게 항상 참이 되어버린다
+— `Completed → InProgress`로 되돌아가는 명백한 버그를 넣어도 TLC가 "No error"라고
+답한다는 걸 이 저장소에서 실제로 확인했고, 올바른 관용구인
+`[](state = "Completed" => [](state = "Completed"))`(바깥에 `[]`를 한 번 더
+씌워 behavior의 매 시점마다 검사)로 고쳐서야 실제로 검증되는 속성이 됐다. 세
+스토리(`backlog task list -m "Formal Specifications (TLA+)"`에서 확인 가능)
+설명에 그 과정이 전부 남아있다 — TLA+의 진짜 함정은 "TLC를 돌렸다"가 아니라
+"그 속성이 애초에 뭔가를 검증하고 있었는가"라는 것.
 
 ## 학습 백로그
 

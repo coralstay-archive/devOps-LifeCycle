@@ -39,8 +39,18 @@ TypeInvariant == state \in States
 \* 이게 이 스펙의 핵심: Completed/Failed는 최종 상태 — 이 상태에서 나가는
 \* 전이가 Next에 없으므로, 한 번 확정되면 영원히 그 상태로 남는다는 것을
 \* 별도 증명 없이 Next의 구조 자체가 보장한다.
+\*
+\* 주의: `(state = "Completed") => [](state = "Completed")`처럼 바깥쪽 []
+\* 없이 쓰면, Init에서 state가 항상 "InProgress"로 시작하는 한 이 조건은
+\* t=0 시점에서 이미 거짓("Completed" 아님)이라 전체 behavior에서 공허하게
+\* 항상 참이 되어버린다(observability-only-baseline에서 겪은 것과 같은
+\* 종류의 버그) — Completed에서 다시 InProgress로 돌아가는 명백한 버그를
+\* Next에 일부러 넣어도 TLC가 "No error"라고 말하는 걸로 직접 확인했다.
+\* 올바른 관용구는 "안정성(stability)"을 behavior의 매 시점마다 검사하도록
+\* 바깥에 []를 한 번 더 씌우는 것 — [](P => []P): "언제든 P가 참이면, 그
+\* 순간부터는 영원히 P"라는 뜻이 되어야 실제로 매 시점에서 검증된다.
 FinalStatesAreStable ==
-    /\ (state = "Completed") => [](state = "Completed")
-    /\ (state = "Failed") => [](state = "Failed")
+    /\ [](state = "Completed" => [](state = "Completed"))
+    /\ [](state = "Failed" => [](state = "Failed"))
 
 ====
