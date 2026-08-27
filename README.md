@@ -228,8 +228,8 @@ This repo doubles as a learning project, tracked with the [Backlog.md](https://g
 **Structure — Epic → Story → Task:**
 
 - **17 milestones** (epics) — one per module tier / scenario category (e.g. "Foundation Modules", "Web/API Scenarios"), plus **Formal Specifications (TLA+)** covering all 30 scenario-level specs
-- **96 parent tasks** (stories), type `spike` — one per module (36), scenario (30), and TLA+ spec (30), each with the official-doc links as `--doc` references, the module/scenario/spec path as `--ref`, and its study points as checkable Acceptance Criteria
-- **96 child tasks**, type `task`/`docs` — one hands-on exercise per story (for TLA+ stories: a concrete follow-up question against the official TLA+ docs, e.g. fairness operators, `EXCEPT` function updates, model values)
+- **96 parent tasks** (stories), type `spike` — one per module (36), scenario (30), and TLA+ spec (30), each conceptual (what to understand, why it matters), left `To Do` for you to actually work through — nothing is pre-completed
+- **126 child tasks**, type `task`/`docs` — module/scenario stories get one hands-on child (type the code out, then run the *actual* toolchain: `terraform validate`, `tflint`, `terraform-docs`, `terraform test` where it exists, `checkov`/`trivy`); TLA+ stories get two: one hands-on child (type `spec.tla` out, run TLC with the exact command, and for specs where TLC caught something during authoring, a guided step to reproduce that exact failure yourself) plus one docs-deepening child (a concrete follow-up question against the official TLA+ docs — fairness operators, `EXCEPT` function updates, model values, leads-to `~>`)
 
 Run `backlog board` for a Kanban view, or `backlog task list --plain -m "Foundation Modules"` to see one epic's stories.
 

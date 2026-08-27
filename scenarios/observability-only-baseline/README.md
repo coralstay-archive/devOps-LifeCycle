@@ -14,3 +14,19 @@ observability
 ## 참고자료
 
 - 관련 모듈 문서: `observability`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_alarm_email"></a> [alarm\_email](#input\_alarm\_email) | n/a | `string` | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"observability-only-baseline"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_alarm_topic_arn"></a> [alarm\_topic\_arn](#output\_alarm\_topic\_arn) | n/a |
+| <a name="output_dashboard_name"></a> [dashboard\_name](#output\_dashboard\_name) | n/a |
+<!-- END_TF_DOCS -->

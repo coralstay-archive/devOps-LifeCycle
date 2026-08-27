@@ -1,10 +1,10 @@
 ---
 id: TASK-69
 title: 'TLA+ 명세: data-lake — Glue Crawler/카탈로그 순서와 NoQueryBeforeCatalog'
-status: Done
+status: To Do
 assignee: []
 created_date: '2026-08-27 06:15'
-updated_date: '2026-08-27 06:15'
+updated_date: '2026-08-27 06:43'
 labels: []
 milestone: m-16
 dependencies: []
@@ -17,11 +17,14 @@ ordinal: 136000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-specs/data-lake/spec.tla — Raw -> Crawling -> Cataloged -> Queried 상태 전이를 명세해, 카탈로그 등록 전에는 Athena 쿼리가 성립할 수 없음을 검증했다.
+specs/data-lake/spec.tla — Raw -> Crawling -> Cataloged -> Queried 상태 전이를 명세해, 카탈로그 등록 전에는 Athena 쿼리가 성립할 수 없음을 TLC로 검증한다.
+
+공식문서를 찾아보며 왜 이런 제약이 실제 AWS 서비스의 동작에 대응하는지 이해한 뒤, 아래 페어링된 실습 태스크에서 직접 타이핑하고 TLC로 검증한다.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 TLC 검증: TypeInvariant, NoQueryBeforeCatalog 위반 없음
-- [x] #2 버그 시나리오(QueryBeforeCatalog)를 주석으로 남겨 대조
+- [ ] #1 이 스펙이 모델링하는 시스템 동작(무엇이 상태 변수고 무엇이 액션인지)을 자신의 말로 설명할 수 있다
+- [ ] #2 TypeInvariant, NoQueryBeforeCatalog, QueryBeforeCatalog이(가) 실제로 어떤 실패 시나리오를 막는지 설명할 수 있다
+- [ ] #3 주석 처리된 QueryBeforeCatalog 액션이 왜 Next에 포함되면 안 되는지, 포함하면 어떤 불변식이 깨질지 설명할 수 있다
 <!-- AC:END -->

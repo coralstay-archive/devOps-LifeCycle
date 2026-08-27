@@ -16,3 +16,19 @@ vpc, ecs-service
 - [EC2 스팟 인스턴스 사용 설명서](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html)
 - [ECS Fargate 용량 공급자(Fargate Spot 포함)](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-capacity-providers.html)
 - 관련 모듈 문서: `vpc`, `ecs-service`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_container_image"></a> [container\_image](#input\_container\_image) | n/a | `string` | `"public.ecr.aws/nginx/nginx:1.27"` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"cost-optimized-spot-fleet"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | n/a |
+<!-- END_TF_DOCS -->

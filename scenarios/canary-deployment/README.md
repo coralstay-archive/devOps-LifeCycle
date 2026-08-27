@@ -15,3 +15,18 @@ vpc, eks, observability
 
 - [Argo Rollouts 공식 문서](https://argoproj.github.io/argo-rollouts/) (AWS 서비스는 아니지만 카나리 배포의 표준 OSS 도구)
 - 관련 모듈 문서: `vpc`, `eks`, `observability`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"canary-deployment"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_cluster_endpoint"></a> [cluster\_endpoint](#output\_cluster\_endpoint) | n/a |
+<!-- END_TF_DOCS -->

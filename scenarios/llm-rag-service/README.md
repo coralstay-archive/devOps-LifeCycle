@@ -14,3 +14,17 @@ bedrock-opensearch
 ## 참고자료
 
 - 관련 모듈 문서: `bedrock-opensearch`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"llm-rag-service"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_collection_endpoint"></a> [collection\_endpoint](#output\_collection\_endpoint) | n/a |
+<!-- END_TF_DOCS -->

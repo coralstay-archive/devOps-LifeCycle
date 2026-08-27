@@ -17,3 +17,24 @@ vpc (x2, 리전별), route53
 
 - [AWS Prescriptive Guidance: Multi-Region Fundamentals](https://docs.aws.amazon.com/prescriptive-guidance/latest/aws-multi-region-fundamentals/)
 - 관련 모듈 문서: `vpc`, `route53`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Real domain you own — no sensible default | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"multi-region-active-active"` | no |
+| <a name="input_primary_azs"></a> [primary\_azs](#input\_primary\_azs) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | n/a | `string` | `"ap-northeast-2"` | no |
+| <a name="input_secondary_azs"></a> [secondary\_azs](#input\_secondary\_azs) | n/a | `list(string)` | <pre>[<br/>  "us-east-1a",<br/>  "us-east-1b"<br/>]</pre> | no |
+| <a name="input_secondary_region"></a> [secondary\_region](#input\_secondary\_region) | n/a | `string` | `"us-east-1"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_primary_vpc_id"></a> [primary\_vpc\_id](#output\_primary\_vpc\_id) | n/a |
+| <a name="output_secondary_vpc_id"></a> [secondary\_vpc\_id](#output\_secondary\_vpc\_id) | n/a |
+| <a name="output_zone_id"></a> [zone\_id](#output\_zone\_id) | n/a |
+<!-- END_TF_DOCS -->

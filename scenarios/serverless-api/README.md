@@ -15,3 +15,17 @@ dynamodb, lambda, api-gateway
 
 - [AWS 백서: Serverless Multi-Tier Architectures with API Gateway and Lambda](https://docs.aws.amazon.com/whitepapers/latest/serverless-multi-tier-architectures-api-gateway-lambda/welcome.html)
 - 관련 모듈 문서: `lambda`, `dynamodb`, `api-gateway`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"serverless-api"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_api_endpoint"></a> [api\_endpoint](#output\_api\_endpoint) | n/a |
+<!-- END_TF_DOCS -->

@@ -14,3 +14,17 @@ organizations-landing-zone
 ## 참고자료
 
 - 관련 모듈 문서: `organizations-landing-zone`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | n/a | `list(string)` | <pre>[<br/>  "Security",<br/>  "Workloads"<br/>]</pre> | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_ou_ids"></a> [ou\_ids](#output\_ou\_ids) | n/a |
+<!-- END_TF_DOCS -->

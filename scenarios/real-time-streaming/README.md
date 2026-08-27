@@ -14,3 +14,18 @@ vpc, msk-kafka, observability
 ## 참고자료
 
 - 관련 모듈 문서: `vpc`, `msk-kafka`, `observability` (컨슈머 애플리케이션 설계는 msk-kafka 모듈 문서의 MSK 개발자 안내서 참고)
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"real-time-streaming"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_bootstrap_brokers_tls"></a> [bootstrap\_brokers\_tls](#output\_bootstrap\_brokers\_tls) | n/a |
+<!-- END_TF_DOCS -->

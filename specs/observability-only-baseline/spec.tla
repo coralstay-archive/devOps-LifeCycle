@@ -72,6 +72,15 @@ TypeInvariant ==
 \* 영원히 조용한" 상황은 없다는 보장. (순간적인 burning은 평가 주기를 못
 \* 넘겨 알람이 안 울릴 수 있다는 게 오히려 CloudWatch의 정상 동작이라서,
 \* 이 속성의 전제를 "always burning"으로 잡았다.)
-AlwaysBurningEventuallyFires == []burning => <>(alarmState = "Firing")
+\*
+\* 주의: 바로 위 설명대로 하려면 `[]burning`(behavior 전체에 걸쳐 항상
+\* burning)이 아니라 `<>[]burning`(어느 시점부터는 계속 burning)이어야
+\* 한다 — burning은 Init에서 FALSE로 시작하므로 `[]burning`은 모든 behavior
+\*에서 이미 t=0에 거짓이 되어, 이 속성 전체가 공허하게(vacuously) 항상 참이
+\* 되어버린다(즉 아무것도 검증하지 않는 죽은 속성이 된다). `<>[]burning`을
+\* 쓰면 "지금 당장은 아니어도 어느 시점 이후로 burning이 계속된다면"이라는
+\* 원래 의도가 정확히 표현되고, 실제로 WF_vars(AlarmFires)를 지웠을 때
+\* TLC가 반례를 다시 찾아낸다는 것으로 이 속성이 살아있음을 확인했다.
+AlwaysBurningEventuallyFires == (<>[]burning) => (<>(alarmState = "Firing"))
 
 ====

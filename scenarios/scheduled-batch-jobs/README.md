@@ -14,3 +14,19 @@ lambda, eventbridge
 ## 참고자료
 
 - 관련 모듈 문서: `lambda`, `eventbridge`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"scheduled-batch-jobs"` | no |
+| <a name="input_schedule_expression"></a> [schedule\_expression](#input\_schedule\_expression) | n/a | `string` | `"rate(1 hour)"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_function_name"></a> [function\_name](#output\_function\_name) | n/a |
+| <a name="output_rule_arn"></a> [rule\_arn](#output\_rule\_arn) | n/a |
+<!-- END_TF_DOCS -->

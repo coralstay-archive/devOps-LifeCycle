@@ -14,3 +14,18 @@ s3-bucket, glue, step-functions
 ## 참고자료
 
 - 관련 모듈 문서: `s3-bucket`, `glue`, `step-functions`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"etl-batch"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_glue_database_name"></a> [glue\_database\_name](#output\_glue\_database\_name) | n/a |
+| <a name="output_state_machine_arn"></a> [state\_machine\_arn](#output\_state\_machine\_arn) | n/a |
+<!-- END_TF_DOCS -->

@@ -76,7 +76,7 @@ jobs:
         uses: terraform-docs/gh-actions@v1
         with:
           config-file: .terraform-docs.yml
-          working-dir: modules/*,bootstrap,live/example-dev
+          working-dir: modules/*,scenarios/*,bootstrap,live/example-dev
           output-check: true
           fail-on-diff: true
 

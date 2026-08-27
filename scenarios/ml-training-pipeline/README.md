@@ -14,3 +14,18 @@ s3-bucket, step-functions
 ## 참고자료
 
 - 관련 모듈 문서: `s3-bucket`, `step-functions` (`sagemaker` 모듈 문서의 SageMaker 개발자 안내서도 참고)
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"ml-training-pipeline"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_artifacts_bucket_id"></a> [artifacts\_bucket\_id](#output\_artifacts\_bucket\_id) | n/a |
+| <a name="output_state_machine_arn"></a> [state\_machine\_arn](#output\_state\_machine\_arn) | n/a |
+<!-- END_TF_DOCS -->

@@ -14,3 +14,18 @@ sns-sqs, lambda
 ## 참고자료
 
 - 관련 모듈 문서: `sns-sqs`, `lambda`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"event-driven-microservices"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_consumer_function_name"></a> [consumer\_function\_name](#output\_consumer\_function\_name) | n/a |
+| <a name="output_topic_arn"></a> [topic\_arn](#output\_topic\_arn) | n/a |
+<!-- END_TF_DOCS -->

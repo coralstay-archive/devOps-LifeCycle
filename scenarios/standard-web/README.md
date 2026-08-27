@@ -19,3 +19,21 @@ vpc, ecr, alb, ecs-service, rds-postgres, observability
 
 - [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html)
 - 관련 모듈 문서: `vpc`, `ecr`, `alb`, `ecs-service`, `rds-postgres`, `observability`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_container_image"></a> [container\_image](#input\_container\_image) | Placeholder public image so this plans/applies out of the box. Swap for your app's image in modules.ecr's repository once you have one. | `string` | `"public.ecr.aws/nginx/nginx:1.27"` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"standard-web"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | n/a |
+| <a name="output_ecr_repository_url"></a> [ecr\_repository\_url](#output\_ecr\_repository\_url) | n/a |
+| <a name="output_rds_endpoint"></a> [rds\_endpoint](#output\_rds\_endpoint) | n/a |
+<!-- END_TF_DOCS -->

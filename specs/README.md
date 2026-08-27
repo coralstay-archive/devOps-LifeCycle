@@ -43,15 +43,23 @@ java -jar ../../.tla-tools/tla2tools.jar -config spec.cfg spec.tla
 `Model checking completed. No error has been found.`이 나오면 그 스펙에 정의된
 모든 불변식(INVARIANT)/속성(PROPERTY)이 TLC가 탐색한 전체 상태 공간에서 성립한다는
 뜻이다. TLC가 실제로 반례를 찾아낸 사례는 `serverless-api`(동시성 한도를 넘는
-`warmInstances` 버그)와 `observability-only-baseline`(공정성 가정이 flapping을
-못 잡는 문제) — 두 스토리(`backlog task board`에서 확인 가능) 설명에 과정이 남아있다.
+`warmInstances` 버그)와 `observability-only-baseline`(naive한 활성 속성이 두 번
+연속으로 틀렸던 사례 — 처음엔 flapping을 못 잡았고, 고친 버전은 공허하게 항상
+참이 되는 죽은 속성이었다) — 두 스토리 설명에 그 과정이 남아있다.
 
 ## 학습 백로그
 
-이 30개 스펙을 만드는 과정 자체가 학습 프로젝트다. `backlog.md` CLI의
-**Formal Specifications (TLA+)**(m-16) 마일스톤 아래 시나리오당 스토리 태스크(무엇을
-모델링했고 어떤 속성을 검증했는지) + 학습 자식 태스크(공식 문서를 찾아 더 깊이
-파고들 구체적인 질문)가 등록되어 있다:
+이 30개 스펙을 만드는 과정 자체가 학습 프로젝트다. 지금 이 저장소에 있는 30개
+스펙은 이미 완성되어 검증까지 끝난 "정답"이지만, 학습 백로그의 각 스토리/태스크는
+**전부 `To Do` 상태로 남아있다** — 직접 타이핑하고, 도구를 돌리고, 공식문서를
+찾아보는 과정 자체가 학습이라는 이 저장소의 원칙 때문이다. `backlog.md` CLI의
+**Formal Specifications (TLA+)**(m-16) 마일스톤 아래 시나리오당:
+
+- 스토리 태스크 — 무엇을 모델링했고 어떤 속성이 왜 중요한지 개념적으로 이해했는지 확인하는 체크리스트
+- 실습 자식 태스크 — `spec.tla`를 직접 타이핑하고 TLC를 실행해 검증하는 태스크. TLC가 저작 중 실제로 뭔가를 잡아낸 스펙(`serverless-api`, `observability-only-baseline`, `multi-tenant-saas`)이나 일부러 주석 처리해둔 "버그" 액션이 있는 스펙은 그 반례를 직접 재현해보는 단계까지 포함
+- 학습 자식 태스크 — 공식 문서를 찾아 더 깊이 파고들 구체적인 질문
+
+이 등록되어 있다:
 
 ```bash
 backlog task list -m "Formal Specifications (TLA+)"

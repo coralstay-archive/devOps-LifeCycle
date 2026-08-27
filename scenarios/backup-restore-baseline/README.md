@@ -15,3 +15,19 @@ vpc, rds-postgres, aws-backup
 
 - [AWS Backup 개발자 안내서](https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html)
 - 관련 모듈 문서: `vpc`, `rds-postgres`, `aws-backup`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"backup-restore-baseline"` | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_backup_plan_id"></a> [backup\_plan\_id](#output\_backup\_plan\_id) | n/a |
+| <a name="output_backup_vault_name"></a> [backup\_vault\_name](#output\_backup\_vault\_name) | n/a |
+<!-- END_TF_DOCS -->

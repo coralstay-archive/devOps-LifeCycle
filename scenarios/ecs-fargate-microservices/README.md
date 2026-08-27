@@ -14,3 +14,20 @@ vpc, alb (서비스당 1개), ecs-service (서비스당 1개)
 ## 참고자료
 
 - 관련 모듈 문서: `vpc`, `alb`, `ecs-service`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_container_image"></a> [container\_image](#input\_container\_image) | Placeholder image shared by all services for a quick smoke test | `string` | `"public.ecr.aws/nginx/nginx:1.27"` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"ecs-fargate-microservices"` | no |
+| <a name="input_services"></a> [services](#input\_services) | One ALB + ECS service pair per entry | `list(string)` | <pre>[<br/>  "service-a",<br/>  "service-b"<br/>]</pre> | no |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_alb_dns_names"></a> [alb\_dns\_names](#output\_alb\_dns\_names) | n/a |
+<!-- END_TF_DOCS -->

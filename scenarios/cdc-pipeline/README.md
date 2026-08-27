@@ -17,3 +17,19 @@ vpc, rds-postgres, msk-kafka, dms
 
 - [AWS DMS 모범 사례 (CDC 포함)](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_BestPractices.html)
 - 관련 모듈 문서: `vpc`, `rds-postgres`, `msk-kafka`, `dms`
+
+<!-- BEGIN_TF_DOCS -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+| ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"cdc-pipeline"` | no |
+| <a name="input_source_db_password"></a> [source\_db\_password](#input\_source\_db\_password) | Password for a dedicated DMS read user on the source DB (not the RDS master password, which is Secrets-Manager-managed and not exposed as plaintext) | `string` | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+| ---- | ----------- |
+| <a name="output_replication_task_arn"></a> [replication\_task\_arn](#output\_replication\_task\_arn) | n/a |
+<!-- END_TF_DOCS -->
