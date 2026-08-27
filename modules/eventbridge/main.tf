@@ -2,6 +2,13 @@ resource "aws_cloudwatch_event_rule" "this" {
   name                = var.name
   schedule_expression = var.schedule_expression
   event_pattern       = var.event_pattern
+
+  lifecycle {
+    precondition {
+      condition     = (var.schedule_expression != null) != (var.event_pattern != null)
+      error_message = "Set exactly one of schedule_expression or event_pattern, not both and not neither."
+    }
+  }
 }
 
 resource "aws_cloudwatch_event_target" "this" {

@@ -6,6 +6,10 @@ A single secret. For RDS master passwords, prefer `rds-postgres`'s built-in `man
 
 Implemented (minimal). No rotation configured — add `aws_secretsmanager_secret_rotation` when a secret needs it.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_secretsmanager_secret.this`에 `postcondition`을 달아, 생성된 ARN이 올바른 Secrets Manager ARN 형태인지 검증한다.
+
 ## 공식문서
 
 - [AWS Secrets Manager 사용 설명서](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html)

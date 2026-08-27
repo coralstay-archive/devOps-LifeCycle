@@ -41,6 +41,13 @@ resource "aws_sagemaker_endpoint_configuration" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.initial_instance_count >= 1
+      error_message = "initial_instance_count must be at least 1."
+    }
+  }
 }
 
 resource "aws_sagemaker_endpoint" "this" {

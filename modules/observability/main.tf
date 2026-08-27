@@ -1,6 +1,13 @@
 resource "aws_sns_topic" "alarms" {
   name = "${var.name}-alarms"
   tags = var.tags
+
+  lifecycle {
+    postcondition {
+      condition     = startswith(self.arn, "arn:aws:sns:")
+      error_message = "alarms topic ARN must be a well-formed SNS ARN."
+    }
+  }
 }
 
 resource "aws_sns_topic_subscription" "email" {

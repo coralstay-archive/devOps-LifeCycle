@@ -34,6 +34,13 @@ resource "aws_opensearchserverless_collection" "this" {
     aws_opensearchserverless_security_policy.encryption,
     aws_opensearchserverless_security_policy.network,
   ]
+
+  lifecycle {
+    precondition {
+      condition     = can(regex("^[a-z][a-z0-9-]{2,31}$", var.name))
+      error_message = "name must be 3-32 chars, lowercase, starting with a letter — OpenSearch Serverless collection naming rule."
+    }
+  }
 }
 
 resource "aws_iam_role" "bedrock" {

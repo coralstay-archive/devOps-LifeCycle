@@ -40,5 +40,12 @@ resource "aws_lambda_function" "this" {
 
   tags = var.tags
 
+  lifecycle {
+    precondition {
+      condition     = var.memory_size >= 128 && var.memory_size <= 10240
+      error_message = "memory_size must be between 128 and 10240 MB — this is a Lambda API requirement, not just a style preference."
+    }
+  }
+
   depends_on = [aws_cloudwatch_log_group.this]
 }

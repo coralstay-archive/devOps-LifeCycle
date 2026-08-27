@@ -6,6 +6,10 @@ Web ACL with the AWS Managed Common Rule Set, associated with an ALB by default 
 
 Implemented (minimal): one managed rule group.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_wafv2_web_acl.this`에 `precondition`을 달아, `scope`가 REGIONAL 또는 CLOUDFRONT인지 검증한다 — WAFv2의 유일한 유효값.
+
 ## 공식문서
 
 - [AWS WAF 개발자 안내서](https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html)

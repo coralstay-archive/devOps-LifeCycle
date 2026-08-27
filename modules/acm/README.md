@@ -6,6 +6,10 @@ DNS-validated ACM certificate, using a Route53 zone (pass `zone_id` from the `ro
 
 Implemented (minimal).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_acm_certificate.this`에 `precondition`을 달아, `subject_alternative_names`에 `domain_name`이 중복으로 들어가지 않았는지 검증한다.
+
 ## 공식문서
 
 - [AWS Certificate Manager 개요](https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html)

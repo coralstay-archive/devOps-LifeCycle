@@ -5,6 +5,11 @@ resource "aws_acm_certificate" "this" {
 
   lifecycle {
     create_before_destroy = true
+
+    precondition {
+      condition     = !contains(var.subject_alternative_names, var.domain_name)
+      error_message = "subject_alternative_names should not repeat domain_name — it's already covered as the primary name."
+    }
   }
 }
 

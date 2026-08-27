@@ -3,6 +3,13 @@ resource "aws_vpc_endpoint" "s3" {
   service_name    = "com.amazonaws.${var.region}.s3"
   route_table_ids = var.route_table_ids
   tags            = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = length(var.route_table_ids) > 0
+      error_message = "route_table_ids must not be empty — a gateway endpoint attached to no route tables is unreachable."
+    }
+  }
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {

@@ -36,6 +36,13 @@ resource "aws_lb" "this" {
   security_groups    = [aws_security_group.this.id]
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = length(var.public_subnet_ids) >= 2
+      error_message = "public_subnet_ids must span at least 2 AZs — this is an ALB API requirement, not just a style preference."
+    }
+  }
 }
 
 resource "aws_lb_target_group" "this" {

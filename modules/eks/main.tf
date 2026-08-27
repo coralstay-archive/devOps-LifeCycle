@@ -73,6 +73,13 @@ resource "aws_eks_node_group" "default" {
 
   tags = var.tags
 
+  lifecycle {
+    precondition {
+      condition     = var.node_min_size <= var.node_desired_size && var.node_desired_size <= var.node_max_size
+      error_message = "Scaling bounds must satisfy node_min_size <= node_desired_size <= node_max_size."
+    }
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.node_worker,
     aws_iam_role_policy_attachment.node_cni,

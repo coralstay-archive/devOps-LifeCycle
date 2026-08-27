@@ -10,6 +10,10 @@ Implemented (minimal). Cluster Mode (sharding) intentionally left out — this i
 
 See `variables.tf` / `outputs.tf`.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_elasticache_replication_group.this`에 `precondition`을 달아, `num_cache_nodes`가 1 이상인지 검증한다.
+
 ## 공식문서
 
 - [ElastiCache for Redis 사용 설명서](https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/WhatIs.html)

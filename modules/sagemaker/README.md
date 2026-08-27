@@ -10,6 +10,10 @@ Implemented (minimal): inference endpoint only.
 
 Training pipelines (`ml-training-pipeline`) aren't a persistent Terraform resource in the usual sense — SageMaker training jobs are typically kicked off via the SDK/`step-functions`, not declared as long-lived infra. Orchestrate training with the `step-functions` module instead of expecting a Terraform resource here.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_sagemaker_endpoint_configuration.this`에 `precondition`을 달아, `initial_instance_count`가 1 이상인지 검증한다.
+
 ## 공식문서
 
 - [Amazon SageMaker 개발자 안내서](https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html)

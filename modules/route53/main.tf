@@ -20,4 +20,11 @@ resource "aws_route53_record" "this" {
   type    = each.value.type
   ttl     = each.value.ttl
   records = each.value.values
+
+  lifecycle {
+    precondition {
+      condition     = each.value.ttl > 0
+      error_message = "Record \"${each.key}\" has ttl <= 0 — TTL must be a positive number of seconds."
+    }
+  }
 }

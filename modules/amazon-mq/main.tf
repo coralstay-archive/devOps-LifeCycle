@@ -36,4 +36,11 @@ resource "aws_mq_broker" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = contains(["RabbitMQ", "ActiveMQ"], var.engine_type)
+      error_message = "engine_type must be RabbitMQ or ActiveMQ — Amazon MQ's only supported engines."
+    }
+  }
 }

@@ -6,6 +6,10 @@ Hosted zone (new or existing) + a map of DNS records.
 
 Implemented (minimal).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_route53_record.this`에 `precondition`을 달아, 각 레코드의 `ttl`이 양수인지 검증한다.
+
 ## 공식문서
 
 - [Amazon Route 53 개발자 안내서](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html)

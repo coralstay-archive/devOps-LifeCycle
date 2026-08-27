@@ -4,6 +4,13 @@ resource "aws_kms_key" "this" {
   enable_key_rotation     = true
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.deletion_window_in_days >= 7 && var.deletion_window_in_days <= 30
+      error_message = "deletion_window_in_days must be between 7 and 30 — this is a KMS API requirement, not just a style preference."
+    }
+  }
 }
 
 resource "aws_kms_alias" "this" {

@@ -27,6 +27,10 @@ alarms = {
 
 Prometheus/Grafana (AMP/AMG) for EKS scenarios, error-budget-burn-rate composite alarms. Add when an EKS-based scenario needs them.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_sns_topic.alarms`에 `postcondition`을 달아, 생성된 ARN이 올바른 SNS ARN 형태인지 검증한다.
+
 ## 공식문서
 
 - [Amazon CloudWatch 사용 설명서](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html)

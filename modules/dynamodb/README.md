@@ -6,6 +6,10 @@ Single-table, on-demand billing (no capacity planning needed), point-in-time rec
 
 Implemented (minimal). No range key, no GSIs/LSIs — add when a scenario's access patterns need them.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_dynamodb_table.this`에 `precondition`을 달아, `hash_key_type`이 S/N/B 중 하나인지 검증한다 — DynamoDB의 유일한 유효 속성 타입.
+
 ## 공식문서
 
 - [Amazon DynamoDB 개발자 안내서](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)

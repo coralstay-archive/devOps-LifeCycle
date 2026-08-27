@@ -6,6 +6,10 @@ One workgroup pointed at an S3 results bucket. Query the tables a `glue` crawler
 
 Implemented (minimal).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_athena_workgroup.this`에 `precondition`을 달아, `output_location`이 `s3://`로 시작하는지 검증한다.
+
 ## 공식문서
 
 - [Amazon Athena 사용 설명서](https://docs.aws.amazon.com/athena/latest/ug/what-is.html)

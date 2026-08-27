@@ -42,4 +42,11 @@ resource "aws_cloudfront_distribution" "this" {
     acm_certificate_arn            = var.certificate_arn
     ssl_support_method             = var.certificate_arn == null ? null : "sni-only"
   }
+
+  lifecycle {
+    precondition {
+      condition     = var.certificate_arn == null || length(var.aliases) > 0
+      error_message = "Setting certificate_arn without any aliases makes no sense — a custom cert with no custom domain to serve it on."
+    }
+  }
 }

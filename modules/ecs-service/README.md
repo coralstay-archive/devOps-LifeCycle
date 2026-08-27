@@ -10,6 +10,10 @@ Implemented (minimal). Pair with the `alb` module for `target_group_arn`.
 
 Service auto scaling policy, blue/green (CodeDeploy) — see `codedeploy` module for `scenarios/blue-green-deployment`.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_ecs_service.this`에 `precondition`을 달아, `private_subnet_ids`가 비어있지 않은지 검증한다.
+
 ## 공식문서
 
 - [Amazon ECS 개발자 안내서](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)

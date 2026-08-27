@@ -10,6 +10,10 @@ Implemented (minimal): one source, one target, one task, capturing all tables by
 
 `source_password` is a plain sensitive variable here for simplicity. In practice, read it from the `secrets-manager` module instead of passing it as a bare tfvar.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_dms_endpoint.source`에 `precondition`을 달아, `source_port`가 유효한 TCP 포트 범위(1-65535)인지 검증한다.
+
 ## 공식문서
 
 - [AWS DMS 사용 설명서](https://docs.aws.amazon.com/dms/latest/userguide/)

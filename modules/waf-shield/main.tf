@@ -35,6 +35,13 @@ resource "aws_wafv2_web_acl" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = contains(["REGIONAL", "CLOUDFRONT"], var.scope)
+      error_message = "scope must be REGIONAL or CLOUDFRONT — WAFv2's only valid values."
+    }
+  }
 }
 
 resource "aws_wafv2_web_acl_association" "this" {

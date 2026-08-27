@@ -17,6 +17,13 @@ resource "aws_backup_plan" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.retention_days >= 1
+      error_message = "retention_days must be at least 1."
+    }
+  }
 }
 
 resource "aws_iam_role" "this" {

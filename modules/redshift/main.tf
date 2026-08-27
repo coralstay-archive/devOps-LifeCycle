@@ -40,4 +40,11 @@ resource "aws_redshift_cluster" "this" {
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.cluster_identifier}-final"
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = can(regex("^[a-z][a-z0-9_]*$", var.database_name))
+      error_message = "database_name must start with a lowercase letter and contain only lowercase alphanumerics/underscore — Redshift's database naming rule."
+    }
+  }
 }

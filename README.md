@@ -88,41 +88,53 @@ Extend this pattern as more modules get picked up from the [learning backlog](#-
 
 Everything used in this repo, gathered in one place — this list *is* the syllabus for the [learning backlog](#-learning-backlog): each row is something to actually understand, not just install.
 
-**Core**
+Organized by **scope**, not by "module vs scenario" — nearly every tool here runs identically against both, since a scenario is just modules composed together. The scope that actually differs is *how much has to exist before the tool can run*:
 
-| Purpose | Tool/technique | Blocking in CI? |
-|---|---|:---:|
-| IaC language & runtime | Terraform >= 1.5 (>= 1.11 for `live/*` stacks, see below), HCL, AWS provider `~> 5.0` | — |
-| State backend | S3 (versioned, encrypted) | — |
-| State locking | **S3-native locking** (`use_lockfile = true`, Terraform >= 1.11) — DynamoDB-based locking is upstream-deprecated; `bootstrap/` doesn't create a lock table anymore | — |
+- **Module-scope**: works on one module in isolation, no composition, often no AWS credentials
+- **Composed-stack-scope**: needs a real `terraform plan` of modules wired together (i.e. a `scenarios/*` recipe copied into `live/*`)
 
-**Verification — three different layers, on purpose**
-
-| Layer | Tool/technique | What it checks | Blocking? |
-|---|---|---|:---:|
-| Syntax/type | `terraform validate`, `terraform fmt` | Does the HCL even parse and format correctly | ✅ |
-| Lint | TFLint (+ AWS ruleset) | AWS-specific footguns (deprecated arguments, invalid instance types, etc.) | ✅ |
-| **Runtime invariants** | `precondition`/`postcondition` (`lifecycle` blocks), inline in `vpc`, `s3-bucket`, `iam`, `iam-github-oidc`, `ec2` | "This value must always hold" — checked on **every** plan/apply, not just in test suites. The in-ecosystem alternative to something like TLA+: Terraform modules are declarative resource graphs, not concurrent algorithms, so there's no meaningful state space for a model checker to explore — but the *goal* TLA+ serves (explicit, checked invariants) maps directly onto `precondition`/`postcondition` and `check` blocks | ✅ (fails the apply) |
-| Unit tests | `terraform test` (native, `mock_provider`) — no AWS credentials, runs in seconds | Module behavior across input combinations, offline | ✅ for modules with `tests/` |
-| Security/compliance scan | Trivy (config scan) | Known AWS misconfigurations | ⚠️ non-blocking, see note |
-| Security/compliance scan (2nd opinion) | Checkov | Same category, different detection coverage — a mature IaC stack runs two in parallel | ⚠️ non-blocking, see note |
-| Custom policy-as-code | Conftest (OPA/Rego), `policy/` | *This repo's own* rules, not generic ones (e.g. no public S3 buckets, no matter how a future scenario tries) | `deny` ✅ / `warn` ❌ |
-| Drift detection | scheduled `terraform plan -detailed-exitcode` (driftctl is unmaintained — this is the practical current alternative) | Real infra silently diverging from code | opens a tracking issue, doesn't block PRs |
-
-> **Why Trivy/Checkov are non-blocking here:** this repo's modules are intentionally minimal (see each module's *"Not yet included"* section) — e.g. Redshift isn't KMS-encrypted, SNS/SQS aren't encrypted by default. Both scanners correctly flag these as real findings; they're accepted trade-offs at the scaffold stage, not bugs. They still run and report on every PR for visibility (`continue-on-error`). Flip a specific project to blocking once a scenario graduates from scaffold to a real production workload.
-
-**Docs, cost, and everything else**
+### Core (applies everywhere)
 
 | Purpose | Tool/technique |
 |---|---|
-| Docs | terraform-docs — auto-generates every module's Inputs/Outputs table (`<!-- BEGIN_TF_DOCS -->` block), fails CI on drift |
-| Cost estimation | Infracost — informational PR comment, not blocking |
-| Secret scanning | gitleaks |
-| Load testing | k6 (`tools/loadtest/`) — rehearses traffic spikes against each stack's `SLO.md` thresholds |
+| IaC language & runtime | Terraform >= 1.5 (>= 1.11 for `live/*` stacks — S3-native locking), HCL, AWS provider `~> 5.0` |
+| State backend | S3 (versioned, encrypted) |
+| State locking | **S3-native locking** (`use_lockfile = true`, Terraform >= 1.11) — DynamoDB-based locking is upstream-deprecated; `bootstrap/` doesn't create a lock table anymore |
+| Version control | Git + GitHub (`gh` CLI for repo/PR management) |
 | CI/CD | GitHub Actions (`terraform-ci`, `terraform-apply`, `drift-detect`) |
 | CI credentials | GitHub OIDC federation (`iam-github-oidc`) — no long-lived AWS keys ever hit GitHub |
-| Version control | Git + GitHub (`gh` CLI for repo/PR management) |
-| Local dev orchestration | pre-commit (runs fmt/validate/tflint/terraform-docs/trivy/checkov/gitleaks before every commit) |
+
+### Module-scope verification (one module, no composition needed)
+
+| Tool/technique | What it checks | Blocking in CI? |
+|---|---|:---:|
+| `terraform validate`, `terraform fmt` | Does the HCL even parse and format correctly | ✅ |
+| TFLint (+ AWS ruleset) | AWS-specific footguns (deprecated arguments, invalid instance types, etc.) | ✅ |
+| **`precondition`/`postcondition`** (`lifecycle` blocks) — in **all 36 modules** | "This value must always hold" — checked on **every** plan/apply, not just in test suites. This is the in-ecosystem alternative to something like TLA+: Terraform modules are declarative resource graphs, not concurrent algorithms, so there's no meaningful state space for a model checker to explore — but the *goal* TLA+ serves (explicit, checked invariants) maps directly onto `precondition`/`postcondition` and `check` blocks | ✅ (fails the apply) |
+| `terraform test` (native, `mock_provider`) | Module behavior across input combinations, fully offline, no AWS credentials | ✅ for modules with `tests/` |
+| terraform-docs | Every module's Inputs/Outputs table (`<!-- BEGIN_TF_DOCS -->` block) is real, not stale | ✅ fails on drift |
+| gitleaks | Secrets accidentally committed | ✅ (both pre-commit *and* CI — see note) |
+
+> **Why gitleaks runs in both places:** pre-commit catches it before a commit even happens, but pre-commit only runs if a contributor has it installed. CI is the backstop that catches it regardless — a repo that only scans secrets in pre-commit has a gap for anyone who skips it.
+
+### Composed-stack-scope (needs a real plan of modules wired together)
+
+| Tool/technique | What it checks | Blocking in CI? |
+|---|---|:---:|
+| Trivy (config scan) | Known AWS misconfigurations | ⚠️ non-blocking, see note |
+| Checkov (2nd opinion) | Same category, different detection coverage — a mature IaC stack runs two in parallel | ⚠️ non-blocking, see note |
+| Conftest (OPA/Rego), `policy/` | *This repo's own* rules, not generic ones (e.g. no public S3 buckets, no matter how a future scenario tries) | `deny` ✅ / `warn` ❌ |
+| Infracost | Cost diff — informational PR comment | ❌ not blocking |
+| k6 (`tools/loadtest/`) | Rehearses traffic spikes against each stack's `SLO.md` thresholds | manual, not wired into CI yet |
+| Scheduled `terraform plan -detailed-exitcode` (drift detection) | Real infra silently diverging from code (driftctl is unmaintained — this is the practical current alternative) | opens a tracking issue, doesn't block PRs |
+
+> **Why Trivy/Checkov are non-blocking here:** this repo's modules are intentionally minimal (see each module's *"Not yet included"* section) — e.g. Redshift isn't KMS-encrypted, SNS/SQS aren't encrypted by default. Both scanners correctly flag these as real findings; they're accepted trade-offs at the scaffold stage, not bugs. They still run and report on every PR for visibility (`continue-on-error`). Flip a specific project to blocking once a scenario graduates from scaffold to a real production workload.
+
+### Local dev orchestration
+
+| Tool | Runs |
+|---|---|
+| pre-commit | fmt, validate, tflint, terraform-docs, trivy, checkov, gitleaks — before every commit |
 
 ## 🎯 SRE principles applied to every scenario
 

@@ -1,5 +1,12 @@
 resource "aws_glue_catalog_database" "this" {
   name = var.database_name
+
+  lifecycle {
+    precondition {
+      condition     = can(regex("^[a-z0-9_]+$", var.database_name))
+      error_message = "database_name must be lowercase alphanumeric/underscore only — Glue catalog naming rule (hyphens aren't allowed, unlike most AWS resource names)."
+    }
+  }
 }
 
 resource "aws_iam_role" "crawler" {

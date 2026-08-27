@@ -16,6 +16,10 @@ Implemented (minimal): cluster + TLS encryption in transit, no topics.
 
 MSK Serverless option, SASL/IAM auth, per-topic partition/retention management, auto-scaling storage policy.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_msk_cluster.this`에 `precondition`을 달아, `number_of_broker_nodes`가 서브넷(AZ) 개수의 배수인지 검증한다 — 스타일이 아니라 실제 MSK API 요구사항이다.
+
 ## 공식문서
 
 - [Amazon MSK 개발자 안내서](https://docs.aws.amazon.com/msk/latest/developerguide/what-is-msk.html)

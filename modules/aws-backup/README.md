@@ -6,6 +6,10 @@ Vault + daily plan (05:00 UTC default, 35-day retention default) + a selection c
 
 Implemented (minimal): one schedule/rule. Add tag-based selection (`selection_tag`) instead of explicit ARNs if you'd rather back up "everything tagged X".
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_backup_plan.this`에 `precondition`을 달아, `retention_days`가 1 이상인지 검증한다. (참고: AWS Backup 규칙 자체의 `lifecycle { delete_after = ... }`와 Terraform 메타인수 `lifecycle` 블록이 이름이 같지만 완전히 다른 개념이니 헷갈리지 말 것 — 전자는 리소스 인수, 후자는 이 리소스를 감싸는 Terraform 문법이다.)
+
 ## 공식문서
 
 - [AWS Backup 개발자 안내서](https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html)

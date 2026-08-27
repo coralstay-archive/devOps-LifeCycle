@@ -86,4 +86,11 @@ resource "aws_ecs_service" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = length(var.private_subnet_ids) > 0
+      error_message = "private_subnet_ids must not be empty — ECS cannot place tasks without at least one subnet."
+    }
+  }
 }

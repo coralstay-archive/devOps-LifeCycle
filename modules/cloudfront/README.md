@@ -6,6 +6,10 @@ CDN in front of an S3 origin via Origin Access Control (OAC — the current reco
 
 Implemented (minimal): S3 origin only, no custom error pages, no cache invalidation automation.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_cloudfront_distribution.this`에 `precondition`을 달아, `certificate_arn`을 설정했는데 `aliases`가 비어있는 모순 상태를 막는다.
+
 ## 공식문서
 
 - [Amazon CloudFront 개발자 안내서](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)

@@ -7,6 +7,13 @@ resource "aws_ecr_repository" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.untagged_image_expiry_days >= 1
+      error_message = "untagged_image_expiry_days must be at least 1."
+    }
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "this" {

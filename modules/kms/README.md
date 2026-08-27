@@ -6,6 +6,10 @@ Customer-managed KMS key with automatic annual rotation, plus an alias. Uses AWS
 
 Implemented (minimal).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_kms_key.this`에 `precondition`을 달아, `deletion_window_in_days`가 7~30 범위인지 검증한다 — 실제 KMS API 요구사항.
+
 ## 공식문서
 
 - [AWS KMS 개발자 안내서](https://docs.aws.amazon.com/kms/latest/developerguide/overview.html)

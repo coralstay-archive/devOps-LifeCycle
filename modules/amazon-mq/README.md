@@ -6,6 +6,10 @@ Managed RabbitMQ (default) or ActiveMQ, single-instance deployment. **Only use t
 
 Implemented (minimal): single-instance, no active/standby HA (use `deployment_mode = "ACTIVE_STANDBY_MULTI_AZ"` for that, not yet parameterized here).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_mq_broker.this`에 `precondition`을 달아, `engine_type`이 RabbitMQ 또는 ActiveMQ인지 검증한다 — Amazon MQ가 지원하는 유일한 엔진들.
+
 ## 공식문서
 
 - [Amazon MQ 개발자 안내서](https://docs.aws.amazon.com/amazon-mq/latest/developerguide/welcome.html)

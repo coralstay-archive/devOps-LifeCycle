@@ -14,6 +14,10 @@ See `variables.tf` / `outputs.tf`. Pass in security group IDs (e.g. from `ecs-se
 
 Read replicas, Aurora option, parameter group tuning, cross-region backup. Add when a scenario needs them.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_db_instance.this`에 `precondition`을 달아, `allocated_storage`가 20GB 이상인지 검증한다 (PostgreSQL의 gp2/gp3 최소 스토리지).
+
 ## 공식문서
 
 - [Amazon RDS for PostgreSQL 사용 설명서](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html)

@@ -6,6 +6,10 @@ S3 + DynamoDB gateway endpoints (free) plus interface endpoints for ECR/CloudWat
 
 Implemented (minimal). Add more `interface_services` (e.g. `secretsmanager`, `sts`) as a scenario needs them.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_vpc_endpoint.s3`에 `precondition`을 달아, `route_table_ids`가 비어있지 않은지 검증한다 — 라우트테이블에 안 붙은 게이트웨이 엔드포인트는 아무 데서도 못 쓴다.
+
 ## 공식문서
 
 - [AWS PrivateLink 개요](https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html)

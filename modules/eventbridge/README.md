@@ -6,6 +6,10 @@ One rule (schedule or event pattern — pick one) + one target. Set `target_is_l
 
 Implemented (minimal). Single target only — for fan-out to multiple targets, add more `aws_cloudwatch_event_target` resources.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_cloudwatch_event_rule.this`에 `precondition`을 달아, `schedule_expression`과 `event_pattern` 중 정확히 하나만 설정됐는지(XOR) 검증한다.
+
 ## 공식문서
 
 - [Amazon EventBridge 사용 설명서](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html)

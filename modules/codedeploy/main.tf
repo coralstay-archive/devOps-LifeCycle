@@ -64,4 +64,11 @@ resource "aws_codedeploy_deployment_group" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.target_group_blue_name != var.target_group_green_name
+      error_message = "target_group_blue_name and target_group_green_name must be different target groups."
+    }
+  }
 }

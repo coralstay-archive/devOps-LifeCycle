@@ -6,6 +6,10 @@ Application Load Balancer + one target group (IP target type, for Fargate). Pass
 
 Implemented (minimal). One target group only — for multiple services behind one ALB, use listener rules (not yet included).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_lb.this`에 `precondition`을 달아, `public_subnet_ids`가 최소 2개 AZ에 걸쳐 있는지 검증한다 — 이건 스타일이 아니라 실제 ALB API 요구사항이다.
+
 ## 공식문서
 
 - [Application Load Balancer 소개](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html)

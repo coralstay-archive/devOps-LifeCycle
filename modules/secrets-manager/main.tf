@@ -1,6 +1,13 @@
 resource "aws_secretsmanager_secret" "this" {
   name = var.name
   tags = var.tags
+
+  lifecycle {
+    postcondition {
+      condition     = startswith(self.arn, "arn:aws:secretsmanager:")
+      error_message = "Secret ARN must be a well-formed Secrets Manager ARN."
+    }
+  }
 }
 
 resource "aws_secretsmanager_secret_version" "this" {

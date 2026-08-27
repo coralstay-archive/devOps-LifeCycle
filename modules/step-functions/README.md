@@ -6,6 +6,10 @@ State machine + IAM role. Ships with a placeholder single-Pass-state definition 
 
 Implemented (minimal).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_sfn_state_machine.this`에 `precondition`을 달아, `definition`이 유효한 JSON인지 검증한다 — ASL은 HCL이 아니라 JSON이다.
+
 ## 공식문서
 
 - [AWS Step Functions 개발자 안내서](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html)

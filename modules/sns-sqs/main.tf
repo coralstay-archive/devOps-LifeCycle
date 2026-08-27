@@ -6,6 +6,13 @@ resource "aws_sns_topic" "this" {
 resource "aws_sqs_queue" "this" {
   name = "${var.name}-queue"
   tags = var.tags
+
+  lifecycle {
+    postcondition {
+      condition     = startswith(self.arn, "arn:aws:sqs:")
+      error_message = "Queue ARN must be a well-formed SQS ARN."
+    }
+  }
 }
 
 resource "aws_sqs_queue_policy" "allow_sns" {

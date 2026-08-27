@@ -6,6 +6,10 @@ Container image repository: scan-on-push, immutable tags (prevents accidentally 
 
 Implemented (minimal).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_ecr_repository.this`에 `precondition`을 달아, `untagged_image_expiry_days`가 1 이상인지 검증한다.
+
 ## 공식문서
 
 - [Amazon ECR 사용 설명서](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html)

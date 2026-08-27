@@ -10,6 +10,10 @@ Implemented (minimal): OpenSearch Serverless side only.
 
 The actual `aws_bedrockagent_knowledge_base` wiring (linking a Bedrock foundation model + this collection into a queryable knowledge base) — that resource is newer/more version-sensitive in the AWS provider, added as a follow-up once `llm-rag-service` is tackled directly.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_opensearchserverless_collection.this`에 `precondition`을 달아, `name`이 OpenSearch Serverless 컬렉션 네이밍 규칙(3-32자, 소문자로 시작)을 따르는지 검증한다.
+
 ## 공식문서
 
 - [Amazon Bedrock: 지식 기반 만들기](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-create.html)

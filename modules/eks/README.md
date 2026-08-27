@@ -12,6 +12,10 @@ Implemented (minimal): base cluster + managed node group only.
 
 IRSA, private-only API endpoint toggle, multiple node groups: also not included.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_eks_node_group.default`에 `precondition`을 달아, `node_min_size <= node_desired_size <= node_max_size`인지 검증한다.
+
 ## 공식문서
 
 - [Amazon EKS 사용 설명서](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html)

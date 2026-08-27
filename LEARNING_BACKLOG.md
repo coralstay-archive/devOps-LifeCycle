@@ -22,62 +22,62 @@
 
 | | 모듈 | 핵심 개념 | 학습 포인트 |
 |---|---|---|---|
-| ⬜ | `eks` | 관리형 쿠버네티스 | 컨트롤플레인/노드그룹 구조, **Karpenter vs Cluster Autoscaler**, IRSA, 프라이빗 API 엔드포인트 |
-| ⬜ | `ecs-service` | 컨테이너 오케스트레이션(AWS 네이티브) | Fargate vs EC2 launch type, 태스크 실행역할 vs 태스크역할 차이, 서비스 오토스케일링, `deployment_controller` |
-| ⬜ | `elasticache-redis` | 인메모리 캐시 | 복제그룹 vs Cluster Mode(샤딩), 자동 페일오버, 읽기 리플리카로 스케일링 |
-| ⬜ | `msk-kafka` | 이벤트 스트리밍 | 파티션/브로커 설계, 컨슈머 그룹과 오프셋, MSK Serverless vs Provisioned, IAM/SASL 인증 |
-| ⬜ | `rds-postgres` | 관계형 DB | Multi-AZ vs 읽기 복제본, RDS의 Secrets Manager 관리형 마스터 비밀번호, 백업 보존 정책 |
-| ⬜ | `observability` | 모니터링/알람 | CloudWatch 지표 vs 로그, SLO/에러버짓과 알람 연결, EKS용 Prometheus/Grafana(AMP/AMG) |
+| ⬜ | `eks` | 관리형 쿠버네티스 | 컨트롤플레인/노드그룹 구조, **Karpenter vs Cluster Autoscaler**, IRSA, 프라이빗 API 엔드포인트, 노드그룹 스케일링 범위(min<=desired<=max)를 precondition으로 검증하기 |
+| ⬜ | `ecs-service` | 컨테이너 오케스트레이션(AWS 네이티브) | Fargate vs EC2 launch type, 태스크 실행역할 vs 태스크역할 차이, 서비스 오토스케일링, `deployment_controller`, private_subnet_ids 비어있지 않은지 precondition |
+| ⬜ | `elasticache-redis` | 인메모리 캐시 | 복제그룹 vs Cluster Mode(샤딩), 자동 페일오버, 읽기 리플리카로 스케일링, num_cache_nodes 최소값 precondition |
+| ⬜ | `msk-kafka` | 이벤트 스트리밍 | 파티션/브로커 설계, 컨슈머 그룹과 오프셋, MSK Serverless vs Provisioned, IAM/SASL 인증, 브로커 수가 AZ 수의 배수여야 하는 실제 MSK 제약을 precondition으로 표현하기 |
+| ⬜ | `rds-postgres` | 관계형 DB | Multi-AZ vs 읽기 복제본, RDS의 Secrets Manager 관리형 마스터 비밀번호, 백업 보존 정책, allocated_storage 최소값(20GB) precondition |
+| ⬜ | `observability` | 모니터링/알람 | CloudWatch 지표 vs 로그, SLO/에러버짓과 알람 연결, EKS용 Prometheus/Grafana(AMP/AMG), SNS 토픽 ARN 형태를 postcondition으로 검증하기 |
 
 ### 1순위 — 범용 인프라
 
 | | 모듈 | 핵심 개념 | 학습 포인트 |
 |---|---|---|---|
-| ⬜ | `alb` | L7 로드밸런서 | 리스너/타겟그룹/헬스체크, HTTP→HTTPS 리다이렉트, 리스너 규칙으로 다중 서비스 라우팅 |
-| ⬜ | `acm` | TLS 인증서 | DNS 검증 흐름, 자동 갱신, CloudFront용 인증서는 반드시 us-east-1이어야 하는 이유 |
-| ⬜ | `route53` | DNS | 호스팅존 vs 레코드, 라우팅 정책(가중치/레이턴시/페일오버), 헬스체크 |
-| ⬜ | `kms` | 암호화 키 관리 | 키 정책 vs IAM 정책, 자동 로테이션, 대칭/비대칭 키, 크로스계정 키 공유 |
-| ⬜ | `secrets-manager` | 시크릿 저장 | 로테이션 Lambda 패턴, Parameter Store와의 차이, 버전 관리 |
-| ⬜ | `ecr` | 컨테이너 레지스트리 | 이미지 스캔, 태그 불변성, 수명주기 정책, 크로스계정 풀 권한 |
+| ⬜ | `alb` | L7 로드밸런서 | 리스너/타겟그룹/헬스체크, HTTP→HTTPS 리다이렉트, 리스너 규칙으로 다중 서비스 라우팅, ALB는 최소 2개 AZ가 필요하다는 실제 API 제약을 precondition으로 표현하기 |
+| ⬜ | `acm` | TLS 인증서 | DNS 검증 흐름, 자동 갱신, CloudFront용 인증서는 반드시 us-east-1이어야 하는 이유, SAN에 도메인 중복 방지 precondition |
+| ⬜ | `route53` | DNS | 호스팅존 vs 레코드, 라우팅 정책(가중치/레이턴시/페일오버), 헬스체크, 레코드별 TTL 양수 precondition (for_each 리소스에 precondition 적용하는 법) |
+| ⬜ | `kms` | 암호화 키 관리 | 키 정책 vs IAM 정책, 자동 로테이션, 대칭/비대칭 키, 크로스계정 키 공유, 삭제 대기기간 7~30일 범위라는 실제 KMS 제약을 precondition으로 표현하기 |
+| ⬜ | `secrets-manager` | 시크릿 저장 | 로테이션 Lambda 패턴, Parameter Store와의 차이, 버전 관리, 시크릿 ARN 형태를 postcondition으로 검증하기 |
+| ⬜ | `ecr` | 컨테이너 레지스트리 | 이미지 스캔, 태그 불변성, 수명주기 정책, 크로스계정 풀 권한, 만료일수 최소값 precondition |
 
 ### 2순위 — 서버리스
 
 | | 모듈 | 핵심 개념 | 학습 포인트 |
 |---|---|---|---|
-| ⬜ | `lambda` | 함수형 컴퓨트 | 콜드스타트, VPC 연결 시 ENI 지연, 프로비저닝된 동시성, 레이어 |
-| ⬜ | `dynamodb` | 서버리스 NoSQL | 파티션 키 설계, GSI/LSI, on-demand vs provisioned, 스트림 |
-| ⬜ | `api-gateway` | API 프론트엔드 | REST API vs HTTP API 차이, 프록시 통합, 스로틀링/사용량 계획 |
-| ⬜ | `sns-sqs` | 메시징 기본 단위 | 팬아웃 패턴, DLQ/재시도, FIFO 큐, 가시성 타임아웃 |
-| ⬜ | `eventbridge` | 이벤트 라우팅 | 이벤트 패턴 매칭, 스케줄 vs 이벤트 기반 트리거, 크로스계정 버스 |
-| ⬜ | `cloudfront` | CDN | OAC vs (구)OAI, 캐시 정책/무효화, Lambda@Edge/CloudFront Functions |
+| ⬜ | `lambda` | 함수형 컴퓨트 | 콜드스타트, VPC 연결 시 ENI 지연, 프로비저닝된 동시성, 레이어, 메모리 128~10240MB라는 실제 Lambda 제약을 precondition으로 표현하기 |
+| ⬜ | `dynamodb` | 서버리스 NoSQL | 파티션 키 설계, GSI/LSI, on-demand vs provisioned, 스트림, hash_key_type이 S/N/B인지 precondition |
+| ⬜ | `api-gateway` | API 프론트엔드 | REST API vs HTTP API 차이, 프록시 통합, 스로틀링/사용량 계획, route_key 형식 검증 precondition (정규식 활용) |
+| ⬜ | `sns-sqs` | 메시징 기본 단위 | 팬아웃 패턴, DLQ/재시도, FIFO 큐, 가시성 타임아웃, 큐 ARN 형태를 postcondition으로 검증하기 |
+| ⬜ | `eventbridge` | 이벤트 라우팅 | 이벤트 패턴 매칭, 스케줄 vs 이벤트 기반 트리거, 크로스계정 버스, schedule_expression과 event_pattern의 XOR 관계를 precondition으로 표현하기 |
+| ⬜ | `cloudfront` | CDN | OAC vs (구)OAI, 캐시 정책/무효화, Lambda@Edge/CloudFront Functions, 인증서 있는데 alias 없는 모순 상태를 precondition으로 막기 |
 
 ### 3순위 — 데이터/분석
 
 | | 모듈 | 핵심 개념 | 학습 포인트 |
 |---|---|---|---|
-| ⬜ | `glue` | ETL/카탈로그 | 크롤러 vs ETL 잡, 데이터 카탈로그, 파티션 프로젝션 |
-| ⬜ | `athena` | 서버리스 쿼리 | 워크그룹별 비용 제어, 파티셔닝으로 스캔량 절감, CTAS |
-| ⬜ | `redshift` | 데이터 웨어하우스 | 단일→멀티노드/Serverless 전환 시점, DISTKEY/SORTKEY, Enhanced VPC Routing |
-| ⬜ | `dms` | DB 마이그레이션/CDC | full-load vs full-load-and-cdc, 테이블 매핑 규칙, 엔드포인트 인증(Secrets Manager 연동) |
-| ⬜ | `step-functions` | 워크플로 오케스트레이션 | Standard vs Express, 상태 종류(Task/Choice/Parallel), 에러 처리/재시도 |
+| ⬜ | `glue` | ETL/카탈로그 | 크롤러 vs ETL 잡, 데이터 카탈로그, 파티션 프로젝션, 카탈로그 DB 이름 규칙(하이픈 불가)을 precondition으로 표현하기 |
+| ⬜ | `athena` | 서버리스 쿼리 | 워크그룹별 비용 제어, 파티셔닝으로 스캔량 절감, CTAS, 출력 위치가 s3:// URI인지 precondition |
+| ⬜ | `redshift` | 데이터 웨어하우스 | 단일→멀티노드/Serverless 전환 시점, DISTKEY/SORTKEY, Enhanced VPC Routing, DB 이름 네이밍 규칙 precondition |
+| ⬜ | `dms` | DB 마이그레이션/CDC | full-load vs full-load-and-cdc, 테이블 매핑 규칙, 엔드포인트 인증(Secrets Manager 연동), 포트 범위 유효성 precondition |
+| ⬜ | `step-functions` | 워크플로 오케스트레이션 | Standard vs Express, 상태 종류(Task/Choice/Parallel), 에러 처리/재시도, definition이 유효 JSON인지 precondition (can(jsondecode(...)) 패턴) |
 
 ### 4순위 — ML/AI·거버넌스
 
 | | 모듈 | 핵심 개념 | 학습 포인트 |
 |---|---|---|---|
-| ⬜ | `sagemaker` | ML 추론 | 실시간 vs 배치 추론, 모델/엔드포인트구성/엔드포인트를 분리하는 이유, 오토스케일링 |
-| ⬜ | `bedrock-opensearch` | RAG 백엔드 | RAG 흐름(임베딩→검색→생성), 벡터 유사도 검색, OpenSearch Serverless 보안정책 |
-| ⬜ | `organizations-landing-zone` | 멀티계정 구조 | OU 설계, SCP, Control Tower와의 관계(이 모듈은 OU만 만듦) |
-| ⬜ | `waf-shield` | 엣지 보안 | 매니지드 룰그룹 vs 커스텀 룰, 요율 제한, Shield Standard vs Advanced |
-| ⬜ | `aws-backup` | 백업 정책 | 백업 계획/보관정책, 태그기반 vs ARN기반 선택, 크로스리전 복사 |
-| ⬜ | `codedeploy` | 배포 오케스트레이션 | 블루/그린 vs 롤링, ECS `deployment_controller` 연동 필요성, 배포 훅 |
-| ⬜ | `vpc-endpoints` | 프라이빗 연결 | 게이트웨이 vs 인터페이스 엔드포인트, Private DNS, NAT 대비 비용 |
+| ⬜ | `sagemaker` | ML 추론 | 실시간 vs 배치 추론, 모델/엔드포인트구성/엔드포인트를 분리하는 이유, 오토스케일링, 인스턴스 카운트 최소값 precondition |
+| ⬜ | `bedrock-opensearch` | RAG 백엔드 | RAG 흐름(임베딩→검색→생성), 벡터 유사도 검색, OpenSearch Serverless 보안정책, OpenSearch Serverless 컬렉션 네이밍 규칙 precondition |
+| ⬜ | `organizations-landing-zone` | 멀티계정 구조 | OU 설계, SCP, Control Tower와의 관계(이 모듈은 OU만 만듦), for_each 리소스에 precondition을 달면 인스턴스 0개일 때 검증이 아예 안 도는 함정, 대신 데이터소스에 다는 우회법 |
+| ⬜ | `waf-shield` | 엣지 보안 | 매니지드 룰그룹 vs 커스텀 룰, 요율 제한, Shield Standard vs Advanced, scope 허용값(REGIONAL/CLOUDFRONT) precondition |
+| ⬜ | `aws-backup` | 백업 정책 | 백업 계획/보관정책, 태그기반 vs ARN기반 선택, 크로스리전 복사, AWS Backup 규칙의 lifecycle{}과 Terraform 메타인수 lifecycle{}이 이름만 같고 다른 개념이라는 것 |
+| ⬜ | `codedeploy` | 배포 오케스트레이션 | 블루/그린 vs 롤링, ECS `deployment_controller` 연동 필요성, 배포 훅, blue/green 타겟그룹 이름이 달라야 한다는 precondition (복붙 실수 방지) |
+| ⬜ | `vpc-endpoints` | 프라이빗 연결 | 게이트웨이 vs 인터페이스 엔드포인트, Private DNS, NAT 대비 비용, 라우트테이블 미연결 상태를 precondition으로 막기 |
 
 ### 메시징 (틈새)
 
 | | 모듈 | 핵심 개념 | 학습 포인트 |
 |---|---|---|---|
-| ⬜ | `amazon-mq` | 레거시 브로커 호환 | AMQP/MQTT/STOMP 프로토콜, 액티브/스탠바이 HA, 언제 SNS/SQS 대신 이걸 써야 하는지 |
+| ⬜ | `amazon-mq` | 레거시 브로커 호환 | AMQP/MQTT/STOMP 프로토콜, 액티브/스탠바이 HA, 언제 SNS/SQS 대신 이걸 써야 하는지, 엔진 타입 허용값 precondition |
 
 ---
 

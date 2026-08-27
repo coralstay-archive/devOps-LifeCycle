@@ -25,6 +25,13 @@ resource "aws_dms_endpoint" "source" {
   password      = var.source_password
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.source_port > 0 && var.source_port <= 65535
+      error_message = "source_port must be a valid TCP port (1-65535)."
+    }
+  }
 }
 
 resource "aws_dms_endpoint" "target" {

@@ -25,4 +25,11 @@ resource "aws_sfn_state_machine" "this" {
   definition = var.definition
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = can(jsondecode(var.definition))
+      error_message = "definition must be valid JSON — Amazon States Language is JSON, not HCL."
+    }
+  }
 }

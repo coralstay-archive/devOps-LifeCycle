@@ -45,4 +45,11 @@ resource "aws_msk_cluster" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.number_of_broker_nodes % length(var.private_subnet_ids) == 0
+      error_message = "number_of_broker_nodes must be a multiple of the number of subnets (AZs) — this is an MSK API requirement, not just a style preference."
+    }
+  }
 }

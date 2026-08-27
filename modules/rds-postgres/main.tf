@@ -53,4 +53,11 @@ resource "aws_db_instance" "this" {
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.identifier}-final"
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.allocated_storage >= 20
+      error_message = "allocated_storage must be at least 20 GB — RDS's minimum for gp2/gp3 storage on PostgreSQL."
+    }
+  }
 }

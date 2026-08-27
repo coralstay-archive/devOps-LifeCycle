@@ -6,6 +6,10 @@ HTTP API (v2, cheaper/simpler than REST API v1) with a single Lambda proxy integ
 
 Implemented (minimal). One route only — add more `aws_apigatewayv2_route`/`aws_apigatewayv2_integration` pairs for multiple endpoints, or use `$default` (current default) to proxy everything to one Lambda that does its own routing.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_apigatewayv2_route.this`에 `precondition`을 달아, `route_key`가 `$default`이거나 올바른 `<METHOD> /path` 형식인지 검증한다.
+
 ## 공식문서
 
 - [API Gateway: HTTP API](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api.html)

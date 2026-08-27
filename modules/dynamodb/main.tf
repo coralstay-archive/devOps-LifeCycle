@@ -17,4 +17,11 @@ resource "aws_dynamodb_table" "this" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = contains(["S", "N", "B"], var.hash_key_type)
+      error_message = "hash_key_type must be S, N, or B — DynamoDB's only valid attribute types."
+    }
+  }
 }

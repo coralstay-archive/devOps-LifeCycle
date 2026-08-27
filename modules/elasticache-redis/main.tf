@@ -40,4 +40,11 @@ resource "aws_elasticache_replication_group" "this" {
   transit_encryption_enabled = true
 
   tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.num_cache_nodes >= 1
+      error_message = "num_cache_nodes must be at least 1 (the primary node)."
+    }
+  }
 }

@@ -1,8 +1,9 @@
 name: terraform-ci
 
-# Runs quality gates on every PR that touches Terraform code: fmt, validate,
-# tflint, trivy (security/compliance), infracost (cost diff), and a plan
-# posted as a PR comment. Nothing here applies changes.
+# Runs quality gates on every PR that touches Terraform code: gitleaks, fmt,
+# validate, tflint, terraform-docs, trivy/checkov (security/compliance),
+# terraform test, conftest, infracost (cost diff), and a plan posted as a PR
+# comment. Nothing here applies changes.
 #
 # NOTE (scaffolding): hardcoded to live/example-dev for now, the only real
 # stack that exists. When more live/<project> stacks are added, turn the
@@ -31,6 +32,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # gitleaks needs history, not just the merge commit
+
+      # Runs first and blocking: this was previously pre-commit-only, meaning
+      # a contributor who skips pre-commit (or never installed it) could push
+      # a secret straight to a PR with nothing in CI to catch it.
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: hashicorp/setup-terraform@v3
         with:

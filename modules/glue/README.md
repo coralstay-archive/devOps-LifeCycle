@@ -6,6 +6,10 @@ Catalog database + one crawler pointed at an S3 path (on-demand by default; set 
 
 Implemented (minimal). ETL jobs (`aws_glue_job`) not included — add when `etl-batch` needs actual transform logic, not just cataloging.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_glue_catalog_database.this`에 `precondition`을 달아, `database_name`이 소문자/숫자/언더스코어만 쓰는지 검증한다 — Glue 카탈로그 네이밍 규칙(하이픈 불가).
+
 ## 공식문서
 
 - [AWS Glue 개발자 안내서](https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html)

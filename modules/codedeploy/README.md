@@ -6,6 +6,10 @@ ECS blue/green deployment group. Needs two target groups (blue/green) already cr
 
 Implemented (minimal): all-at-once traffic shift, auto-terminate old task set after 5 minutes.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_codedeploy_deployment_group.this`에 `precondition`을 달아, blue/green 타겟그룹 이름이 서로 다른지 검증한다 — 흔한 복붙 실수를 잡는다.
+
 ## 공식문서
 
 - [AWS CodeDeploy 사용 설명서](https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html)

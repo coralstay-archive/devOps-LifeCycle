@@ -6,6 +6,10 @@ One function from a local zip (`filename`), basic-execution IAM role, explicit l
 
 Implemented (minimal). No VPC attachment, no layers, no provisioned concurrency — add when a scenario needs them.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_lambda_function.this`에 `precondition`을 달아, `memory_size`가 128~10240MB 범위인지 검증한다 — 실제 Lambda API 요구사항.
+
 ## 공식문서
 
 - [AWS Lambda 개발자 안내서](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)

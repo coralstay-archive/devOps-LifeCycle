@@ -10,6 +10,10 @@ Implemented (minimal): OU structure only.
 
 Control Tower itself isn't a plain Terraform resource — it's a separate AWS service you enable via the console/API, after which it manages its own guardrails. This module only creates OUs; it doesn't set up Control Tower, SCPs, or account vending. Add SCPs (`aws_organizations_policy` + `aws_organizations_policy_attachment`) when `multi-account-landing-zone` needs actual guardrails, not just structure.
 
+## 런타임 불변식 (precondition/postcondition)
+
+`data.aws_organizations_organization.current`에 `precondition`을 달아, `organizational_units`가 비어있지 않은지 검증한다 — for_each 리소스에 precondition을 달면 인스턴스가 0개일 때 아예 실행이 안 되는 함정이 있어, 항상 존재하는 데이터소스 쪽에 달았다.
+
 ## 공식문서
 
 - [AWS Organizations 사용 설명서](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html)

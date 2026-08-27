@@ -6,6 +6,10 @@ Single-node cluster (cheapest option — bump `node_type`/`cluster_type` to mult
 
 Implemented (minimal).
 
+## 런타임 불변식 (precondition/postcondition)
+
+`aws_redshift_cluster.this`에 `precondition`을 달아, `database_name`이 소문자로 시작하는 소문자/숫자/언더스코어 조합인지 검증한다 — Redshift 네이밍 규칙.
+
 ## 공식문서
 
 - [Amazon Redshift 관리 안내서](https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html)
