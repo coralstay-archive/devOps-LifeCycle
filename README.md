@@ -8,7 +8,7 @@ A reusable Terraform launchpad for AWS — atomic modules, composed scenarios, a
 
 ![Terraform](https://img.shields.io/badge/terraform-%3E%3D1.5-623CE4?style=flat-square&logo=terraform&logoColor=white)
 ![AWS Provider](https://img.shields.io/badge/AWS%20provider-~%3E%205.0-FF9900?style=flat-square&logo=amazonaws&logoColor=white)
-![Modules](https://img.shields.io/badge/modules-34-2ea44f?style=flat-square)
+![Modules](https://img.shields.io/badge/modules-36-2ea44f?style=flat-square)
 ![Scenarios](https://img.shields.io/badge/scenarios-30-2ea44f?style=flat-square)
 ![Status](https://img.shields.io/badge/status-scaffolding-yellow?style=flat-square)
 ![Security scans](https://img.shields.io/badge/security-Trivy%20%2B%20Checkov-blueviolet?style=flat-square)
@@ -45,7 +45,7 @@ flowchart LR
 - [Custom policy checks](#-custom-policy-checks)
 - [Tooling](#-tooling)
 - [SRE principles applied to every scenario](#-sre-principles-applied-to-every-scenario)
-- [Modules (34)](#-modules-34)
+- [Modules (36)](#-modules-36)
 - [Scenarios (30)](#-scenarios-30)
 - [Reference example](#-reference-example)
 - [Learning backlog](#-learning-backlog)
@@ -56,7 +56,7 @@ flowchart LR
 
 1. Pick the closest match under `scenarios/` — see the [full list](#-scenarios-30).
 2. Copy it: `cp -r scenarios/<slug> live/<your-project-name>`
-3. Fill in `backend.tf` (bucket/table names from `bootstrap/`), `providers.tf` region, and `variables.tf` / a new `terraform.tfvars`.
+3. Fill in `backend.tf` (bucket name from `bootstrap/`), `providers.tf` region, and `variables.tf` / a new `terraform.tfvars`.
 4. Fill in `SLO.md` with real availability/latency targets for this project.
 5. `terraform init && terraform plan` locally, then open a PR — `terraform-ci.yml` runs fmt/validate/tflint/trivy/checkov/conftest/terraform-test and posts a plan + cost diff as PR comments.
 6. Merge to `main` → `terraform-apply.yml` applies (gated behind manual approval on the `production` GitHub Environment).
@@ -65,7 +65,7 @@ flowchart LR
 
 | Step | What to do |
 |---|---|
-| 🪣 State backend | Run `bootstrap/` once per AWS account/region to create the S3 state bucket + DynamoDB lock table (see `bootstrap/README.md`) |
+| 🪣 State backend | Run `bootstrap/` once per AWS account/region to create the S3 state bucket. Locking is S3-native (`use_lockfile`, Terraform >= 1.11) — no DynamoDB table needed (see `bootstrap/README.md`) |
 | 🔑 CI credentials | Use `modules/iam-github-oidc` to create two roles — a narrow `plan` role (`AWS_PLAN_ROLE_ARN`) and a broader `apply` role restricted to `refs/heads/main` (`AWS_APPLY_ROLE_ARN`). No long-lived AWS keys in GitHub, ever |
 | 💰 Infracost | Add an `INFRACOST_API_KEY` repo secret (free key from infracost.io) |
 | 💻 Local dev | `pip install pre-commit && pre-commit install`, then `brew install terraform-docs checkov conftest k6` for the tools that also run outside CI |
@@ -111,16 +111,16 @@ Extend this pattern as more modules get picked up from the [learning backlog](#-
 4. **Load testing before trust** — `tools/loadtest/` k6 templates rehearse sudden spikes (Google/Spotify-style) against the SLO thresholds.
 5. **Multi-AZ by default**, multi-region only where a scenario specifically needs it.
 
-## 📦 Modules (34)
+## 📦 Modules (36)
 
-All 34 are implemented (minimal, default-heavy — a working baseline, not every feature) and pass `terraform validate`. Every module README has a `## 공식문서` section with real AWS/Terraform doc links plus a *"Not yet included"* section documenting its gaps on purpose.
+All 36 are implemented (minimal, default-heavy — a working baseline, not every feature) and pass `terraform validate`. Every module README has a `## 공식문서` section with real AWS/Terraform doc links plus a *"Not yet included"* section documenting its gaps on purpose.
 
 <details>
-<summary><strong>Show all 34 modules by tier</strong></summary>
+<summary><strong>Show all 36 modules by tier</strong></summary>
 
 | Tier | Modules |
 |---|---|
-| 🏗️ Foundation | `vpc` · `s3-bucket` · `iam-github-oidc` |
+| 🏗️ Foundation | `vpc` · `s3-bucket` · `iam-github-oidc` · `iam` · `ec2` |
 | 🖥️ Compute/network | `eks` · `ecs-service` · `elasticache-redis` · `msk-kafka` · `rds-postgres` · `observability` |
 | 1️⃣ General-purpose primitives | `alb` · `acm` · `route53` · `kms` · `secrets-manager` · `ecr` |
 | 2️⃣ Serverless | `lambda` · `dynamodb` · `api-gateway` · `sns-sqs` · `eventbridge` · `cloudfront` |
@@ -178,5 +178,5 @@ All 30 are **composed** — module calls wired together, `terraform validate` pa
 
 ## 🎓 Learning backlog
 
-This repo doubles as a learning project. [`LEARNING_BACKLOG.md`](./LEARNING_BACKLOG.md) tracks what to study for each of the 34 modules and 30 scenarios, in module → scenario order — pulled straight from each README's *"Not yet included"* / *"알려진 제약"* sections, since the documented gaps **are** the next things to learn.
+This repo doubles as a learning project. [`LEARNING_BACKLOG.md`](./LEARNING_BACKLOG.md) tracks what to study for each of the 36 modules and 30 scenarios, in module → scenario order — pulled straight from each README's *"Not yet included"* / *"알려진 제약"* sections, since the documented gaps **are** the next things to learn.
 

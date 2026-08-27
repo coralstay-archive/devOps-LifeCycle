@@ -8,9 +8,3 @@ variable "state_bucket_name" {
   description = "Globally unique name for the Terraform remote state bucket"
   type        = string
 }
-
-variable "lock_table_name" {
-  description = "Name for the DynamoDB state lock table"
-  type        = string
-  default     = "aws-launcher-tf-locks"
-}
