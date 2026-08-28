@@ -152,9 +152,9 @@ What the tools above actually find when run against this repo right now — not 
 | Metric | Result |
 |---|---|
 | tflint (whole repo) | 0 errors/warnings; 322 `info`-level notices (missing `description` on variables/outputs — tracked as [`TASK-175`](backlog/tasks), not started yet) |
-| checkov (36 modules) | 325 passed / 23 failed (93.4%) — every remaining failure has a matching *"Not yet included"* note in that module's README, and most are tracked as explicit backlog tasks (see below) |
-| trivy config (36 modules) | 31 misconfigurations flagged — same category as checkov, second-opinion scanner, same audit coverage |
-| `precondition`/`postcondition` blocks | 36 (33 precondition + 3 postcondition) — real AWS-API invariants enforced on every `plan`/`apply` |
+| checkov (36 modules) | 338 passed / 19 failed (94.7%) — every remaining failure has a matching *"Not yet included"* note in that module's README, and most are tracked as explicit backlog tasks (see below) |
+| trivy config (36 modules) | 30 misconfigurations flagged — same category as checkov, second-opinion scanner, same audit coverage |
+| `precondition`/`postcondition` blocks | 37 (34 precondition + 3 postcondition) — real AWS-API invariants enforced on every `plan`/`apply` |
 | `terraform test` files | 3 (`vpc`, `s3-bucket`, `iam-github-oidc`) |
 | Conftest policies (`policy/`) | 2 (1 `deny`, 1 `warn`) |
 | gitleaks (full git history) | 0 leaks |
@@ -176,13 +176,15 @@ A second `tflint --recursive` scan later turned up the same class of trap from a
 
 ### Round two: closing the remaining findings (Security & Observability Hardening)
 
-Findings that were "left as documented trade-offs" above got revisited rather than left alone — checkov/trivy were re-run, every remaining failure was logged as an explicit `bug`-type task via the `backlog` CLI under a new milestone, **Security & Observability Hardening** (`m-17` — separate from the module/scenario *learning* milestones below, since these are engineering tasks meant to actually get fixed, not concepts left for a human to work through), and most were closed out in the same pass: **checkov 45→23 failures (93.4% passing)**, **trivy 40→31**. The remaining backlog under `m-17` is the honest list of what's still open — see [`backlog/tasks`](backlog/tasks) or run `backlog task list -m "Security & Observability Hardening" --plain`.
+Findings that were "left as documented trade-offs" above got revisited rather than left alone — checkov/trivy were re-run, every remaining failure was logged as an explicit `bug`-type task via the `backlog` CLI under a new milestone, **Security & Observability Hardening** (`m-17` — separate from the module/scenario *learning* milestones below, since these are engineering tasks meant to actually get fixed, not concepts left for a human to work through). As of the last pass, **41 of 43** of those tasks are closed: **checkov 45→19 failures (94.7% passing)**, **trivy 40→30**. The remaining backlog under `m-17` is the honest list of what's still open — see [`backlog/tasks`](backlog/tasks) or run `backlog task list -m "Security & Observability Hardening" --plain`.
 
-What actually got fixed, in two groups:
+What actually got fixed, roughly in the order it happened:
 - **Optional customer-managed KMS keys** added to 15 modules (`dms`, `amazon-mq`, `dynamodb`, `ecr`, `secrets-manager`, `aws-backup`, `rds-postgres`, `redshift`, `sns-sqs`, `observability`, `s3-bucket`, `lambda`, `step-functions`, `elasticache-redis`, `glue`, `msk-kafka`) — every one is a nullable variable defaulting to the AWS-managed key (non-breaking, opt-in, no forced cost).
-- **Real capability gaps closed**, some free and unconditional (`amazon-mq` and `msk-kafka` broker logging, `redshift` enhanced VPC routing — all previously entirely absent, not just defaulted off) and some opt-in with a real cost when enabled (`eks` control-plane logging + `public_access_cidrs`, `elasticache-redis` AUTH token, `vpc` flow logs, `ec2` detailed monitoring, `ecs-service` Container Insights, `alb` deletion protection, `rds-postgres` log exports, `redshift` audit logging, `lambda` DLQ/concurrency limit/env-var KMS, `step-functions` log retention).
+- **Real capability gaps closed for free**, unconditional and previously entirely absent rather than just defaulted off: `amazon-mq`, `msk-kafka`, and `api-gateway` access/broker logging, `redshift` enhanced VPC routing.
+- **Real capability gaps closed as opt-in** (real cost when enabled, off by default): `eks` control-plane logging + `public_access_cidrs`, `elasticache-redis` AUTH token, `vpc` flow logs, `ec2` detailed monitoring, `ecs-service` Container Insights, `alb`/`cloudfront` deletion protection/access logging/WAF association/geo restriction, `rds-postgres` log exports + enhanced monitoring (its own IAM role, created only when enabled), `redshift` audit logging, `lambda` DLQ/concurrency limit/env-var KMS/VPC attachment/code-signing, `step-functions` log retention, `api-gateway` route-level authorization (`authorization_type`/`authorizer_id`, defaulting to `"NONE"`/`null` — not forced on, since requiring an authorizer by default would be a breaking change for every existing caller).
+- **A backlog bookkeeping bug found and fixed along the way**: a couple of task-ID off-by-one mistakes in this session's own fork instructions left 4 tasks with the wrong status (2 marked "Done" for work that was never built — `rds-postgres` enhanced monitoring, `lambda` code-signing — and 2 left "To Do" for work that was already shipped — `rds-postgres` log exports, `lambda` DLQ). Caught by verifying every task's title against the actual code rather than trusting either the fork reports or the task IDs at face value, and corrected before those two "Done" items got built for real.
 
-Still open, deliberately: `ALB`/`CloudFront` access logging (needs a real S3 log bucket + bucket policy, not just a toggle), `CloudFront` WAF association (straightforward — wire in the existing `waf-shield` module — just not done yet), `API Gateway` route-level authorization (an actual design decision, not a one-line fix — forcing an authorizer on every route would be a breaking default for a scaffold), `Lambda` VPC attachment and code-signing (bigger architectural additions), and the 322 `tflint` description notices above.
+Still open, deliberately: `CloudFront` origin failover (needs a second origin + `origin_group`, a real architectural addition — this module is single-origin by design), and the 322 `tflint` description notices above.
 
 ## 🎯 SRE principles this repo aims for (and where it honestly falls short)
 
@@ -282,7 +284,7 @@ This repo doubles as a learning project, tracked with the [Backlog.md](https://g
 **Two different kinds of backlog live side by side under the same CLI** — worth distinguishing since they mean different things when you see them in `backlog board`:
 
 - **Milestones `m-0` through `m-16`** (below) are the *learning* backlog — `spike`/`task`/`docs`-type tasks meant to be worked through by a human, left `To Do` on purpose, never pre-completed on your behalf.
-- **Milestone `m-17`, "Security & Observability Hardening"**, is a *different* kind of backlog — `bug`-type engineering tasks logged from real checkov/trivy/tflint findings, meant to actually get fixed (see [Repo metrics](#-repo-metrics) above for what's closed vs. still open: 32/43 done as of the last pass).
+- **Milestone `m-17`, "Security & Observability Hardening"**, is a *different* kind of backlog — `bug`-type engineering tasks logged from real checkov/trivy/tflint findings, meant to actually get fixed (see [Repo metrics](#-repo-metrics) above for what's closed vs. still open: 41/43 done as of the last pass).
 
 **Structure — Epic → Story → Task (the learning backlog, `m-0`–`m-16`):**
 

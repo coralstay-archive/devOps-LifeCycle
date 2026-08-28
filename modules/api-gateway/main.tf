@@ -21,6 +21,13 @@ resource "aws_apigatewayv2_route" "this" {
   route_key = var.route_key
   target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
 
+  # NONE (default) preserves this module's original behavior -- the route
+  # accepts unauthenticated requests and the Lambda behind it does its own
+  # auth if needed. Not forced on by default: requiring an authorizer here
+  # would be a breaking change for every existing caller of this module.
+  authorization_type = var.authorization_type
+  authorizer_id      = var.authorizer_id
+
   # route_key has an exact grammar API Gateway expects — either the literal
   # "$default" catch-all, or "<METHOD> /path". Anything else is a typo that
   # would otherwise surface as a confusing 404 at request time instead of a
@@ -29,6 +36,15 @@ resource "aws_apigatewayv2_route" "this" {
     precondition {
       condition     = var.route_key == "$default" || can(regex("^(GET|POST|PUT|DELETE|PATCH|OPTIONS|HEAD|ANY) ", var.route_key))
       error_message = "route_key must be \"$default\" or \"<METHOD> /path\" (e.g. \"GET /items\")."
+    }
+
+    # JWT/CUSTOM authorizers need an actual authorizer resource to check
+    # against; AWS_IAM and NONE don't take an authorizer_id at all. Catches
+    # a plan-time-valid-looking but broken combination before it fails at
+    # apply with a much less specific API error.
+    precondition {
+      condition     = !contains(["JWT", "CUSTOM"], var.authorization_type) || var.authorizer_id != null
+      error_message = "authorizer_id must be set when authorization_type is \"JWT\" or \"CUSTOM\"."
     }
   }
 }
