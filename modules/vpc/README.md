@@ -16,7 +16,9 @@ See `variables.tf`. Key ones: `name`, `cidr_block`, `availability_zones`, `enabl
 
 ## Not yet included
 
-VPC endpoints (S3/ECR gateway/interface endpoints), flow logs, IPv6. Add when a scenario needs them.
+VPC endpoints (S3/ECR gateway/interface endpoints — see the `vpc-endpoints` module), flow logs, IPv6. Add when a scenario needs them.
+
+One Trivy finding that's intentional, not a gap: **"instances in a subnet receive a public IP by default"** — that's `map_public_ip_on_launch = true` on the *public* subnets specifically (the private subnets don't set this). A public subnet whose instances don't get public IPs isn't really public — this is the point of the subnet, not an oversight.
 
 ## 런타임 불변식 (precondition/postcondition)
 

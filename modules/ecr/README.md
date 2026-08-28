@@ -6,6 +6,10 @@ Container image repository: scan-on-push, immutable tags (prevents accidentally 
 
 Implemented (minimal).
 
+## Not yet included
+
+**Customer-managed KMS key** — encrypted with the AWS-managed key (`AES256`) by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable (`encryption_configuration { encryption_type = "KMS", kms_key = ... }`) if a scenario needs key rotation control/audit.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_ecr_repository.this`에 `precondition`을 달아, `untagged_image_expiry_days`가 1 이상인지 검증한다.

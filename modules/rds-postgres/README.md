@@ -14,6 +14,12 @@ See `variables.tf` / `outputs.tf`. Pass in security group IDs (e.g. from `ecs-se
 
 Read replicas, Aurora option, parameter group tuning, cross-region backup. Add when a scenario needs them.
 
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **Enhanced monitoring not enabled** (`monitoring_interval`) — needs its own IAM role (`monitoring.rds.amazonaws.com`) and has a real per-instance cost at 1-15 second granularity. Add when a scenario needs finer-grained OS-level metrics than the default CloudWatch instance metrics.
+- **Log exports to CloudWatch not enabled** (`enabled_cloudwatch_logs_exports`) — a real cost trade-off (log ingestion isn't free); add `["postgresql", "upgrade"]` when a scenario needs query-level log access instead of relying on Performance Insights.
+
+One finding that's a checkov false-positive, not a gap: **"deletion protection not enabled"** — it's actually on by default (`deletion_protection = !var.skip_final_snapshot`, and `skip_final_snapshot` defaults to `false`). Checkov's static check only accepts a literal `true`, not an expression, so it flags this even though the real behavior is already correct.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_db_instance.this`에 `precondition`을 달아, `allocated_storage`가 20GB 이상인지 검증한다 (PostgreSQL의 gp2/gp3 최소 스토리지).

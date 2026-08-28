@@ -18,12 +18,14 @@ resource "aws_vpc_security_group_ingress_rule" "redshift" {
   from_port                    = 5439
   to_port                      = 5439
   ip_protocol                  = "tcp"
+  description                  = "Redshift from an approved application security group"
 }
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
+  description       = "Unrestricted egress — the cluster needs to reach AWS APIs (e.g. S3 for COPY/UNLOAD)"
 }
 
 resource "aws_redshift_cluster" "this" {
@@ -41,6 +43,11 @@ resource "aws_redshift_cluster" "this" {
   cluster_subnet_group_name = aws_redshift_subnet_group.this.name
   vpc_security_group_ids    = [aws_security_group.this.id]
   encrypted                 = true
+  # Redshift's actual default is TRUE if left unset — unlike RDS, which
+  # defaults to false in a VPC. This isn't a style preference: an unset
+  # publicly_accessible here would put the cluster on a public IP despite
+  # already being scoped to private subnets and a locked-down security group.
+  publicly_accessible       = false
   skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.cluster_identifier}-final"
 

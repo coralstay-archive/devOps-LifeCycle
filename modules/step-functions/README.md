@@ -4,7 +4,13 @@ State machine + IAM role. Ships with a placeholder single-Pass-state definition 
 
 ## Status
 
-Implemented (minimal).
+Implemented (minimal). Execution logging (`logging_configuration`, ERROR level) and X-Ray tracing are on by default — see the log group and IAM policy in `main.tf` for what that actually requires (Step Functions' CloudWatch Logs integration needs a specific set of `logs:*LogDelivery*` actions, not just `logs:PutLogEvents`).
+
+## Not yet included
+
+Checkov/Trivy findings on the log group added above:
+- **Retention is 14 days, not 1+ year** — matches this repo's convention elsewhere (`lambda`'s `log_retention_days` also defaults to 14) rather than a longer compliance-driven minimum; make it a variable if a scenario needs longer retention.
+- **Log group not encrypted with a customer-managed KMS key** — uses CloudWatch's default encryption. Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
 
 ## 런타임 불변식 (precondition/postcondition)
 

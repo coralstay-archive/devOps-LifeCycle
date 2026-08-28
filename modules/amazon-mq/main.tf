@@ -15,26 +15,29 @@ resource "aws_vpc_security_group_ingress_rule" "amqp_tls" {
   from_port                    = 5671
   to_port                      = 5671
   ip_protocol                  = "tcp"
+  description                  = "AMQP over TLS from an approved application security group"
 }
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
+  description       = "Unrestricted egress — the broker needs to reach AWS APIs/NAT; scoping this down isn't worth the maintenance cost for a minimal module"
 }
 
 # SINGLE_INSTANCE deployment (no HA) — see this module's README for when
 # you'd actually reach for this instead of sns-sqs (short version: only for
 # AMQP/MQTT/STOMP protocol compatibility with something pre-existing).
 resource "aws_mq_broker" "this" {
-  broker_name         = var.name
-  engine_type         = var.engine_type
-  engine_version      = var.engine_version
-  host_instance_type  = var.host_instance_type
-  deployment_mode     = "SINGLE_INSTANCE"
-  subnet_ids          = [var.private_subnet_ids[0]]
-  security_groups     = [aws_security_group.this.id]
-  publicly_accessible = false
+  broker_name                = var.name
+  engine_type                = var.engine_type
+  engine_version             = var.engine_version
+  host_instance_type         = var.host_instance_type
+  deployment_mode            = "SINGLE_INSTANCE"
+  subnet_ids                 = [var.private_subnet_ids[0]]
+  security_groups            = [aws_security_group.this.id]
+  publicly_accessible        = false
+  auto_minor_version_upgrade = true
 
   user {
     username = var.username

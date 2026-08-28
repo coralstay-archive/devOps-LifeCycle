@@ -28,6 +28,25 @@ resource "aws_eks_cluster" "this" {
 
   vpc_config {
     subnet_ids = var.private_subnet_ids
+    # Free and strictly additive: lets nodes/pods reach the API server over
+    # the VPC instead of only via the public endpoint. Doesn't disable
+    # public access (see this module's README for that trade-off) — just
+    # adds a second, private path.
+    endpoint_private_access = true
+  }
+
+  # Only set when a KMS key is provided — encrypting Kubernetes Secrets at
+  # rest is valuable but needs a real key (customer-managed or from the
+  # `kms` module), so this stays opt-in rather than silently creating a key
+  # this module didn't ask permission to own.
+  dynamic "encryption_config" {
+    for_each = var.secrets_kms_key_arn == null ? [] : [1]
+    content {
+      resources = ["secrets"]
+      provider {
+        key_arn = var.secrets_kms_key_arn
+      }
+    }
   }
 
   tags = var.tags

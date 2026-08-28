@@ -6,6 +6,12 @@ HTTP API (v2, cheaper/simpler than REST API v1) with a single Lambda proxy integ
 
 Implemented (minimal). One route only — add more `aws_apigatewayv2_route`/`aws_apigatewayv2_integration` pairs for multiple endpoints, or use `$default` (current default) to proxy everything to one Lambda that does its own routing.
 
+## Not yet included
+
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **Access logging not configured** — needs a CloudWatch log group + `access_log_settings` block on the stage; add when a scenario needs request-level audit trails.
+- **No route-level authorization** (`authorization_type`) — this module's `$default` route accepts unauthenticated requests by design (the Lambda behind it does its own auth if needed). Add a `authorizer_id`/Cognito or IAM authorizer when a scenario needs gateway-level auth.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_apigatewayv2_route.this`에 `precondition`을 달아, `route_key`가 `$default`이거나 올바른 `<METHOD> /path` 형식인지 검증한다.

@@ -10,7 +10,12 @@ Implemented (minimal): base cluster + managed node group only.
 
 **Karpenter is not wired up yet**, despite being the original point of this module for spike traffic (see `scenarios/high-traffic-spike`). Karpenter needs a Helm release + its own IAM role/instance profile + `NodePool`/`EC2NodeClass` Kubernetes CRDs, which means Terraform's `helm`/`kubernetes` providers — a bigger addition than "minimal." Until then, react to spikes via `node_max_size` headroom on the managed node group (slower than Karpenter, but functional). Add Karpenter when `high-traffic-spike` is actually implemented.
 
-IRSA, private-only API endpoint toggle, multiple node groups: also not included.
+IRSA, multiple node groups: also not included.
+
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **Public API endpoint open to 0.0.0.0/0** — this is the actual AWS default when `endpoint_public_access`/`public_access_cidrs` aren't set, which is what lets you run `kubectl`/`terraform` from a laptop without a VPN into the VPC. `endpoint_private_access = true` is now on too (free, lets in-VPC traffic use a private path), but disabling public access entirely means every cluster interaction has to go through something inside the VPC (bastion, VPN, Cloud9) — a real operational cost this minimal module doesn't force on you. Set `public_access_cidrs` to your own IP range, or add a variable to disable public access entirely, once a scenario needs it.
+- **Control plane logging not enabled** (`enabled_cluster_log_types`) — a real cost trade-off: CloudWatch Logs ingestion for `api`/`audit`/`authenticator`/`controllerManager`/`scheduler` logs isn't free at scale. Add when a scenario needs control-plane audit trails.
+- **Secrets encryption available but opt-in** — pass `secrets_kms_key_arn` (e.g. from the `kms` module) to encrypt Kubernetes Secrets at rest with envelope encryption. Left off by default because it needs a real KMS key this module won't silently create on your behalf.
 
 ## 런타임 불변식 (precondition/postcondition)
 

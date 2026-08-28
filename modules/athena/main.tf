@@ -10,6 +10,12 @@ resource "aws_athena_workgroup" "this" {
 
     result_configuration {
       output_location = var.output_location
+
+      # SSE-S3, same "encryption on by default costs nothing" call as
+      # s3-bucket — no customer-managed KMS key to operate.
+      encryption_configuration {
+        encryption_option = "SSE_S3"
+      }
     }
   }
 

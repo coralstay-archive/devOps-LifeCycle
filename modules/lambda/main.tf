@@ -24,6 +24,13 @@ resource "aws_iam_role_policy_attachment" "basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# Required for tracing_config below to actually write anything to X-Ray —
+# without this permission, Active tracing silently produces no traces.
+resource "aws_iam_role_policy_attachment" "xray" {
+  role       = aws_iam_role.this.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}
+
 # Declared explicitly (with a real retention period) instead of letting
 # Lambda auto-create it — Lambda's auto-created log group defaults to never
 # expiring, which quietly accumulates cost forever.
@@ -48,6 +55,12 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = var.environment_variables
+  }
+
+  # Free observability win: samples and records request traces with no
+  # code changes needed, as long as the xray policy attachment above exists.
+  tracing_config {
+    mode = "Active"
   }
 
   tags = var.tags

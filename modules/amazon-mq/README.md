@@ -6,6 +6,13 @@ Managed RabbitMQ (default) or ActiveMQ, single-instance deployment. **Only use t
 
 Implemented (minimal): single-instance, no active/standby HA (use `deployment_mode = "ACTIVE_STANDBY_MULTI_AZ"` for that, not yet parameterized here).
 
+## Not yet included
+
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **Customer-managed KMS key** — broker is encrypted with the AWS-managed key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+- **Audit and general logging to CloudWatch Logs not enabled** — needs a log group + `logs { audit = true, general = true }` block; add when a scenario needs broker-level audit trails.
+- **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_mq_broker.this`에 두 개의 `precondition`을 달았다: `engine_type`이 RabbitMQ 또는 ActiveMQ인지(Amazon MQ가 지원하는 유일한 엔진들), 그리고 `password`가 12~250자인지(Amazon MQ API 자체의 요구사항 — `specs/modules/amazon-mq/spec.tla`로 이 모듈의 입출력 동작을 정리하다가 이 검증이 빠져 있는 걸 발견해 추가했다).

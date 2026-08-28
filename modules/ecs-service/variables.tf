@@ -40,6 +40,12 @@ variable "target_group_arn" {
   default     = null
 }
 
+variable "alb_security_group_id" {
+  description = "ALB's security group ID (the alb module's security_group_id output). If set, container_port ingress is scoped to only the ALB instead of 0.0.0.0/0. Leave null if there's no ALB in front of this service."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

@@ -22,6 +22,12 @@ variable "initial_instance_count" {
   default = 1
 }
 
+variable "endpoint_kms_key_arn" {
+  description = "KMS key ARN to encrypt the endpoint's inference storage volume at rest (e.g. from the kms module). Leave null to skip — SageMaker has no AWS-managed-key fallback here, so this volume is genuinely unencrypted without one."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

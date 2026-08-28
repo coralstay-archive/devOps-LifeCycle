@@ -16,6 +16,11 @@ resource "aws_cloudfront_distribution" "this" {
   aliases         = var.aliases
   tags            = var.tags
 
+  # This module always fronts an S3 origin via OAC (see origin_access_control
+  # above) — it's a static-site distribution, so a request for "/" needs a
+  # real object to resolve to.
+  default_root_object = "index.html"
+
   # Points at the S3 origin and attaches the OAC above — without
   # origin_access_control_id here, CloudFront would need the bucket to be
   # public (or use the deprecated OAI) to read from it.
@@ -56,6 +61,10 @@ resource "aws_cloudfront_distribution" "this" {
     cloudfront_default_certificate = var.certificate_arn == null
     acm_certificate_arn            = var.certificate_arn
     ssl_support_method             = var.certificate_arn == null ? null : "sni-only"
+    # Only settable with a custom cert (sni-only) — the default CloudFront
+    # certificate path is pinned to TLSv1 for legacy-client compatibility
+    # and can't be overridden.
+    minimum_protocol_version = var.certificate_arn == null ? null : "TLSv1.2_2021"
   }
 
   # A custom certificate with no aliases to serve it on is a contradiction —

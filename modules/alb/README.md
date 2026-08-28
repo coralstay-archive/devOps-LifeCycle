@@ -6,6 +6,14 @@ Application Load Balancer + one target group (IP target type, for Fargate). Pass
 
 Implemented (minimal). One target group only — for multiple services behind one ALB, use listener rules (not yet included).
 
+## Not yet included
+
+Checkov/Trivy findings that are real, accepted trade-offs, not gaps that slipped through unnoticed:
+- **Deletion protection off** — deliberately, so `terraform destroy` works cleanly for a scaffold/demo stack. Flip on for anything real.
+- **Access logging not configured** — needs an S3 bucket + bucket policy to receive logs; add when a scenario needs request-level audit trails.
+- **HTTP allowed / not forced to HTTPS-only** — intentional: without `certificate_arn`, HTTP forwards directly so `live/example-dev`-style testing doesn't require a cert. This is a real gap only if you deploy without `certificate_arn` in production.
+- **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_lb.this`에 `precondition`을 달아, `public_subnet_ids`가 최소 2개 AZ에 걸쳐 있는지 검증한다 — 이건 스타일이 아니라 실제 ALB API 요구사항이다.

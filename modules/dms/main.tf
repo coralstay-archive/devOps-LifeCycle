@@ -5,6 +5,26 @@ resource "aws_dms_replication_subnet_group" "this" {
   tags                                 = var.tags
 }
 
+# Without this, aws_dms_replication_instance below falls back to the VPC's
+# default security group — whatever that happens to allow, uncontrolled by
+# this module. The replication instance only ever initiates outbound
+# connections to the source/target endpoints; nothing needs to connect
+# into it, so no ingress rule is needed here (unlike rds-postgres/
+# elasticache-redis/etc., which all serve inbound traffic).
+resource "aws_security_group" "this" {
+  name        = "${var.name}-dms-sg"
+  description = "DMS replication instance — outbound only, no inbound rule needed"
+  vpc_id      = var.vpc_id
+  tags        = var.tags
+}
+
+resource "aws_vpc_security_group_egress_rule" "all" {
+  security_group_id = aws_security_group.this.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+  description       = "Unrestricted egress — reaches the source DB and target (e.g. Kafka) endpoints, which can be anywhere"
+}
+
 # The compute that actually runs the migration/replication task — separate
 # from the source/target endpoints below, which just describe where data
 # comes from and goes to.
@@ -12,7 +32,9 @@ resource "aws_dms_replication_instance" "this" {
   replication_instance_id     = var.name
   replication_instance_class  = var.replication_instance_class
   replication_subnet_group_id = aws_dms_replication_subnet_group.this.id
+  vpc_security_group_ids      = [aws_security_group.this.id]
   publicly_accessible         = false
+  auto_minor_version_upgrade  = true
 
   tags = var.tags
 }

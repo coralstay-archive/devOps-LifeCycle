@@ -6,6 +6,13 @@ Redis replication group: 1 primary + replicas (count via `num_cache_nodes`), enc
 
 Implemented (minimal). Cluster Mode (sharding) intentionally left out — this is a single shard with replicas, which covers most caching/session use cases. Add Cluster Mode when a scenario needs write throughput beyond one primary.
 
+## Not yet included
+
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **No `auth_token` (Redis AUTH)** — transit encryption is on (`transit_encryption_enabled = true`), but there's no password required to connect. Adding one properly means generating a random token and storing it in `secrets-manager` (never as a plain output, same pattern as this repo's other password-bearing modules) — a real feature addition, not a one-line flip.
+- **Customer-managed KMS key** — encrypted at rest with the AWS-managed key by default. Add a `kms_key_id` variable if a scenario needs key rotation control/audit.
+- **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
+
 ## Inputs / Outputs
 
 See `variables.tf` / `outputs.tf`.

@@ -23,12 +23,14 @@ resource "aws_vpc_security_group_ingress_rule" "redis" {
   from_port                    = 6379
   to_port                      = 6379
   ip_protocol                  = "tcp"
+  description                  = "Redis from an approved application security group"
 }
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
+  description       = "Unrestricted egress — the replication group needs to reach AWS APIs"
 }
 
 resource "aws_elasticache_replication_group" "this" {

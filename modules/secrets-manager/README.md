@@ -6,6 +6,10 @@ A single secret. For RDS master passwords, prefer `rds-postgres`'s built-in `man
 
 Implemented (minimal). No rotation configured — add `aws_secretsmanager_secret_rotation` when a secret needs it.
 
+## Not yet included
+
+**Customer-managed KMS key** — encrypted with the AWS-managed `aws/secretsmanager` key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_id` variable if a scenario needs key rotation control/audit.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_secretsmanager_secret.this`에 `postcondition`을 달아, 생성된 ARN이 올바른 Secrets Manager ARN 형태인지 검증한다.

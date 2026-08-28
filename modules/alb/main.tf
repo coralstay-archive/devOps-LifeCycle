@@ -11,6 +11,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
   from_port         = 80
   to_port           = 80
   ip_protocol       = "tcp"
+  description       = "Public HTTP — forwards directly if no cert, else redirects to HTTPS"
 }
 
 # Only opened when there's actually a cert to serve HTTPS with — no point
@@ -22,12 +23,14 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   from_port         = 443
   to_port           = 443
   ip_protocol       = "tcp"
+  description       = "Public HTTPS"
 }
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
+  description       = "Unrestricted egress to reach the target group across any subnet/AZ"
 }
 
 resource "aws_lb" "this" {
@@ -36,6 +39,10 @@ resource "aws_lb" "this" {
   load_balancer_type = "application"
   subnets            = var.public_subnet_ids
   security_groups    = [aws_security_group.this.id]
+
+  # Free hardening with no behavior tradeoff — rejects requests smuggling
+  # invalid header fields instead of passing them through.
+  drop_invalid_header_fields = true
 
   tags = var.tags
 

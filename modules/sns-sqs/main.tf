@@ -3,6 +3,10 @@
 resource "aws_sns_topic" "this" {
   name = "${var.name}-topic"
   tags = var.tags
+
+  # AWS-managed key, same "encryption on by default costs nothing" call as
+  # s3-bucket's SSE-S3 — no customer-managed KMS key/rotation to operate.
+  kms_master_key_id = "alias/aws/sns"
 }
 
 # The durable consume side: unlike a direct SNS subscription to, say, a
@@ -11,6 +15,9 @@ resource "aws_sns_topic" "this" {
 resource "aws_sqs_queue" "this" {
   name = "${var.name}-queue"
   tags = var.tags
+
+  # AWS-managed key — same rationale as the topic's kms_master_key_id above.
+  kms_master_key_id = "alias/aws/sqs"
 
   # Same "does this ARN look real" convention as the other modules'
   # postconditions — cheap, mostly documentation of intent.

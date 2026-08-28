@@ -4,7 +4,7 @@ Web ACL with the AWS Managed Common Rule Set, associated with an ALB by default 
 
 ## Status
 
-Implemented (minimal): one managed rule group.
+Implemented (minimal): two managed rule groups (common rule set + known bad inputs, which covers Log4Shell/CVE-2021-44228).
 
 ## 런타임 불변식 (precondition/postcondition)
 

@@ -10,6 +10,12 @@ Implemented (minimal): one source, one target, one task, capturing all tables by
 
 `source_password` is a plain sensitive variable here for simplicity. In practice, read it from the `secrets-manager` module instead of passing it as a bare tfvar.
 
+## Not yet included
+
+**Customer-managed KMS key** — both the replication instance and endpoints are encrypted with the AWS-managed `aws/dms` key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+
+**Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment for why (the replication instance only ever makes outbound connections, to arbitrary source/target endpoints).
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_dms_endpoint.source`에 `precondition`을 달아, `source_port`가 유효한 TCP 포트 범위(1-65535)인지 검증한다. `aws_dms_endpoint.target`에도 `precondition`을 달아, `target_engine_name`이 "kafka"면 `target_kafka_broker`가 반드시 설정되어 있는지 검증한다(`specs/modules/dms/spec.tla`로 이 모듈의 입출력 동작을 정리하다가, 이 조합을 막는 검증이 빠져 있던 걸 발견해 추가했다).

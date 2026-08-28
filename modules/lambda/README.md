@@ -6,6 +6,17 @@ One function from a local zip (`filename`), basic-execution IAM role, explicit l
 
 Implemented (minimal). No VPC attachment, no layers, no provisioned concurrency — add when a scenario needs them.
 
+## Not yet included
+
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **Not attached to a VPC** — intentional: most Lambda use cases here (serverless-api, event-driven-microservices) don't need to reach anything VPC-private, and VPC attachment adds cold-start latency + needs its own subnets/NAT. Add `vpc_config` when a scenario's function needs to reach an RDS/ElastiCache instance directly.
+- **No Dead Letter Queue** — needs an `sns-sqs` (or plain SQS) queue wired to `dead_letter_config`; add when a scenario needs to inspect failed async invocations instead of just retrying/dropping them.
+- **No reserved concurrency limit** — unbounded by default, which is the right default for most cases (don't want one function's traffic starving others via account-level concurrency); set `reserved_concurrent_executions` when a scenario specifically needs a ceiling (see `specs/serverless-api/spec.tla`'s `MaxConcurrency` for why this matters).
+- **No code-signing validation** — needs an AWS Signer profile; add for scenarios with a supply-chain-integrity requirement.
+- **CloudWatch Log Group not encrypted with KMS** — uses CloudWatch's default encryption. Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+- **Log retention is a variable, not fixed at "1 year+"** (`log_retention_days` defaults to 14) — deliberately configurable per caller rather than a fixed compliance-driven minimum.
+- **Environment variables not KMS-encrypted with a customer key** — Lambda always encrypts environment variables at rest with an AWS-managed key; this finding wants a customer-managed one specifically.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_lambda_function.this`에 `precondition`을 달아, `memory_size`가 128~10240MB 범위인지 검증한다 — 실제 Lambda API 요구사항.

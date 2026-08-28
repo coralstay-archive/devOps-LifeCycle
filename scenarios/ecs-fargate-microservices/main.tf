@@ -29,10 +29,11 @@ module "service" {
   source   = "../../modules/ecs-service"
   for_each = toset(var.services)
 
-  name               = "${var.name}-${each.key}"
-  vpc_id             = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids
-  container_image    = var.container_image
-  container_port     = 80
-  target_group_arn   = module.alb[each.key].target_group_arn
+  name                  = "${var.name}-${each.key}"
+  vpc_id                = module.vpc.vpc_id
+  private_subnet_ids    = module.vpc.private_subnet_ids
+  container_image       = var.container_image
+  container_port        = 80
+  target_group_arn      = module.alb[each.key].target_group_arn
+  alb_security_group_id = module.alb[each.key].security_group_id
 }

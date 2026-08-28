@@ -10,6 +10,8 @@ Implemented (minimal).
 
 Auto Scaling Group (this is a single fixed instance, not a fleet), additional EBS volumes, EIP association, launch template. For anything that needs to scale, consider `ecs-service`/`eks` instead — this module exists for the cases that genuinely need a plain VM (bastion hosts, self-hosted tools, legacy lift-and-shift).
 
+**Detailed monitoring not enabled** — a real cost trade-off, not a free flip: 1-minute CloudWatch metrics cost extra per instance versus the free 5-minute default. Set `monitoring = true` on the resource when a scenario actually needs finer-grained metrics.
+
 ## Security note
 
 `key_name` defaults to `null`. Prefer **SSM Session Manager** (via an instance profile with `AmazonSSMManagedInstanceCore`) over SSH key pairs — no open port 22, no key distribution problem, and every session is logged in CloudTrail.

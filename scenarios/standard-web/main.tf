@@ -37,12 +37,13 @@ module "alb" {
 module "ecs_service" {
   source = "../../modules/ecs-service"
 
-  name               = var.name
-  vpc_id             = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids
-  container_image    = var.container_image
-  container_port     = 80
-  target_group_arn   = module.alb.target_group_arn
+  name                  = var.name
+  vpc_id                = module.vpc.vpc_id
+  private_subnet_ids    = module.vpc.private_subnet_ids
+  container_image       = var.container_image
+  container_port        = 80
+  target_group_arn      = module.alb.target_group_arn
+  alb_security_group_id = module.alb.security_group_id
 }
 
 # allowed_security_group_ids = [ecs_service's SG] is the actual access

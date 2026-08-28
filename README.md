@@ -4,22 +4,23 @@
 
 **Pick a scenario. Copy it. Ship it.**
 
-A reusable Terraform launchpad for AWS — atomic modules, composed scenarios, and an IaC quality pipeline with Google-SRE principles baked in from day one, not bolted on later.
+A personal Terraform launchpad for AWS — atomic modules, composed scenarios, formally-specified runtime behavior, and an IaC quality pipeline, built as a hands-on way to actually learn this stuff rather than just read about it.
 
 ![Terraform](https://img.shields.io/badge/terraform-%3E%3D1.5-623CE4?style=flat-square&logo=terraform&logoColor=white)
 ![AWS Provider](https://img.shields.io/badge/AWS%20provider-~%3E%205.0-FF9900?style=flat-square&logo=amazonaws&logoColor=white)
 ![Modules](https://img.shields.io/badge/modules-36-2ea44f?style=flat-square)
 ![Scenarios](https://img.shields.io/badge/scenarios-30-2ea44f?style=flat-square)
-![Status](https://img.shields.io/badge/status-scaffolding-yellow?style=flat-square)
+![TLA+ specs](https://img.shields.io/badge/TLA%2B%20specs-66-9146ff?style=flat-square)
+![Status](https://img.shields.io/badge/status-active%20learning%20project-yellow?style=flat-square)
 ![Security scans](https://img.shields.io/badge/security-Trivy%20%2B%20Checkov-blueviolet?style=flat-square)
 ![Policy as code](https://img.shields.io/badge/policy--as--code-OPA%2FConftest-005571?style=flat-square)
-![License](https://img.shields.io/badge/license-unlicensed-lightgrey?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 
 </div>
 
 ---
 
-> 🎓 **This is a learning repo, built together with Claude.** Every module, scenario, and TLA+ spec here was written in an ongoing pairing session between the repo owner and [Claude](https://claude.com/claude-code) — the design decisions, the deliberate bugs found and fixed along the way, and the [`backlog.md`](#-learning-backlog) learning tasks are all part of that process, not a finished product to copy blindly. Read the `backlog/decisions/` folder for the *why* behind the non-obvious calls.
+> 🎓 **This is a personal learning project, built together with Claude.** Not a polished product, not a company's official IaC library — one person's hands-on tooling for actually learning Terraform, AWS, SRE practice, and formal specification (TLA+) by building something real with an AI pairing partner, mistakes included. Every module, scenario, and TLA+ spec here came out of that ongoing session with [Claude](https://claude.com/claude-code) — the design decisions, the real bugs a security scanner or a model checker actually caught (and the ones that turned out to be false positives), and the [`backlog.md`](#-learning-backlog) learning tasks left for the human to actually work through, are all part of that process, not a finished thing to copy blindly. Read `backlog/decisions/` for the *why* behind the non-obvious calls, and [Repo metrics](#-repo-metrics) for what the tools actually find when pointed at this code — including the things that are still open.
 
 ---
 
@@ -144,30 +145,40 @@ Organized by **scope**, not by "module vs scenario" — nearly every tool here r
 
 ## 📊 Repo metrics
 
-What the tools above actually find when run against this repo right now — not aspirational, a real snapshot:
+What the tools above actually find when run against this repo right now — not aspirational, a real snapshot, and one that's already been through a full audit pass (see below):
 
 | Metric | Result |
 |---|---|
-| tflint (whole repo) | **0 findings** |
-| checkov (36 modules) | 246 passed / 79 failed (75.7%) — failures are the documented *"Not yet included"* trade-offs per module, not gaps that slipped through unnoticed |
-| trivy config (36 modules) | 52 misconfigurations flagged — same category as checkov, second-opinion scanner |
+| tflint (whole repo) | 0 errors/warnings; 322 `info`-level notices (missing `description` on variables/outputs — a real, separate cleanup item, not started yet) |
+| checkov (36 modules) | 301 passed / 45 failed (87.0%) — every remaining failure has a matching *"Not yet included"* note in that module's README |
+| trivy config (36 modules) | 40 misconfigurations flagged — same category as checkov, second-opinion scanner, same audit coverage |
 | `precondition`/`postcondition` blocks | 38 (35 precondition + 3 postcondition) — real AWS-API invariants enforced on every `plan`/`apply` |
 | `terraform test` files | 3 (`vpc`, `s3-bucket`, `iam-github-oidc`) |
 | Conftest policies (`policy/`) | 2 (1 `deny`, 1 `warn`) |
 | gitleaks (full git history) | 0 leaks |
-| TLA+ / TLC (66 specs: 30 scenarios + 36 modules) | 376 states generated, 227 distinct, **0 failing** |
-| Lines of code ([tokei](https://github.com/XAMPPRocky/tokei)) | 6,030 HCL · 3,925 TLA+ (`tokei` doesn't recognize `.tla`, counted separately) · 316 backlog learning-task files (11,736 lines) |
-| Infracost | not run — needs a personal `infracost auth login` (browser-based, can't be done on someone else's behalf); run it yourself, then `infracost breakdown --path live/<project>` |
+| TLA+ / TLC (66 specs: 30 scenarios + 36 modules) | 0 failing, reconfirmed after every module fix below |
+| Lines of code ([tokei](https://github.com/XAMPPRocky/tokei)) | 6,030+ HCL · 3,925 TLA+ (`tokei` doesn't recognize `.tla`, counted separately) · 316 backlog learning-task files (11,736 lines) |
+| Infracost | not run locally — confirmed by actually trying: the latest CLI (`v2.16.2` via Homebrew) requires a browser OAuth login even for `infracost scan`, and `infracost diff`/`infracost comment` (what CI uses) are deprecated *in that version*. The CI workflow itself is fine: `infracost/actions/setup@v3` pins CLI `0.10.x` by default, where `diff`/`comment` are still the correct, working commands — so this is purely a "can't run the newest CLI interactively on your behalf" gap, not a broken pipeline. You still need to `infracost auth login` once yourself to get the `INFRACOST_API_KEY` for the repo secret (see [One-time setup](#-one-time-setup)) |
 
-> **On the checkov/trivy failures:** they're real findings, not false positives — this repo's modules are intentionally minimal (see each module's own *"Not yet included"* section for the specific trade-off). Nobody has yet cross-checked that all 79+52 findings actually have a matching README note versus something that just slipped through — that audit is still open.
+### The checkov/trivy audit (what actually happened)
 
-## 🎯 SRE principles applied to every scenario
+The first pass of this table said "79 checkov / 52 trivy failures, not yet cross-checked against documentation." That audit happened — findings dropped from 79→45 (checkov) and 52→40 (trivy; one new finding appeared along the way — see the `dms` note below — so it's not a clean drop), split three ways:
 
-1. **SLI/SLO first** — every `live/<project>` carries an `SLO.md` (availability, latency, error budget policy).
-2. **Observability from day one** — `modules/observability` (CloudWatch baseline, Prometheus/Grafana for EKS scenarios) is part of the recipe, not an afterthought.
-3. **Spike-ready autoscaling** — Karpenter on EKS, ElastiCache read replicas, MSK partition scaling, ALB/API Gateway throttling.
-4. **Load testing before trust** — `tools/loadtest/` k6 templates rehearse sudden spikes (Google/Spotify-style) against the SLO thresholds.
-5. **Multi-AZ by default**, multi-region only where a scenario specifically needs it.
+- **Fixed for free** (~20 findings): security group rule descriptions, `auto_minor_version_upgrade`, SNS/SQS/Athena default encryption with AWS-managed keys, CloudFront `default_root_object`/TLS 1.2 minimum, ALB header-dropping, Lambda X-Ray tracing, Step Functions logging + tracing, WAF's Log4Shell rule set, RDS IAM auth + Performance Insights, SageMaker network isolation.
+- **Fixed because they were real security gaps, not just scanner nits**: `ecs-service` had its container port open to `0.0.0.0/0` even behind an ALB — now scoped to the ALB's security group when one exists. `redshift` had no `publicly_accessible` set at all, and Redshift (unlike RDS) actually defaults that to `true` — now explicit `false`. `dms` had no security group whatsoever, silently falling back to the VPC's default SG — now has one (egress-only, since it only makes outbound connections). Two of these were found via a leftover `tflint` unused-variable warning (`vpc_id` declared but never used) that turned out to be pointing at real missing infrastructure, not dead code.
+- **Left as documented trade-offs** (the rest): mostly "use a customer-managed KMS key" (encryption is already on everywhere via AWS-managed keys — this is about who manages the key) and things needing real new infrastructure (access-log buckets, enhanced monitoring's IAM role, VPC-attached Lambda). Every one of these has a specific note in its module's README, not just a generic "intentionally minimal" hand-wave.
+
+One thing this audit exposed about itself: `tflint`'s "0 findings" claim in an earlier version of this table was **wrong** — the `aws` plugin had silently failed to load (a stale plugin cache), so most of the repo was never actually being checked, and it looked clean by accident. Re-running `tflint --init` surfaced the real number (322 info-level notices, 0 real errors) plus the two `vpc_id` warnings above. Lesson kept for the record: a "0 findings" result is only as trustworthy as confirming the tool actually ran everywhere it was supposed to.
+
+## 🎯 SRE principles this repo aims for (and where it honestly falls short)
+
+The intent, stated plainly, and the actual state rather than the aspiration:
+
+1. **SLI/SLO first** — every `live/<project>` carries an `SLO.md` (availability, latency, error budget policy). Implemented.
+2. **Observability from day one** — `modules/observability` (CloudWatch baseline) is part of the recipe, not an afterthought. **Not yet implemented**: Prometheus/Grafana (AMP/AMG) for EKS scenarios — see `modules/observability`'s own *"Not yet included"* note.
+3. **Spike-ready autoscaling** — ElastiCache read replicas and MSK partition/broker scaling are real (see those modules' `precondition` blocks). **Not yet implemented**: Karpenter on EKS (the `eks` module's README documents this gap directly — it's the whole reason `high-traffic-spike` exists as a scenario, and it isn't wired up yet), and there's no ALB/API Gateway throttling configuration anywhere in this repo yet.
+4. **Load testing before trust** — `tools/loadtest/` k6 templates rehearse sudden spikes, wired into CI as a manual `workflow_dispatch` job (`.github/workflows/loadtest.yml`). Implemented, but the thresholds in `basic-load.js` are still placeholders per scenario.
+5. **Multi-AZ by default**, multi-region only where a scenario specifically needs it. Implemented (see the `precondition` blocks requiring ≥2 AZs on `vpc`, `alb`, `eks`, `msk-kafka`).
 
 ## 📦 Modules (36)
 

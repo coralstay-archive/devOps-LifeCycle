@@ -4,6 +4,10 @@
 *.tfstate.*
 *.tfvars
 !*.tfvars.example
+# modules/scenarios aren't standalone deployments (only live/* is) — no
+# provider lock file to commit at that scope
+modules/*/.terraform.lock.hcl
+scenarios/*/.terraform.lock.hcl
 crash.log
 crash.*.log
 override.tf

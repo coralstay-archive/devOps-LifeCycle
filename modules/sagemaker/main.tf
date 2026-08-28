@@ -35,6 +35,13 @@ resource "aws_sagemaker_model" "this" {
     model_data_url = var.model_data_url
   }
 
+  # Free for the common case (a container that only needs to load its model
+  # artifact and serve inference, no other network calls) — blocks all
+  # outbound network access from the container except what SageMaker itself
+  # needs. Turn off if the container genuinely needs runtime internet access
+  # (e.g. downloading additional assets at startup).
+  enable_network_isolation = true
+
   tags = var.tags
 }
 
@@ -50,6 +57,12 @@ resource "aws_sagemaker_endpoint_configuration" "this" {
     instance_type          = var.instance_type
     initial_instance_count = var.initial_instance_count
   }
+
+  # Unlike S3/DynamoDB/SNS, SageMaker has no "AWS-managed key" fallback for
+  # the inference storage volume — it's genuinely unencrypted unless a real
+  # KMS key is supplied, so this stays opt-in rather than something this
+  # module can silently turn on.
+  kms_key_arn = var.endpoint_kms_key_arn
 
   tags = var.tags
 

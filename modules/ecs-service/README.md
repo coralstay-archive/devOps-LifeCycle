@@ -10,6 +10,10 @@ Implemented (minimal). Pair with the `alb` module for `target_group_arn`.
 
 Service auto scaling policy, blue/green (CodeDeploy) — see `codedeploy` module for `scenarios/blue-green-deployment`.
 
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **Container Insights not enabled** — a real cost trade-off, not a free flip: extra per-container CloudWatch metrics cost money at scale. Set `setting { name = "containerInsights", value = "enabled" }` on the cluster when a scenario needs per-container CPU/memory visibility beyond task-level metrics.
+- **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment. Ingress *is* scoped to the ALB's security group when one is provided (`alb_security_group_id`).
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_ecs_service.this`에 `precondition`을 달아, `private_subnet_ids`가 비어있지 않은지 검증한다.

@@ -10,6 +10,8 @@ Implemented (minimal): inference endpoint only.
 
 Training pipelines (`ml-training-pipeline`) aren't a persistent Terraform resource in the usual sense — SageMaker training jobs are typically kicked off via the SDK/`step-functions`, not declared as long-lived infra. Orchestrate training with the `step-functions` module instead of expecting a Terraform resource here.
 
+**Endpoint storage encryption is opt-in** (`endpoint_kms_key_arn`) — unlike S3/DynamoDB/SNS, SageMaker has no AWS-managed-key fallback for the inference storage volume; pass a KMS key ARN (e.g. from the `kms` module) when a scenario needs encryption at rest.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_sagemaker_endpoint_configuration.this`에 `precondition`을 달아, `initial_instance_count`가 1 이상인지 검증한다.

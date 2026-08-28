@@ -27,6 +27,8 @@ alarms = {
 
 Prometheus/Grafana (AMP/AMG) for EKS scenarios, error-budget-burn-rate composite alarms. Add when an EKS-based scenario needs them.
 
+**Customer-managed KMS key for the SNS topic** — encrypted with the AWS-managed `alias/aws/sns` key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_sns_topic.alarms`에 `postcondition`을 달아, 생성된 ARN이 올바른 SNS ARN 형태인지 검증한다.

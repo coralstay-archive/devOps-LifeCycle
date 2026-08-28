@@ -40,18 +40,37 @@ resource "aws_security_group" "service" {
 # Fargate tasks use awsvpc networking, meaning each task gets its own ENI —
 # so the security group has to allow the container port directly, there's no
 # host-level port mapping to reason about like with EC2 launch type.
-resource "aws_vpc_security_group_ingress_rule" "container_port" {
+#
+# Scoped to the ALB's security group when one is given — traffic is only
+# ever supposed to arrive via the ALB, so 0.0.0.0/0 is a wider hole than
+# necessary. Falls back to 0.0.0.0/0 only for the no-ALB case (a caller
+# reaching the service directly, e.g. via a Cloud Map/service-discovery
+# setup this minimal module doesn't build).
+resource "aws_vpc_security_group_ingress_rule" "container_port_from_alb" {
+  count                        = var.alb_security_group_id == null ? 0 : 1
+  security_group_id            = aws_security_group.service.id
+  referenced_security_group_id = var.alb_security_group_id
+  from_port                    = var.container_port
+  to_port                      = var.container_port
+  ip_protocol                  = "tcp"
+  description                  = "Container port from the ALB's security group only"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "container_port_open" {
+  count             = var.alb_security_group_id == null ? 1 : 0
   security_group_id = aws_security_group.service.id
   cidr_ipv4         = "0.0.0.0/0"
   from_port         = var.container_port
   to_port           = var.container_port
   ip_protocol       = "tcp"
+  description       = "No ALB security group given — falls back to open ingress on the container port"
 }
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.service.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
+  description       = "Unrestricted egress — pulls the container image from ECR, talks to other AWS APIs"
 }
 
 # Fargate specifically (requires_compatibilities), awsvpc networking mode

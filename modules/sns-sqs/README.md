@@ -6,6 +6,10 @@ One SNS topic fanning out to one SQS queue (the default AWS "message queue" patt
 
 Implemented (minimal). No dead-letter queue yet — add `aws_sqs_queue` with `redrive_policy` when a scenario needs retry handling.
 
+## Not yet included
+
+**Customer-managed KMS key** — both the topic and queue use the AWS-managed `alias/aws/sns` / `alias/aws/sqs` keys (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_sqs_queue.this`에 `postcondition`을 달아, 생성된 ARN이 올바른 SQS ARN 형태인지 검증한다.

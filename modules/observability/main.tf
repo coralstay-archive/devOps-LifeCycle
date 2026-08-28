@@ -5,6 +5,10 @@ resource "aws_sns_topic" "alarms" {
   name = "${var.name}-alarms"
   tags = var.tags
 
+  # AWS-managed key — same "encryption on by default costs nothing" call as
+  # s3-bucket's SSE-S3.
+  kms_master_key_id = "alias/aws/sns"
+
   # Cheap sanity check that the resource actually produced a usable ARN —
   # mainly here as the pattern other modules follow (see s3-bucket's
   # bucket_arn precondition for the same idea on an output instead of a

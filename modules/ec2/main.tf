@@ -21,6 +21,10 @@ resource "aws_instance" "this" {
   associate_public_ip_address = var.associate_public_ip_address
   iam_instance_profile        = var.iam_instance_profile
   user_data                   = var.user_data
+  # Free on every current-generation instance type (t3, m5, etc.) — EBS
+  # optimization is already the API default for them, this just makes it
+  # explicit instead of relying on that default silently holding.
+  ebs_optimized = true
 
   # Encrypted by default — there's no reason a fresh EC2 instance's root
   # volume should ever be unencrypted, and AWS doesn't default to encrypted

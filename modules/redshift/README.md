@@ -6,6 +6,15 @@ Single-node cluster (cheapest option — bump `node_type`/`cluster_type` to mult
 
 Implemented (minimal).
 
+## Not yet included
+
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **`master_username` defaults to `"admin"`** — a commonly-guessed username, flagged alongside public-access checks. The username alone isn't the security boundary here (the security group + `publicly_accessible = false` are); changing the default doesn't meaningfully harden anything, so it's left as the conventional default rather than picked to satisfy a scanner.
+- **Customer-managed KMS key** — `encrypted = true` uses the AWS-managed `aws/redshift` key by default. Add a `kms_key_id` variable if a scenario needs key rotation control/audit.
+- **Enhanced VPC routing not enabled** — forces all COPY/UNLOAD traffic through the VPC (instead of the public internet) for auditability; add `enhanced_vpc_routing = true` when a scenario needs that guarantee (requires the VPC to actually have a route to S3, e.g. via `vpc-endpoints`).
+- **Audit logging not enabled** — needs an S3 bucket to receive logs (`aws_redshift_logging` / `logging { enable = true, bucket_name = ... }`); add when a scenario needs query-level audit trails.
+- **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_redshift_cluster.this`에 `precondition`을 달아, `database_name`이 소문자로 시작하는 소문자/숫자/언더스코어 조합인지 검증한다 — Redshift 네이밍 규칙.

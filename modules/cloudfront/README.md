@@ -6,6 +6,15 @@ CDN in front of an S3 origin via Origin Access Control (OAC — the current reco
 
 Implemented (minimal): S3 origin only, no custom error pages, no cache invalidation automation.
 
+## Not yet included
+
+Checkov/Trivy findings that are real, accepted trade-offs:
+- **No WAF attached** — see the `waf-shield` module for adding one (`scope = "CLOUDFRONT"`, must be created in `us-east-1`); not wired together by default since not every static site needs WAF rules.
+- **No geo restriction** — add a `restrictions { geo_restriction { ... } }` block when a scenario needs to block/allow specific countries.
+- **No origin failover** — needs a second origin + `origin_group`; this module is single-origin by design (see Status above).
+- **Access logging not configured** — needs a dedicated S3 bucket to receive logs; add when a scenario needs request-level audit trails.
+- **Default CloudFront certificate when `certificate_arn` is null** — this is TLS 1.0/1.1-compatible for backward compatibility with old clients, and CloudFront doesn't let you pin a higher minimum on the default cert path. Set `certificate_arn` to get TLS 1.2+ enforced (`minimum_protocol_version = "TLSv1.2_2021"`).
+
 ## 런타임 불변식 (precondition/postcondition)
 
 `aws_cloudfront_distribution.this`에 `precondition`을 달아, `certificate_arn`을 설정했는데 `aliases`가 비어있는 모순 상태를 막는다.

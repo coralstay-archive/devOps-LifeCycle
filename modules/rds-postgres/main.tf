@@ -27,12 +27,14 @@ resource "aws_vpc_security_group_ingress_rule" "postgres" {
   from_port                    = 5432
   to_port                      = 5432
   ip_protocol                  = "tcp"
+  description                  = "PostgreSQL from an approved application security group"
 }
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
+  description       = "Unrestricted egress — the instance needs to reach AWS APIs (e.g. Secrets Manager for the managed password)"
 }
 
 resource "aws_db_instance" "this" {
@@ -52,8 +54,17 @@ resource "aws_db_instance" "this" {
   # avoids ever putting a DB password in state/plan output directly.
   manage_master_user_password = true
 
-  multi_az                = var.multi_az
-  backup_retention_period = 7
+  multi_az                   = var.multi_az
+  backup_retention_period    = 7
+  auto_minor_version_upgrade = true
+
+  # Both free: IAM auth just enables the capability (callers still need an
+  # explicit IAM policy grant to actually use it — this alone changes
+  # nothing about how the master password login works), and Performance
+  # Insights' default 7-day retention has no additional charge on
+  # instance classes that support it.
+  iam_database_authentication_enabled = true
+  performance_insights_enabled        = true
   # deletion_protection tracks skip_final_snapshot's inverse deliberately:
   # if you've said "it's fine to skip the final snapshot," you've already
   # accepted losing this data, so there's no reason deletion_protection

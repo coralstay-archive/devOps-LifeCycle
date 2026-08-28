@@ -42,6 +42,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   from_port         = 443
   to_port           = 443
   ip_protocol       = "tcp"
+  description       = "HTTPS from within the VPC to the interface endpoints"
 }
 
 # Defaults to ECR (api + dkr, both needed to pull images) and CloudWatch

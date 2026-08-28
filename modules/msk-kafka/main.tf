@@ -16,12 +16,14 @@ resource "aws_vpc_security_group_ingress_rule" "kafka_tls" {
   from_port                    = 9094
   to_port                      = 9094
   ip_protocol                  = "tcp"
+  description                  = "Kafka TLS listener from an approved application security group"
 }
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.this.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
+  description       = "Unrestricted egress — brokers need to reach AWS APIs"
 }
 
 resource "aws_msk_cluster" "this" {
