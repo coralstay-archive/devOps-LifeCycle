@@ -52,6 +52,18 @@ resource "aws_cloudfront_distribution" "this" {
   # default.
   web_acl_id = var.web_acl_id
 
+  # Requires an existing bucket with ACLs enabled and write access granted to
+  # CloudFront's log-delivery account — this module doesn't create or
+  # configure that bucket itself, same reasoning as alb's access_logs_bucket.
+  dynamic "logging_config" {
+    for_each = var.logging_bucket_domain_name == null ? [] : [1]
+    content {
+      bucket          = var.logging_bucket_domain_name
+      prefix          = var.logging_prefix
+      include_cookies = false
+    }
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = var.geo_restriction_type

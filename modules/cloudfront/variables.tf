@@ -40,3 +40,15 @@ variable "geo_restriction_locations" {
   type        = list(string)
   default     = []
 }
+
+variable "logging_bucket_domain_name" {
+  description = "S3 bucket regional domain name to receive access logs (must already have ACLs enabled and write access granted to CloudFront's log-delivery account -- this module doesn't create/configure that bucket). Null disables access logging."
+  type        = string
+  default     = null
+}
+
+variable "logging_prefix" {
+  description = "S3 key prefix for access logs, used only when logging_bucket_domain_name is set."
+  type        = string
+  default     = null
+}
