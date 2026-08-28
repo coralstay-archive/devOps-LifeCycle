@@ -1,9 +1,11 @@
 variable "name" {
-  type = string
+  description = "Name for the broker and its security group."
+  type        = string
 }
 
 variable "vpc_id" {
-  type = string
+  description = "VPC to place the broker and its security group in."
+  type        = string
 }
 
 variable "private_subnet_ids" {
@@ -12,8 +14,9 @@ variable "private_subnet_ids" {
 }
 
 variable "allowed_security_group_ids" {
-  type    = list(string)
-  default = []
+  description = "Security groups allowed to reach the broker on port 5671 (AMQP over TLS)."
+  type        = list(string)
+  default     = []
 }
 
 variable "engine_type" {
@@ -23,27 +26,32 @@ variable "engine_type" {
 }
 
 variable "engine_version" {
-  type    = string
-  default = "3.13"
+  description = "Broker engine version -- must be a version RabbitMQ/ActiveMQ (whichever engine_type picks) actually supports."
+  type        = string
+  default     = "3.13"
 }
 
 variable "host_instance_type" {
-  type    = string
-  default = "mq.t3.micro"
+  description = "Broker instance type (e.g. mq.t3.micro) -- this module always deploys SINGLE_INSTANCE, so there's no separate replica sizing."
+  type        = string
+  default     = "mq.t3.micro"
 }
 
 variable "username" {
-  type = string
+  description = "Admin username for the broker."
+  type        = string
 }
 
 variable "password" {
-  type      = string
-  sensitive = true
+  description = "Admin password for the broker. Must be 12-250 characters -- Amazon MQ's own API requirement, enforced by this module's precondition."
+  type        = string
+  sensitive   = true
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the broker and its security group."
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

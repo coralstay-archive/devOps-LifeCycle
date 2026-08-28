@@ -25,14 +25,14 @@ The actual `aws_bedrockagent_knowledge_base` wiring (linking a Bedrock foundatio
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name for the collection and its security policies/IAM role. Must be 3-32 chars, lowercase, starting with a letter -- OpenSearch Serverless's collection naming rule, enforced by a precondition. | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the collection and IAM role. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_bedrock_role_arn"></a> [bedrock\_role\_arn](#output\_bedrock\_role\_arn) | n/a |
-| <a name="output_collection_arn"></a> [collection\_arn](#output\_collection\_arn) | n/a |
-| <a name="output_collection_endpoint"></a> [collection\_endpoint](#output\_collection\_endpoint) | n/a |
+| <a name="output_bedrock_role_arn"></a> [bedrock\_role\_arn](#output\_bedrock\_role\_arn) | ARN of the IAM role Bedrock assumes to read/write this collection -- reference this when configuring a Bedrock knowledge base against it. |
+| <a name="output_collection_arn"></a> [collection\_arn](#output\_collection\_arn) | Collection ARN. |
+| <a name="output_collection_endpoint"></a> [collection\_endpoint](#output\_collection\_endpoint) | Collection endpoint -- used by clients/SDKs to talk to this vector store directly. |
 <!-- END_TF_DOCS -->

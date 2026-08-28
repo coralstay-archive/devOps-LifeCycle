@@ -1,9 +1,11 @@
 variable "cluster_name" {
-  type = string
+  description = "Name of the MSK cluster"
+  type        = string
 }
 
 variable "vpc_id" {
-  type = string
+  description = "VPC to place the cluster's security group in"
+  type        = string
 }
 
 variable "private_subnet_ids" {
@@ -12,18 +14,21 @@ variable "private_subnet_ids" {
 }
 
 variable "allowed_security_group_ids" {
-  type    = list(string)
-  default = []
+  description = "Security groups allowed to connect to the Kafka TLS listener (port 9094)"
+  type        = list(string)
+  default     = []
 }
 
 variable "kafka_version" {
-  type    = string
-  default = "3.7.x"
+  description = "Apache Kafka version MSK runs on the brokers"
+  type        = string
+  default     = "3.7.x"
 }
 
 variable "broker_instance_type" {
-  type    = string
-  default = "kafka.t3.small"
+  description = "EC2 instance type for each broker node"
+  type        = string
+  default     = "kafka.t3.small"
 }
 
 variable "number_of_broker_nodes" {
@@ -33,8 +38,9 @@ variable "number_of_broker_nodes" {
 }
 
 variable "broker_volume_size" {
-  type    = number
-  default = 100
+  description = "EBS volume size per broker, in GB"
+  type        = number
+  default     = 100
 }
 
 variable "encryption_at_rest_kms_key_arn" {
@@ -44,6 +50,7 @@ variable "encryption_at_rest_kms_key_arn" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the cluster, its security group, and its broker log group"
+  type        = map(string)
+  default     = {}
 }

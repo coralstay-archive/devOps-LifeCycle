@@ -29,14 +29,14 @@ Checkov/Trivy findings on the log group added above, now both configurable via o
 | <a name="input_definition"></a> [definition](#input\_definition) | Amazon States Language JSON. Defaults to a trivial single-Pass-state machine so this module works with zero required config beyond `name`. | `string` | `"{\n  \"Comment\": \"Placeholder state machine - replace with a real definition\",\n  \"StartAt\": \"Placeholder\",\n  \"States\": {\n    \"Placeholder\": {\n      \"Type\": \"Pass\",\n      \"End\": true\n    }\n  }\n}\n"` | no |
 | <a name="input_log_kms_key_arn"></a> [log\_kms\_key\_arn](#input\_log\_kms\_key\_arn) | Customer-managed KMS key for the execution log group. Defaults to null, which uses CloudWatch Logs' default encryption. | `string` | `null` | no |
 | <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | State machine execution log group retention. Checkov wants >= 365 for compliance; defaults to 14 here to match this repo's cost-conscious convention (see lambda's log\_retention\_days) — raise it per caller when needed. | `number` | `14` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | Name of the state machine and base name for its IAM role and log group. | `string` | n/a | yes |
 | <a name="input_policy_arns"></a> [policy\_arns](#input\_policy\_arns) | Managed policy ARNs to attach (e.g. to let it invoke Lambda/Glue) | `list(string)` | `[]` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the state machine, IAM role, and log group. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | n/a |
-| <a name="output_state_machine_arn"></a> [state\_machine\_arn](#output\_state\_machine\_arn) | n/a |
+| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN of the IAM role Step Functions assumes to execute the state machine (has policy\_arns attached, plus logging/X-Ray permissions). |
+| <a name="output_state_machine_arn"></a> [state\_machine\_arn](#output\_state\_machine\_arn) | ARN of the state machine -- pass this to StartExecution calls or EventBridge targets. |
 <!-- END_TF_DOCS -->

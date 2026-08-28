@@ -33,24 +33,24 @@ Implemented (minimal): one source, one target, one task, capturing all tables by
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the replication instance and both endpoints. Defaults to null, which falls back to the AWS-managed aws/dms key. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name used as the base for the replication instance, task, and endpoint identifiers. | `string` | n/a | yes |
-| <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | n/a | `list(string)` | n/a | yes |
-| <a name="input_replication_instance_class"></a> [replication\_instance\_class](#input\_replication\_instance\_class) | n/a | `string` | `"dms.t3.micro"` | no |
-| <a name="input_source_database_name"></a> [source\_database\_name](#input\_source\_database\_name) | n/a | `string` | n/a | yes |
+| <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Private subnet IDs for the DMS replication subnet group. | `list(string)` | n/a | yes |
+| <a name="input_replication_instance_class"></a> [replication\_instance\_class](#input\_replication\_instance\_class) | DMS replication instance size, e.g. dms.t3.micro for light workloads. | `string` | `"dms.t3.micro"` | no |
+| <a name="input_source_database_name"></a> [source\_database\_name](#input\_source\_database\_name) | Name of the source database to migrate/replicate from. | `string` | n/a | yes |
 | <a name="input_source_engine_name"></a> [source\_engine\_name](#input\_source\_engine\_name) | e.g. postgres, mysql | `string` | `"postgres"` | no |
-| <a name="input_source_password"></a> [source\_password](#input\_source\_password) | n/a | `string` | n/a | yes |
-| <a name="input_source_port"></a> [source\_port](#input\_source\_port) | n/a | `number` | `5432` | no |
-| <a name="input_source_server_name"></a> [source\_server\_name](#input\_source\_server\_name) | n/a | `string` | n/a | yes |
-| <a name="input_source_username"></a> [source\_username](#input\_source\_username) | n/a | `string` | n/a | yes |
+| <a name="input_source_password"></a> [source\_password](#input\_source\_password) | Password DMS uses to connect to the source database. Plain sensitive variable for simplicity -- see this module's README for why that's a trade-off, not the ideal end state. | `string` | n/a | yes |
+| <a name="input_source_port"></a> [source\_port](#input\_source\_port) | TCP port the source database listens on. | `number` | `5432` | no |
+| <a name="input_source_server_name"></a> [source\_server\_name](#input\_source\_server\_name) | Hostname or IP address of the source database DMS reads change data from. | `string` | n/a | yes |
+| <a name="input_source_username"></a> [source\_username](#input\_source\_username) | Username DMS uses to connect to the source database. | `string` | n/a | yes |
 | <a name="input_table_mappings"></a> [table\_mappings](#input\_table\_mappings) | DMS table mapping JSON. Defaults to capturing every table in every schema. | `string` | `"{\n  \"rules\": [{\n    \"rule-type\": \"selection\",\n    \"rule-id\": \"1\",\n    \"rule-name\": \"1\",\n    \"object-locator\": { \"schema-name\": \"%\", \"table-name\": \"%\" },\n    \"rule-action\": \"include\"\n  }]\n}\n"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
-| <a name="input_target_engine_name"></a> [target\_engine\_name](#input\_target\_engine\_name) | n/a | `string` | `"kafka"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to all resources. | `map(string)` | `{}` | no |
+| <a name="input_target_engine_name"></a> [target\_engine\_name](#input\_target\_engine\_name) | DMS target engine, e.g. "kafka" (default) or "s3" -- changing this requires updating the kafka\_settings block in main.tf to match the new target. | `string` | `"kafka"` | no |
 | <a name="input_target_kafka_broker"></a> [target\_kafka\_broker](#input\_target\_kafka\_broker) | Used when target\_engine\_name = kafka: broker1:port,broker2:port | `string` | `null` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | n/a | yes |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC to place the replication instance's security group in. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_replication_instance_arn"></a> [replication\_instance\_arn](#output\_replication\_instance\_arn) | n/a |
-| <a name="output_replication_task_arn"></a> [replication\_task\_arn](#output\_replication\_task\_arn) | n/a |
+| <a name="output_replication_instance_arn"></a> [replication\_instance\_arn](#output\_replication\_instance\_arn) | ARN of the DMS replication instance. |
+| <a name="output_replication_task_arn"></a> [replication\_task\_arn](#output\_replication\_task\_arn) | ARN of the DMS replication task. |
 <!-- END_TF_DOCS -->

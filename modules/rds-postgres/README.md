@@ -57,9 +57,9 @@ One finding that's a checkov false-positive, not a gap: **"deletion protection n
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_arn"></a> [arn](#output\_arn) | n/a |
-| <a name="output_db_instance_id"></a> [db\_instance\_id](#output\_db\_instance\_id) | n/a |
+| <a name="output_arn"></a> [arn](#output\_arn) | ARN of the RDS instance |
+| <a name="output_db_instance_id"></a> [db\_instance\_id](#output\_db\_instance\_id) | RDS instance identifier |
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Connection endpoint (host:port) |
 | <a name="output_master_user_secret_arn"></a> [master\_user\_secret\_arn](#output\_master\_user\_secret\_arn) | ARN of the Secrets Manager secret holding the master password |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security group guarding port 5432 -- pass this to whatever needs to connect via allowed\_security\_group\_ids |
 <!-- END_TF_DOCS -->

@@ -151,7 +151,8 @@ What the tools above actually find when run against this repo right now — not 
 
 | Metric | Result |
 |---|---|
-| tflint (whole repo) | 0 errors/warnings; 322 `info`-level notices (missing `description` on variables/outputs — tracked as [`TASK-175`](backlog/tasks), not started yet) |
+| tflint (`modules/`) | 0 errors/warnings, 0 `info`-level notices — the 322 that used to be here (missing `description` on variables/outputs) are fixed, see below |
+| tflint (`scenarios/`, `bootstrap/`, `live/`) | 112 `info`-level notices, same rule, never previously audited (the original 322 count only ever covered `modules/`) — newly found, tracked as [`TASK-176`](backlog/tasks) |
 | checkov (36 modules) | 338 passed / 19 failed (94.7%) — every remaining failure has a matching *"Not yet included"* note in that module's README, and most are tracked as explicit backlog tasks (see below) |
 | trivy config (36 modules) | 30 misconfigurations flagged — same category as checkov, second-opinion scanner, same audit coverage |
 | `precondition`/`postcondition` blocks | 37 (34 precondition + 3 postcondition) — real AWS-API invariants enforced on every `plan`/`apply` |
@@ -184,7 +185,7 @@ What actually got fixed, roughly in the order it happened:
 - **Real capability gaps closed as opt-in** (real cost when enabled, off by default): `eks` control-plane logging + `public_access_cidrs`, `elasticache-redis` AUTH token, `vpc` flow logs, `ec2` detailed monitoring, `ecs-service` Container Insights, `alb`/`cloudfront` deletion protection/access logging/WAF association/geo restriction, `rds-postgres` log exports + enhanced monitoring (its own IAM role, created only when enabled), `redshift` audit logging, `lambda` DLQ/concurrency limit/env-var KMS/VPC attachment/code-signing, `step-functions` log retention, `api-gateway` route-level authorization (`authorization_type`/`authorizer_id`, defaulting to `"NONE"`/`null` — not forced on, since requiring an authorizer by default would be a breaking change for every existing caller).
 - **A backlog bookkeeping bug found and fixed along the way**: a couple of task-ID off-by-one mistakes in this session's own fork instructions left 4 tasks with the wrong status (2 marked "Done" for work that was never built — `rds-postgres` enhanced monitoring, `lambda` code-signing — and 2 left "To Do" for work that was already shipped — `rds-postgres` log exports, `lambda` DLQ). Caught by verifying every task's title against the actual code rather than trusting either the fork reports or the task IDs at face value, and corrected before those two "Done" items got built for real.
 
-Still open: the 322 `tflint` description notices above — the last item in `m-17`, tracked as [`TASK-175`](backlog/tasks).
+`m-17` is now fully closed (43/43) — the last item, the 322 `tflint` description notices across all 36 modules, was fixed via four parallel forks (one per 9-module batch), each verified with `tflint --config="$(pwd)/.tflint.hcl"` per module and re-validated with `terraform validate`. That same pass surfaced a follow-on finding while confirming the fix with a full-repo `--recursive` scan: `scenarios/`, `bootstrap/`, and `live/` have their own 112 undocumented variables/outputs, never covered by the original 322 count (which was `modules/`-only) or audited before — logged as [`TASK-176`](backlog/tasks) under a fresh milestone for the next pass.
 
 ## 🎯 SRE principles this repo aims for (and where it honestly falls short)
 
@@ -284,7 +285,7 @@ This repo doubles as a learning project, tracked with the [Backlog.md](https://g
 **Two different kinds of backlog live side by side under the same CLI** — worth distinguishing since they mean different things when you see them in `backlog board`:
 
 - **Milestones `m-0` through `m-16`** (below) are the *learning* backlog — `spike`/`task`/`docs`-type tasks meant to be worked through by a human, left `To Do` on purpose, never pre-completed on your behalf.
-- **Milestone `m-17`, "Security & Observability Hardening"**, is a *different* kind of backlog — `bug`-type engineering tasks logged from real checkov/trivy/tflint findings, meant to actually get fixed (see [Repo metrics](#-repo-metrics) above for what's closed vs. still open: 42/43 done as of the last pass).
+- **Milestone `m-17`, "Security & Observability Hardening"**, is a *different* kind of backlog — `bug`-type engineering tasks logged from real checkov/trivy/tflint findings, meant to actually get fixed. **Complete: 43/43 done**, see [Repo metrics](#-repo-metrics) above for what actually got fixed.
 
 **Structure — Epic → Story → Task (the learning backlog, `m-0`–`m-16`):**
 

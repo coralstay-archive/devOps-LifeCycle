@@ -1,5 +1,6 @@
 variable "domain_name" {
-  type = string
+  description = "Primary domain name the certificate covers (DNS validated via Route53)."
+  type        = string
 }
 
 variable "zone_id" {
@@ -8,6 +9,7 @@ variable "zone_id" {
 }
 
 variable "subject_alternative_names" {
-  type    = list(string)
-  default = []
+  description = "Additional domain names the certificate covers besides domain_name. Must not repeat domain_name itself -- enforced by a precondition."
+  type        = list(string)
+  default     = []
 }

@@ -35,28 +35,28 @@ Now configurable via opt-in variables (all default to off/unset, matching prior 
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_code_signing_config_arn"></a> [code\_signing\_config\_arn](#input\_code\_signing\_config\_arn) | ARN of an aws\_signer\_signing\_profile-backed code signing config. Requires an AWS Signer profile set up out-of-band (this module doesn't create one) -- leave null to skip code-signing enforcement entirely. | `string` | `null` | no |
 | <a name="input_dead_letter_target_arn"></a> [dead\_letter\_target\_arn](#input\_dead\_letter\_target\_arn) | SNS topic or SQS queue ARN to send failed async invocations to. Leave null to just retry/drop them. | `string` | `null` | no |
-| <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | n/a | `map(string)` | `{}` | no |
+| <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | Environment variables passed to the function. | `map(string)` | `{}` | no |
 | <a name="input_filename"></a> [filename](#input\_filename) | Path to the deployment package zip | `string` | n/a | yes |
-| <a name="input_function_name"></a> [function\_name](#input\_function\_name) | n/a | `string` | n/a | yes |
-| <a name="input_handler"></a> [handler](#input\_handler) | n/a | `string` | `"index.handler"` | no |
+| <a name="input_function_name"></a> [function\_name](#input\_function\_name) | Name of the Lambda function | `string` | n/a | yes |
+| <a name="input_handler"></a> [handler](#input\_handler) | Function entrypoint, as <file>.<exported function> for the given runtime. | `string` | `"index.handler"` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key to encrypt environment variables with. Defaults to null, which uses Lambda's AWS-managed key. | `string` | `null` | no |
 | <a name="input_log_kms_key_arn"></a> [log\_kms\_key\_arn](#input\_log\_kms\_key\_arn) | Customer-managed KMS key for the function's log group. Defaults to null, which uses CloudWatch Logs' default encryption. | `string` | `null` | no |
-| <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | n/a | `number` | `14` | no |
-| <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | n/a | `number` | `128` | no |
+| <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | CloudWatch retention for the function's log group -- declared explicitly since Lambda's auto-created log group defaults to never expiring, which quietly accumulates cost forever. | `number` | `14` | no |
+| <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | Memory allocated to the function in MB (128-10240, a real Lambda API range enforced by this module's precondition) -- also proportionally scales the CPU/network available to the function. | `number` | `128` | no |
 | <a name="input_reserved_concurrent_executions"></a> [reserved\_concurrent\_executions](#input\_reserved\_concurrent\_executions) | Ceiling on concurrent executions for this function. Leave null for unreserved (Lambda's default — bounded only by the account-level limit). | `number` | `null` | no |
-| <a name="input_runtime"></a> [runtime](#input\_runtime) | n/a | `string` | `"python3.13"` | no |
+| <a name="input_runtime"></a> [runtime](#input\_runtime) | Lambda runtime identifier (e.g. python3.13, nodejs20.x). | `string` | `"python3.13"` | no |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | Security group IDs for the function's ENIs. Only used when subnet\_ids is non-empty. | `list(string)` | `[]` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | Private subnet IDs to attach the function to (e.g. to reach rds-postgres/elasticache-redis). Empty list (default) keeps the function off any VPC, on the Lambda service network -- attaching to a VPC is a real cold-start latency trade-off, not just a toggle, so only set this when the function actually needs to reach something private. | `list(string)` | `[]` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
-| <a name="input_timeout"></a> [timeout](#input\_timeout) | n/a | `number` | `10` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the function, its IAM role, and its log group | `map(string)` | `{}` | no |
+| <a name="input_timeout"></a> [timeout](#input\_timeout) | Maximum execution duration in seconds before Lambda terminates the invocation. | `number` | `10` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_function_arn"></a> [function\_arn](#output\_function\_arn) | n/a |
-| <a name="output_function_name"></a> [function\_name](#output\_function\_name) | n/a |
-| <a name="output_invoke_arn"></a> [invoke\_arn](#output\_invoke\_arn) | n/a |
-| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | n/a |
-| <a name="output_role_name"></a> [role\_name](#output\_role\_name) | n/a |
+| <a name="output_function_arn"></a> [function\_arn](#output\_function\_arn) | ARN of the created Lambda function |
+| <a name="output_function_name"></a> [function\_name](#output\_function\_name) | Name of the created Lambda function |
+| <a name="output_invoke_arn"></a> [invoke\_arn](#output\_invoke\_arn) | Invocation ARN for wiring into an API Gateway integration (aws\_apigatewayv2\_integration.integration\_uri) |
+| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN of the function's execution IAM role |
+| <a name="output_role_name"></a> [role\_name](#output\_role\_name) | Name of the function's execution IAM role |
 <!-- END_TF_DOCS -->

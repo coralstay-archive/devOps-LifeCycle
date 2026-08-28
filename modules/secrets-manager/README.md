@@ -25,14 +25,14 @@ Implemented (minimal). No rotation configured — add `aws_secretsmanager_secret
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the secret. Defaults to null, which falls back to the AWS-managed aws/secretsmanager key. | `string` | `null` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | Name of the Secrets Manager secret. | `string` | n/a | yes |
 | <a name="input_secret_string"></a> [secret\_string](#input\_secret\_string) | Initial secret value. Leave null to create an empty secret and fill it in outside Terraform (recommended for anything rotated). | `string` | `null` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the secret. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_secret_arn"></a> [secret\_arn](#output\_secret\_arn) | n/a |
-| <a name="output_secret_id"></a> [secret\_id](#output\_secret\_id) | n/a |
+| <a name="output_secret_arn"></a> [secret\_arn](#output\_secret\_arn) | ARN of the secret container (independent of whether a value has been set via secret\_string). |
+| <a name="output_secret_id"></a> [secret\_id](#output\_secret\_id) | ID of the secret container, usable in IAM policies or as a lookup key for aws\_secretsmanager\_secret\_version data sources. |
 <!-- END_TF_DOCS -->

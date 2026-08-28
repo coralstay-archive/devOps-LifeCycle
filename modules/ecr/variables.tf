@@ -4,13 +4,15 @@ variable "name" {
 }
 
 variable "untagged_image_expiry_days" {
-  type    = number
-  default = 14
+  description = "Days an untagged image is kept before the lifecycle policy expires it. IMMUTABLE tags mean untagged images accumulate on every rebuild without a new tag, so this needs to be a real positive number."
+  type        = number
+  default     = 14
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the repository."
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

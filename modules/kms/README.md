@@ -20,15 +20,15 @@ Implemented (minimal).
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_deletion_window_in_days"></a> [deletion\_window\_in\_days](#input\_deletion\_window\_in\_days) | n/a | `number` | `30` | no |
+| <a name="input_deletion_window_in_days"></a> [deletion\_window\_in\_days](#input\_deletion\_window\_in\_days) | Waiting period (7-30 days, a real KMS API range) before a scheduled key deletion becomes irreversible. | `number` | `30` | no |
 | <a name="input_name"></a> [name](#input\_name) | Alias name (without the alias/ prefix) | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the KMS key | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_alias_name"></a> [alias\_name](#output\_alias\_name) | n/a |
-| <a name="output_key_arn"></a> [key\_arn](#output\_key\_arn) | n/a |
-| <a name="output_key_id"></a> [key\_id](#output\_key\_id) | n/a |
+| <a name="output_alias_name"></a> [alias\_name](#output\_alias\_name) | Human-friendly alias (alias/<name>) pointing at the key |
+| <a name="output_key_arn"></a> [key\_arn](#output\_key\_arn) | ARN of the created KMS key |
+| <a name="output_key_id"></a> [key\_id](#output\_key\_id) | ID of the created KMS key |
 <!-- END_TF_DOCS -->

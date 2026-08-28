@@ -25,16 +25,16 @@ Implemented (minimal): one schedule/rule. Add tag-based selection (`selection_ta
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the backup vault. Defaults to null, which falls back to the AWS-managed aws/backup key. | `string` | `null` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | Base name used for the backup vault, plan, selection, and IAM role. | `string` | n/a | yes |
 | <a name="input_resource_arns"></a> [resource\_arns](#input\_resource\_arns) | ARNs to back up | `list(string)` | `[]` | no |
-| <a name="input_retention_days"></a> [retention\_days](#input\_retention\_days) | n/a | `number` | `35` | no |
+| <a name="input_retention_days"></a> [retention\_days](#input\_retention\_days) | How long backups from the daily rule are kept before deletion. Must be at least 1 -- enforced by a precondition. | `number` | `35` | no |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | Cron expression, default daily at 05:00 UTC | `string` | `"cron(0 5 * * ? *)"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the vault, plan, and IAM role. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_plan_id"></a> [plan\_id](#output\_plan\_id) | n/a |
-| <a name="output_vault_name"></a> [vault\_name](#output\_vault\_name) | n/a |
+| <a name="output_plan_id"></a> [plan\_id](#output\_plan\_id) | Backup plan ID. |
+| <a name="output_vault_name"></a> [vault\_name](#output\_vault\_name) | Backup vault name -- backups from the plan land here. |
 <!-- END_TF_DOCS -->

@@ -1,5 +1,6 @@
 variable "function_name" {
-  type = string
+  description = "Name of the Lambda function"
+  type        = string
 }
 
 variable "filename" {
@@ -8,33 +9,39 @@ variable "filename" {
 }
 
 variable "handler" {
-  type    = string
-  default = "index.handler"
+  description = "Function entrypoint, as <file>.<exported function> for the given runtime."
+  type        = string
+  default     = "index.handler"
 }
 
 variable "runtime" {
-  type    = string
-  default = "python3.13"
+  description = "Lambda runtime identifier (e.g. python3.13, nodejs20.x)."
+  type        = string
+  default     = "python3.13"
 }
 
 variable "memory_size" {
-  type    = number
-  default = 128
+  description = "Memory allocated to the function in MB (128-10240, a real Lambda API range enforced by this module's precondition) -- also proportionally scales the CPU/network available to the function."
+  type        = number
+  default     = 128
 }
 
 variable "timeout" {
-  type    = number
-  default = 10
+  description = "Maximum execution duration in seconds before Lambda terminates the invocation."
+  type        = number
+  default     = 10
 }
 
 variable "environment_variables" {
-  type    = map(string)
-  default = {}
+  description = "Environment variables passed to the function."
+  type        = map(string)
+  default     = {}
 }
 
 variable "log_retention_days" {
-  type    = number
-  default = 14
+  description = "CloudWatch retention for the function's log group -- declared explicitly since Lambda's auto-created log group defaults to never expiring, which quietly accumulates cost forever."
+  type        = number
+  default     = 14
 }
 
 variable "log_kms_key_arn" {
@@ -80,6 +87,7 @@ variable "code_signing_config_arn" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the function, its IAM role, and its log group"
+  type        = map(string)
+  default     = {}
 }

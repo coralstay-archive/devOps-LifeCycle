@@ -20,13 +20,13 @@ Implemented (minimal).
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | Name for the Athena workgroup. | `string` | n/a | yes |
 | <a name="input_output_location"></a> [output\_location](#input\_output\_location) | e.g. s3://my-bucket/athena-results/ | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the workgroup. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_workgroup_name"></a> [workgroup\_name](#output\_workgroup\_name) | n/a |
+| <a name="output_workgroup_name"></a> [workgroup\_name](#output\_workgroup\_name) | Workgroup name -- pass to query clients so they inherit its enforced output\_location/encryption settings. |
 <!-- END_TF_DOCS -->

@@ -1,17 +1,21 @@
 variable "vpc_id" {
-  type = string
+  description = "VPC to attach the gateway and interface endpoints to."
+  type        = string
 }
 
 variable "vpc_cidr_block" {
-  type = string
+  description = "The VPC's CIDR block -- scopes the interface endpoints' security group ingress to traffic originating inside the VPC."
+  type        = string
 }
 
 variable "region" {
-  type = string
+  description = "AWS region, used to build each endpoint's service_name (e.g. com.amazonaws.<region>.s3)."
+  type        = string
 }
 
 variable "private_subnet_ids" {
-  type = list(string)
+  description = "Subnets the interface endpoints' ENIs are placed in."
+  type        = list(string)
 }
 
 variable "route_table_ids" {
@@ -26,6 +30,7 @@ variable "interface_services" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the endpoints and the interface endpoints' security group."
+  type        = map(string)
+  default     = {}
 }

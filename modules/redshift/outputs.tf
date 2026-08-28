@@ -1,9 +1,11 @@
 output "endpoint" {
-  value = aws_redshift_cluster.this.endpoint
+  description = "Connection endpoint (host:port)"
+  value       = aws_redshift_cluster.this.endpoint
 }
 
 output "cluster_id" {
-  value = aws_redshift_cluster.this.id
+  description = "Redshift cluster ID"
+  value       = aws_redshift_cluster.this.id
 }
 
 # manage_master_password = true already makes AWS generate and store this

@@ -21,17 +21,17 @@ Implemented (minimal). Add more `interface_services` (e.g. `secretsmanager`, `st
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_interface_services"></a> [interface\_services](#input\_interface\_services) | Short service names, e.g. ecr.api, ecr.dkr, logs | `list(string)` | <pre>[<br/>  "ecr.api",<br/>  "ecr.dkr",<br/>  "logs"<br/>]</pre> | no |
-| <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | n/a | `list(string)` | n/a | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
+| <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Subnets the interface endpoints' ENIs are placed in. | `list(string)` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | AWS region, used to build each endpoint's service\_name (e.g. com.amazonaws.<region>.s3). | `string` | n/a | yes |
 | <a name="input_route_table_ids"></a> [route\_table\_ids](#input\_route\_table\_ids) | Route tables the S3/DynamoDB gateway endpoints attach to | `list(string)` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
-| <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | n/a | `string` | n/a | yes |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the endpoints and the interface endpoints' security group. | `map(string)` | `{}` | no |
+| <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | The VPC's CIDR block -- scopes the interface endpoints' security group ingress to traffic originating inside the VPC. | `string` | n/a | yes |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC to attach the gateway and interface endpoints to. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_interface_endpoint_ids"></a> [interface\_endpoint\_ids](#output\_interface\_endpoint\_ids) | n/a |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
+| <a name="output_interface_endpoint_ids"></a> [interface\_endpoint\_ids](#output\_interface\_endpoint\_ids) | Map of interface\_services entry -> its aws\_vpc\_endpoint ID (e.g. { "ecr.api" = "vpce-..." }). |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security group attached to all interface endpoints -- reference this if another resource needs to be added as an allowed source beyond the VPC CIDR. |
 <!-- END_TF_DOCS -->

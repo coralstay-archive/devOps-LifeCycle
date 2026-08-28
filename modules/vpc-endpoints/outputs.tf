@@ -1,7 +1,9 @@
 output "interface_endpoint_ids" {
-  value = { for k, e in aws_vpc_endpoint.interface : k => e.id }
+  description = "Map of interface_services entry -> its aws_vpc_endpoint ID (e.g. { \"ecr.api\" = \"vpce-...\" })."
+  value       = { for k, e in aws_vpc_endpoint.interface : k => e.id }
 }
 
 output "security_group_id" {
-  value = aws_security_group.interface_endpoints.id
+  description = "Security group attached to all interface endpoints -- reference this if another resource needs to be added as an allowed source beyond the VPC CIDR."
+  value       = aws_security_group.interface_endpoints.id
 }

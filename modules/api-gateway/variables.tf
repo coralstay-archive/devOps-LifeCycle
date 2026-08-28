@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Name for the HTTP API and its access-log group."
+  type        = string
 }
 
 variable "lambda_invoke_arn" {
@@ -8,7 +9,8 @@ variable "lambda_invoke_arn" {
 }
 
 variable "lambda_function_name" {
-  type = string
+  description = "function_name output from the lambda module -- used to grant this API Gateway permission to invoke it."
+  type        = string
 }
 
 variable "route_key" {

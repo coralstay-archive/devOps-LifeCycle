@@ -33,22 +33,22 @@ Checkov/Trivy findings that are real, accepted trade-offs, not gaps that slipped
 | <a name="input_access_logs_prefix"></a> [access\_logs\_prefix](#input\_access\_logs\_prefix) | S3 key prefix for access logs, used only when access\_logs\_bucket is set. | `string` | `null` | no |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ACM certificate ARN. If set, adds an HTTPS listener and redirects HTTP to it. If null, HTTP forwards directly. | `string` | `null` | no |
 | <a name="input_enable_deletion_protection"></a> [enable\_deletion\_protection](#input\_enable\_deletion\_protection) | Blocks accidental/automated deletion of the load balancer. Off by default so terraform destroy works cleanly for a scaffold/demo stack — flip on for anything real. | `bool` | `false` | no |
-| <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | n/a | `string` | `"/"` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
-| <a name="input_public_subnet_ids"></a> [public\_subnet\_ids](#input\_public\_subnet\_ids) | n/a | `list(string)` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
-| <a name="input_target_port"></a> [target\_port](#input\_target\_port) | n/a | `number` | `8080` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | n/a | yes |
+| <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | HTTP path the target group's health check requests. | `string` | `"/"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name used for the load balancer, target group, and security group. | `string` | n/a | yes |
+| <a name="input_public_subnet_ids"></a> [public\_subnet\_ids](#input\_public\_subnet\_ids) | Public subnet IDs for the ALB itself -- must span at least 2 AZs, an ALB API requirement enforced by this module's precondition. | `list(string)` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the load balancer, target group, and security group. | `map(string)` | `{}` | no |
+| <a name="input_target_port"></a> [target\_port](#input\_target\_port) | Port the target group forwards traffic to on registered targets. | `number` | `8080` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC to place the ALB, target group, and security group in. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_arn"></a> [arn](#output\_arn) | n/a |
-| <a name="output_arn_suffix"></a> [arn\_suffix](#output\_arn\_suffix) | n/a |
-| <a name="output_dns_name"></a> [dns\_name](#output\_dns\_name) | n/a |
+| <a name="output_arn"></a> [arn](#output\_arn) | Full ARN of the load balancer. |
+| <a name="output_arn_suffix"></a> [arn\_suffix](#output\_arn\_suffix) | Shortened ARN suffix used by CloudWatch metrics/dashboards for this ALB. |
+| <a name="output_dns_name"></a> [dns\_name](#output\_dns\_name) | The ALB's public DNS name -- point a Route53 alias record at this. |
 | <a name="output_listener_arn"></a> [listener\_arn](#output\_listener\_arn) | The externally-facing listener: HTTPS if certificate\_arn was set, else HTTP |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
-| <a name="output_target_group_arn"></a> [target\_group\_arn](#output\_target\_group\_arn) | n/a |
-| <a name="output_target_group_name"></a> [target\_group\_name](#output\_target\_group\_name) | n/a |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security group ID for the ALB itself -- reference this from a backend module's ingress rules to scope access to traffic from this ALB only. |
+| <a name="output_target_group_arn"></a> [target\_group\_arn](#output\_target\_group\_arn) | ARN of the single target group -- feed into ecs-service to register tasks against it. |
+| <a name="output_target_group_name"></a> [target\_group\_name](#output\_target\_group\_name) | Name of the single target group. |
 <!-- END_TF_DOCS -->

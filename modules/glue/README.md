@@ -25,15 +25,15 @@ Implemented (minimal). ETL jobs (`aws_glue_job`) not included — add when `etl-
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_crawler_schedule"></a> [crawler\_schedule](#input\_crawler\_schedule) | cron() expression. Leave null to run on-demand only. | `string` | `null` | no |
-| <a name="input_database_name"></a> [database\_name](#input\_database\_name) | n/a | `string` | n/a | yes |
+| <a name="input_database_name"></a> [database\_name](#input\_database\_name) | Name of the Glue catalog database. Lowercase alphanumeric/underscore only -- Glue's naming rule doesn't allow hyphens, unlike most AWS resource names. | `string` | n/a | yes |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the crawler's security configuration (CloudWatch logs, job bookmarks, S3 reads). Leave null to leave all three encryption modes DISABLED (Glue's own default). | `string` | `null` | no |
 | <a name="input_s3_target_path"></a> [s3\_target\_path](#input\_s3\_target\_path) | e.g. s3://my-bucket/raw/ | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the crawler and its IAM role. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_crawler_name"></a> [crawler\_name](#output\_crawler\_name) | n/a |
-| <a name="output_database_name"></a> [database\_name](#output\_database\_name) | n/a |
+| <a name="output_crawler_name"></a> [crawler\_name](#output\_crawler\_name) | Name of the Glue crawler. |
+| <a name="output_database_name"></a> [database\_name](#output\_database\_name) | Name of the Glue catalog database. |
 <!-- END_TF_DOCS -->

@@ -1,7 +1,9 @@
 output "endpoint_name" {
-  value = aws_sagemaker_endpoint.this.name
+  description = "Name of the live, invokable SageMaker endpoint -- pass this to application code calling for predictions."
+  value       = aws_sagemaker_endpoint.this.name
 }
 
 output "role_arn" {
-  value = aws_iam_role.this.arn
+  description = "ARN of the IAM role SageMaker assumes to run the model/endpoint (AmazonSageMakerFullAccess attached)."
+  value       = aws_iam_role.this.arn
 }

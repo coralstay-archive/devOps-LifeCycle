@@ -1,5 +1,6 @@
 variable "cluster_name" {
-  type = string
+  description = "Name of the EKS cluster."
+  type        = string
 }
 
 variable "private_subnet_ids" {
@@ -8,28 +9,33 @@ variable "private_subnet_ids" {
 }
 
 variable "kubernetes_version" {
-  type    = string
-  default = "1.31"
+  description = "EKS control plane Kubernetes version."
+  type        = string
+  default     = "1.31"
 }
 
 variable "node_instance_types" {
-  type    = list(string)
-  default = ["t3.medium"]
+  description = "EC2 instance types available to the default managed node group."
+  type        = list(string)
+  default     = ["t3.medium"]
 }
 
 variable "node_desired_size" {
-  type    = number
-  default = 2
+  description = "Desired node count for the default managed node group. Must satisfy node_min_size <= node_desired_size <= node_max_size."
+  type        = number
+  default     = 2
 }
 
 variable "node_min_size" {
-  type    = number
-  default = 2
+  description = "Minimum node count the managed node group will scale down to."
+  type        = number
+  default     = 2
 }
 
 variable "node_max_size" {
-  type    = number
-  default = 4
+  description = "Maximum node count the managed node group will scale up to."
+  type        = number
+  default     = 4
 }
 
 variable "cluster_log_types" {
@@ -51,6 +57,7 @@ variable "secrets_kms_key_arn" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the cluster and node group."
+  type        = map(string)
+  default     = {}
 }

@@ -4,11 +4,13 @@ output "endpoint" {
 }
 
 output "db_instance_id" {
-  value = aws_db_instance.this.id
+  description = "RDS instance identifier"
+  value       = aws_db_instance.this.id
 }
 
 output "arn" {
-  value = aws_db_instance.this.arn
+  description = "ARN of the RDS instance"
+  value       = aws_db_instance.this.arn
 }
 
 output "master_user_secret_arn" {
@@ -17,5 +19,6 @@ output "master_user_secret_arn" {
 }
 
 output "security_group_id" {
-  value = aws_security_group.this.id
+  description = "Security group guarding port 5432 -- pass this to whatever needs to connect via allowed_security_group_ids"
+  value       = aws_security_group.this.id
 }

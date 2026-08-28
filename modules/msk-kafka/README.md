@@ -35,22 +35,22 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_allowed_security_group_ids"></a> [allowed\_security\_group\_ids](#input\_allowed\_security\_group\_ids) | n/a | `list(string)` | `[]` | no |
-| <a name="input_broker_instance_type"></a> [broker\_instance\_type](#input\_broker\_instance\_type) | n/a | `string` | `"kafka.t3.small"` | no |
-| <a name="input_broker_volume_size"></a> [broker\_volume\_size](#input\_broker\_volume\_size) | n/a | `number` | `100` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | n/a | yes |
+| <a name="input_allowed_security_group_ids"></a> [allowed\_security\_group\_ids](#input\_allowed\_security\_group\_ids) | Security groups allowed to connect to the Kafka TLS listener (port 9094) | `list(string)` | `[]` | no |
+| <a name="input_broker_instance_type"></a> [broker\_instance\_type](#input\_broker\_instance\_type) | EC2 instance type for each broker node | `string` | `"kafka.t3.small"` | no |
+| <a name="input_broker_volume_size"></a> [broker\_volume\_size](#input\_broker\_volume\_size) | EBS volume size per broker, in GB | `number` | `100` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the MSK cluster | `string` | n/a | yes |
 | <a name="input_encryption_at_rest_kms_key_arn"></a> [encryption\_at\_rest\_kms\_key\_arn](#input\_encryption\_at\_rest\_kms\_key\_arn) | Customer-managed KMS key for broker EBS storage at rest. Defaults to null, which lets MSK apply its own AWS-managed key automatically. | `string` | `null` | no |
-| <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | n/a | `string` | `"3.7.x"` | no |
+| <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | Apache Kafka version MSK runs on the brokers | `string` | `"3.7.x"` | no |
 | <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | Must be a multiple of the number of subnets (AZs) | `number` | `2` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Needs >= 2 AZs | `list(string)` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the cluster, its security group, and its broker log group | `map(string)` | `{}` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC to place the cluster's security group in | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_bootstrap_brokers_tls"></a> [bootstrap\_brokers\_tls](#output\_bootstrap\_brokers\_tls) | n/a |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
-| <a name="output_zookeeper_connect_string"></a> [zookeeper\_connect\_string](#output\_zookeeper\_connect\_string) | n/a |
+| <a name="output_bootstrap_brokers_tls"></a> [bootstrap\_brokers\_tls](#output\_bootstrap\_brokers\_tls) | TLS bootstrap broker connection string, for wiring into a Kafka client (e.g. dms's target\_kafka\_broker) |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security group ID guarding the brokers' TLS listener |
+| <a name="output_zookeeper_connect_string"></a> [zookeeper\_connect\_string](#output\_zookeeper\_connect\_string) | ZooKeeper connection string for the cluster |
 <!-- END_TF_DOCS -->

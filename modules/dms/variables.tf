@@ -4,16 +4,19 @@ variable "name" {
 }
 
 variable "vpc_id" {
-  type = string
+  description = "VPC to place the replication instance's security group in."
+  type        = string
 }
 
 variable "private_subnet_ids" {
-  type = list(string)
+  description = "Private subnet IDs for the DMS replication subnet group."
+  type        = list(string)
 }
 
 variable "replication_instance_class" {
-  type    = string
-  default = "dms.t3.micro"
+  description = "DMS replication instance size, e.g. dms.t3.micro for light workloads."
+  type        = string
+  default     = "dms.t3.micro"
 }
 
 variable "source_engine_name" {
@@ -23,30 +26,36 @@ variable "source_engine_name" {
 }
 
 variable "source_server_name" {
-  type = string
+  description = "Hostname or IP address of the source database DMS reads change data from."
+  type        = string
 }
 
 variable "source_port" {
-  type    = number
-  default = 5432
+  description = "TCP port the source database listens on."
+  type        = number
+  default     = 5432
 }
 
 variable "source_database_name" {
-  type = string
+  description = "Name of the source database to migrate/replicate from."
+  type        = string
 }
 
 variable "source_username" {
-  type = string
+  description = "Username DMS uses to connect to the source database."
+  type        = string
 }
 
 variable "source_password" {
-  type      = string
-  sensitive = true
+  description = "Password DMS uses to connect to the source database. Plain sensitive variable for simplicity -- see this module's README for why that's a trade-off, not the ideal end state."
+  type        = string
+  sensitive   = true
 }
 
 variable "target_engine_name" {
-  type    = string
-  default = "kafka"
+  description = "DMS target engine, e.g. \"kafka\" (default) or \"s3\" -- changing this requires updating the kafka_settings block in main.tf to match the new target."
+  type        = string
+  default     = "kafka"
 }
 
 variable "target_kafka_broker" {
@@ -72,8 +81,9 @@ variable "table_mappings" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to all resources."
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

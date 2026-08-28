@@ -4,11 +4,13 @@ variable "name" {
 }
 
 variable "deletion_window_in_days" {
-  type    = number
-  default = 30
+  description = "Waiting period (7-30 days, a real KMS API range) before a scheduled key deletion becomes irreversible."
+  type        = number
+  default     = 30
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the KMS key"
+  type        = map(string)
+  default     = {}
 }

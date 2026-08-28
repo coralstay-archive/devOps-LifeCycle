@@ -26,11 +26,11 @@ Control Tower itself isn't a plain Terraform resource — it's a separate AWS se
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | OU names to create directly under the org root | `list(string)` | <pre>[<br/>  "Security",<br/>  "Workloads"<br/>]</pre> | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to each created organizational unit | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_ou_ids"></a> [ou\_ids](#output\_ou\_ids) | n/a |
+| <a name="output_ou_ids"></a> [ou\_ids](#output\_ou\_ids) | Map of organizational unit name to its OU ID, one entry per organizational\_units input |
 <!-- END_TF_DOCS -->

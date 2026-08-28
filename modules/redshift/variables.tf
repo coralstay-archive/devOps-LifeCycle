@@ -1,43 +1,52 @@
 variable "cluster_identifier" {
-  type = string
+  description = "Redshift cluster identifier"
+  type        = string
 }
 
 variable "vpc_id" {
-  type = string
+  description = "VPC to place the cluster's subnet group and security group in"
+  type        = string
 }
 
 variable "private_subnet_ids" {
-  type = list(string)
+  description = "Private subnet IDs for the cluster's subnet group"
+  type        = list(string)
 }
 
 variable "allowed_security_group_ids" {
-  type    = list(string)
-  default = []
+  description = "Security groups allowed to connect on port 5439"
+  type        = list(string)
+  default     = []
 }
 
 variable "node_type" {
-  type    = string
-  default = "dc2.large"
+  description = "Redshift node type for the single-node cluster"
+  type        = string
+  default     = "dc2.large"
 }
 
 variable "master_username" {
-  type    = string
-  default = "admin"
+  description = "Master username -- not the real security boundary here (the master password is AWS-managed via Secrets Manager, see manage_master_password), just an identifier"
+  type        = string
+  default     = "admin"
 }
 
 variable "database_name" {
-  type    = string
-  default = "app"
+  description = "Initial database name -- must start with a lowercase letter and contain only lowercase alphanumerics/underscore, Redshift's own naming rule enforced by this module's precondition"
+  type        = string
+  default     = "app"
 }
 
 variable "skip_final_snapshot" {
-  type    = bool
-  default = false
+  description = "Skip the final snapshot on destroy (keep false for anything holding real data)"
+  type        = bool
+  default     = false
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the cluster, its subnet group, and its security group"
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

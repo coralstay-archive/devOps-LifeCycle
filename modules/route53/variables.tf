@@ -1,5 +1,6 @@
 variable "domain_name" {
-  type = string
+  description = "The domain/zone name (e.g. \"example.com\"). Used to create a new hosted zone or look up an existing one, depending on create_zone."
+  type        = string
 }
 
 variable "create_zone" {

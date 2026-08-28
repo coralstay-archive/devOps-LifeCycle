@@ -28,10 +28,10 @@ Implemented (minimal). One route only — add more `aws_apigatewayv2_route`/`aws
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_authorization_type"></a> [authorization\_type](#input\_authorization\_type) | Route authorization: "NONE" (default, matches this module's original unauthenticated behavior), "AWS\_IAM", "JWT", or "CUSTOM". Not forced on -- requiring an authorizer here by default would be a breaking change for every existing caller. | `string` | `"NONE"` | no |
 | <a name="input_authorizer_id"></a> [authorizer\_id](#input\_authorizer\_id) | aws\_apigatewayv2\_authorizer ID, required when authorization\_type is "JWT" or "CUSTOM". This module doesn't create the authorizer itself -- pass one in from a scenario that needs gateway-level auth (e.g. a Cognito user pool JWT authorizer). | `string` | `null` | no |
-| <a name="input_lambda_function_name"></a> [lambda\_function\_name](#input\_lambda\_function\_name) | n/a | `string` | n/a | yes |
+| <a name="input_lambda_function_name"></a> [lambda\_function\_name](#input\_lambda\_function\_name) | function\_name output from the lambda module -- used to grant this API Gateway permission to invoke it. | `string` | n/a | yes |
 | <a name="input_lambda_invoke_arn"></a> [lambda\_invoke\_arn](#input\_lambda\_invoke\_arn) | invoke\_arn output from the lambda module | `string` | n/a | yes |
 | <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | CloudWatch retention for the stage's access log group. | `number` | `14` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | Name for the HTTP API and its access-log group. | `string` | n/a | yes |
 | <a name="input_route_key"></a> [route\_key](#input\_route\_key) | e.g. "GET /items" or "$default" | `string` | `"$default"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the access-log group. | `map(string)` | `{}` | no |
 
@@ -39,6 +39,6 @@ Implemented (minimal). One route only — add more `aws_apigatewayv2_route`/`aws
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_api_endpoint"></a> [api\_endpoint](#output\_api\_endpoint) | n/a |
-| <a name="output_api_id"></a> [api\_id](#output\_api\_id) | n/a |
+| <a name="output_api_endpoint"></a> [api\_endpoint](#output\_api\_endpoint) | Invoke URL for the $default stage -- the public HTTPS endpoint clients call. |
+| <a name="output_api_id"></a> [api\_id](#output\_api\_id) | HTTP API ID. |
 <!-- END_TF_DOCS -->

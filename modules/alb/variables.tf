@@ -1,23 +1,28 @@
 variable "name" {
-  type = string
+  description = "Name used for the load balancer, target group, and security group."
+  type        = string
 }
 
 variable "vpc_id" {
-  type = string
+  description = "VPC to place the ALB, target group, and security group in."
+  type        = string
 }
 
 variable "public_subnet_ids" {
-  type = list(string)
+  description = "Public subnet IDs for the ALB itself -- must span at least 2 AZs, an ALB API requirement enforced by this module's precondition."
+  type        = list(string)
 }
 
 variable "target_port" {
-  type    = number
-  default = 8080
+  description = "Port the target group forwards traffic to on registered targets."
+  type        = number
+  default     = 8080
 }
 
 variable "health_check_path" {
-  type    = string
-  default = "/"
+  description = "HTTP path the target group's health check requests."
+  type        = string
+  default     = "/"
 }
 
 variable "certificate_arn" {
@@ -33,8 +38,9 @@ variable "enable_deletion_protection" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the load balancer, target group, and security group."
+  type        = map(string)
+  default     = {}
 }
 
 variable "access_logs_bucket" {

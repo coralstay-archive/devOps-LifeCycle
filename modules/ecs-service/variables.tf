@@ -1,37 +1,45 @@
 variable "name" {
-  type = string
+  description = "Name used for the cluster, task definition, service, and security group."
+  type        = string
 }
 
 variable "vpc_id" {
-  type = string
+  description = "VPC to place the service's security group in."
+  type        = string
 }
 
 variable "private_subnet_ids" {
-  type = list(string)
+  description = "Private subnet IDs the Fargate tasks run in (awsvpc networking, one ENI per task)."
+  type        = list(string)
 }
 
 variable "container_image" {
-  type = string
+  description = "Container image URI (e.g. from the ecr module's repository_url output)."
+  type        = string
 }
 
 variable "container_port" {
-  type    = number
-  default = 8080
+  description = "Port the container listens on -- also what the security group ingress rules and ALB target group forward to."
+  type        = number
+  default     = 8080
 }
 
 variable "cpu" {
-  type    = number
-  default = 256
+  description = "Fargate task-level vCPU units (256 = 0.25 vCPU)."
+  type        = number
+  default     = 256
 }
 
 variable "memory" {
-  type    = number
-  default = 512
+  description = "Fargate task-level memory in MB."
+  type        = number
+  default     = 512
 }
 
 variable "desired_count" {
-  type    = number
-  default = 2
+  description = "Number of task copies the service keeps running."
+  type        = number
+  default     = 2
 }
 
 variable "target_group_arn" {
@@ -53,6 +61,7 @@ variable "enable_container_insights" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to all resources."
+  type        = map(string)
+  default     = {}
 }

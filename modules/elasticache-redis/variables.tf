@@ -4,21 +4,25 @@ variable "name" {
 }
 
 variable "vpc_id" {
-  type = string
+  description = "VPC to place the replication group's security group in."
+  type        = string
 }
 
 variable "private_subnet_ids" {
-  type = list(string)
+  description = "Private subnet IDs for the ElastiCache subnet group."
+  type        = list(string)
 }
 
 variable "allowed_security_group_ids" {
-  type    = list(string)
-  default = []
+  description = "Application security group IDs allowed to reach Redis on port 6379. Empty means nothing can connect -- Redis is never opened to a CIDR range, only to specific approved security groups."
+  type        = list(string)
+  default     = []
 }
 
 variable "node_type" {
-  type    = string
-  default = "cache.t4g.micro"
+  description = "ElastiCache node instance class."
+  type        = string
+  default     = "cache.t4g.micro"
 }
 
 variable "num_cache_nodes" {
@@ -41,6 +45,7 @@ variable "kms_key_arn" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to all resources."
+  type        = map(string)
+  default     = {}
 }

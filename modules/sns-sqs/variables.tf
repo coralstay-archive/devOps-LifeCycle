@@ -1,10 +1,12 @@
 variable "name" {
-  type = string
+  description = "Base name for the SNS topic and SQS queue (suffixed with -topic/-queue)."
+  type        = string
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the topic and queue."
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

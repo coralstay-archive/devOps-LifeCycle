@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Name of the Secrets Manager secret."
+  type        = string
 }
 
 variable "secret_string" {
@@ -10,8 +11,9 @@ variable "secret_string" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the secret."
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

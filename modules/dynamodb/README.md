@@ -24,16 +24,16 @@ Implemented (minimal). No range key, no GSIs/LSIs — add when a scenario's acce
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_hash_key"></a> [hash\_key](#input\_hash\_key) | n/a | `string` | `"id"` | no |
+| <a name="input_hash_key"></a> [hash\_key](#input\_hash\_key) | Name of the table's hash (partition) key attribute. | `string` | `"id"` | no |
 | <a name="input_hash_key_type"></a> [hash\_key\_type](#input\_hash\_key\_type) | S, N, or B | `string` | `"S"` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the table. Defaults to null, which falls back to the AWS-owned default key (aws/dynamodb). | `string` | `null` | no |
-| <a name="input_table_name"></a> [table\_name](#input\_table\_name) | n/a | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_table_name"></a> [table\_name](#input\_table\_name) | Name of the DynamoDB table. | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the table. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_table_arn"></a> [table\_arn](#output\_table\_arn) | n/a |
-| <a name="output_table_name"></a> [table\_name](#output\_table\_name) | n/a |
+| <a name="output_table_arn"></a> [table\_arn](#output\_table\_arn) | ARN of the created DynamoDB table. |
+| <a name="output_table_name"></a> [table\_name](#output\_table\_name) | Name of the created DynamoDB table. |
 <!-- END_TF_DOCS -->

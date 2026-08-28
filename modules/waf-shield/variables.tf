@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Name of the WAF web ACL."
+  type        = string
 }
 
 variable "scope" {
@@ -21,6 +22,7 @@ variable "enable_shield_advanced" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the web ACL."
+  type        = map(string)
+  default     = {}
 }

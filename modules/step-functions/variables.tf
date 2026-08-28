@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Name of the state machine and base name for its IAM role and log group."
+  type        = string
 }
 
 variable "definition" {
@@ -38,6 +39,7 @@ variable "log_kms_key_arn" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the state machine, IAM role, and log group."
+  type        = map(string)
+  default     = {}
 }

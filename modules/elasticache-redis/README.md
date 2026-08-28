@@ -32,21 +32,21 @@ See `variables.tf` / `outputs.tf`.
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_allowed_security_group_ids"></a> [allowed\_security\_group\_ids](#input\_allowed\_security\_group\_ids) | n/a | `list(string)` | `[]` | no |
+| <a name="input_allowed_security_group_ids"></a> [allowed\_security\_group\_ids](#input\_allowed\_security\_group\_ids) | Application security group IDs allowed to reach Redis on port 6379. Empty means nothing can connect -- Redis is never opened to a CIDR range, only to specific approved security groups. | `list(string)` | `[]` | no |
 | <a name="input_auth_token"></a> [auth\_token](#input\_auth\_token) | Redis AUTH token (16-128 chars). Plain sensitive variable for simplicity, same pattern as modules/dms's source\_password — read it from modules/secrets-manager instead of a bare tfvar in practice. Null disables AUTH. | `string` | `null` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for at-rest encryption (already on via the AWS-managed key). Leave null to keep using the AWS-managed key. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for the Redis replication group | `string` | n/a | yes |
-| <a name="input_node_type"></a> [node\_type](#input\_node\_type) | n/a | `string` | `"cache.t4g.micro"` | no |
+| <a name="input_node_type"></a> [node\_type](#input\_node\_type) | ElastiCache node instance class. | `string` | `"cache.t4g.micro"` | no |
 | <a name="input_num_cache_nodes"></a> [num\_cache\_nodes](#input\_num\_cache\_nodes) | Number of nodes (1 primary + N-1 replicas) | `number` | `2` | no |
-| <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | n/a | `list(string)` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | n/a | yes |
+| <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Private subnet IDs for the ElastiCache subnet group. | `list(string)` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to all resources. | `map(string)` | `{}` | no |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC to place the replication group's security group in. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_primary_endpoint"></a> [primary\_endpoint](#output\_primary\_endpoint) | n/a |
-| <a name="output_reader_endpoint"></a> [reader\_endpoint](#output\_reader\_endpoint) | n/a |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
+| <a name="output_primary_endpoint"></a> [primary\_endpoint](#output\_primary\_endpoint) | Endpoint address for read/write connections (the primary node). |
+| <a name="output_reader_endpoint"></a> [reader\_endpoint](#output\_reader\_endpoint) | Endpoint address for read-only connections, load-balanced across replicas. |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security group ID attached to the replication group. |
 <!-- END_TF_DOCS -->

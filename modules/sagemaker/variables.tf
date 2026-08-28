@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Base name for the SageMaker model, endpoint configuration, endpoint, and IAM role."
+  type        = string
 }
 
 variable "container_image" {
@@ -13,13 +14,15 @@ variable "model_data_url" {
 }
 
 variable "instance_type" {
-  type    = string
-  default = "ml.t2.medium"
+  description = "Instance type backing the endpoint's production variant (e.g. ml.t2.medium, ml.m5.large)."
+  type        = string
+  default     = "ml.t2.medium"
 }
 
 variable "initial_instance_count" {
-  type    = number
-  default = 1
+  description = "Number of instances behind the endpoint's production variant. Must be at least 1 -- enforced by this module's precondition."
+  type        = number
+  default     = 1
 }
 
 variable "endpoint_kms_key_arn" {
@@ -29,6 +32,7 @@ variable "endpoint_kms_key_arn" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the model, endpoint configuration, endpoint, and IAM role."
+  type        = map(string)
+  default     = {}
 }

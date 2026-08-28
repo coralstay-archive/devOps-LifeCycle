@@ -1,5 +1,6 @@
 variable "database_name" {
-  type = string
+  description = "Name of the Glue catalog database. Lowercase alphanumeric/underscore only -- Glue's naming rule doesn't allow hyphens, unlike most AWS resource names."
+  type        = string
 }
 
 variable "s3_target_path" {
@@ -20,6 +21,7 @@ variable "kms_key_arn" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the crawler and its IAM role."
+  type        = map(string)
+  default     = {}
 }

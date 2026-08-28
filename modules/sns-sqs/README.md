@@ -26,14 +26,14 @@ Implemented (minimal). No dead-letter queue yet — add `aws_sqs_queue` with `re
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key ARN for both the topic and queue. Leave null to use the AWS-managed alias/aws/sns and alias/aws/sqs keys. | `string` | `null` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name for the SNS topic and SQS queue (suffixed with -topic/-queue). | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the topic and queue. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_queue_arn"></a> [queue\_arn](#output\_queue\_arn) | n/a |
-| <a name="output_queue_url"></a> [queue\_url](#output\_queue\_url) | n/a |
-| <a name="output_topic_arn"></a> [topic\_arn](#output\_topic\_arn) | n/a |
+| <a name="output_queue_arn"></a> [queue\_arn](#output\_queue\_arn) | ARN of the SQS queue subscribed to the topic -- grant consumers sqs:ReceiveMessage/DeleteMessage on this. |
+| <a name="output_queue_url"></a> [queue\_url](#output\_queue\_url) | URL of the SQS queue, used by SDK calls like ReceiveMessage/SendMessage (aws\_sqs\_queue.id is the queue URL, not an ARN, despite the resource attribute's name). |
+| <a name="output_topic_arn"></a> [topic\_arn](#output\_topic\_arn) | ARN of the SNS topic -- the publish side producers send events to. |
 <!-- END_TF_DOCS -->

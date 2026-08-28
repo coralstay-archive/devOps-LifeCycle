@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Name for the Athena workgroup."
+  type        = string
 }
 
 variable "output_location" {
@@ -8,6 +9,7 @@ variable "output_location" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the workgroup."
+  type        = map(string)
+  default     = {}
 }

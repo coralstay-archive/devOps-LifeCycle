@@ -26,13 +26,13 @@ Implemented (minimal).
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for image encryption. Defaults to null, which uses AES256 (Amazon S3-managed) encryption instead. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Repository name | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
-| <a name="input_untagged_image_expiry_days"></a> [untagged\_image\_expiry\_days](#input\_untagged\_image\_expiry\_days) | n/a | `number` | `14` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the repository. | `map(string)` | `{}` | no |
+| <a name="input_untagged_image_expiry_days"></a> [untagged\_image\_expiry\_days](#input\_untagged\_image\_expiry\_days) | Days an untagged image is kept before the lifecycle policy expires it. IMMUTABLE tags mean untagged images accumulate on every rebuild without a new tag, so this needs to be a real positive number. | `number` | `14` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_repository_arn"></a> [repository\_arn](#output\_repository\_arn) | n/a |
-| <a name="output_repository_url"></a> [repository\_url](#output\_repository\_url) | n/a |
+| <a name="output_repository_arn"></a> [repository\_arn](#output\_repository\_arn) | ARN of the ECR repository. |
+| <a name="output_repository_url"></a> [repository\_url](#output\_repository\_url) | Repository URI for docker push/pull (e.g. <account>.dkr.ecr.<region>.amazonaws.com/<name>). |
 <!-- END_TF_DOCS -->

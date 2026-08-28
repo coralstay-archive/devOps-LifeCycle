@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Name for the origin access control and used as the primary origin's origin_id."
+  type        = string
 }
 
 variable "origin_domain_name" {
@@ -14,13 +15,15 @@ variable "certificate_arn" {
 }
 
 variable "aliases" {
-  type    = list(string)
-  default = []
+  description = "Custom domain names (CNAMEs) this distribution answers for. Required (non-empty) whenever certificate_arn is set -- enforced by a precondition."
+  type        = list(string)
+  default     = []
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the distribution."
+  type        = map(string)
+  default     = {}
 }
 
 variable "web_acl_id" {

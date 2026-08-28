@@ -1,3 +1,4 @@
 output "rule_arn" {
-  value = aws_cloudwatch_event_rule.this.arn
+  description = "ARN of the EventBridge rule."
+  value       = aws_cloudwatch_event_rule.this.arn
 }

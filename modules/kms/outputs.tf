@@ -1,11 +1,14 @@
 output "key_id" {
-  value = aws_kms_key.this.key_id
+  description = "ID of the created KMS key"
+  value       = aws_kms_key.this.key_id
 }
 
 output "key_arn" {
-  value = aws_kms_key.this.arn
+  description = "ARN of the created KMS key"
+  value       = aws_kms_key.this.arn
 }
 
 output "alias_name" {
-  value = aws_kms_alias.this.name
+  description = "Human-friendly alias (alias/<name>) pointing at the key"
+  value       = aws_kms_alias.this.name
 }

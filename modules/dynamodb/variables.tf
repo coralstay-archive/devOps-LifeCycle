@@ -1,10 +1,12 @@
 variable "table_name" {
-  type = string
+  description = "Name of the DynamoDB table."
+  type        = string
 }
 
 variable "hash_key" {
-  type    = string
-  default = "id"
+  description = "Name of the table's hash (partition) key attribute."
+  type        = string
+  default     = "id"
 }
 
 variable "hash_key_type" {
@@ -14,8 +16,9 @@ variable "hash_key_type" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the table."
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

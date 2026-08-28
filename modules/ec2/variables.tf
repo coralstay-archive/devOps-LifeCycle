@@ -1,9 +1,11 @@
 variable "name" {
-  type = string
+  description = "Name tag for the instance."
+  type        = string
 }
 
 variable "subnet_id" {
-  type = string
+  description = "Subnet to launch the instance into."
+  type        = string
 }
 
 variable "ami_id" {
@@ -13,8 +15,9 @@ variable "ami_id" {
 }
 
 variable "instance_type" {
-  type    = string
-  default = "t3.micro"
+  description = "EC2 instance type."
+  type        = string
+  default     = "t3.micro"
 }
 
 variable "security_group_ids" {
@@ -30,8 +33,9 @@ variable "key_name" {
 }
 
 variable "associate_public_ip_address" {
-  type    = bool
-  default = false
+  description = "Assign a public IP on launch. Only meaningful in a public subnet -- keep false for anything in a private subnet."
+  type        = bool
+  default     = false
 }
 
 variable "iam_instance_profile" {
@@ -41,8 +45,9 @@ variable "iam_instance_profile" {
 }
 
 variable "user_data" {
-  type    = string
-  default = null
+  description = "Shell script or cloud-init data to run on first boot. Leave null to skip."
+  type        = string
+  default     = null
 }
 
 variable "root_volume_size" {
@@ -58,6 +63,7 @@ variable "enable_detailed_monitoring" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the instance (merged with a Name tag from var.name)."
+  type        = map(string)
+  default     = {}
 }

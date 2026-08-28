@@ -25,8 +25,9 @@ variable "alarms" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the alarms SNS topic and CloudWatch alarms"
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

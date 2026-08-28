@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Name of the EventBridge rule."
+  type        = string
 }
 
 variable "schedule_expression" {
@@ -15,7 +16,8 @@ variable "event_pattern" {
 }
 
 variable "target_arn" {
-  type = string
+  description = "ARN the rule invokes when it fires (e.g. a Lambda function ARN, SQS queue ARN, or Step Functions state machine ARN)."
+  type        = string
 }
 
 variable "target_is_lambda" {

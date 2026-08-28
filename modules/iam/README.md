@@ -41,12 +41,12 @@ Federated/OIDC trust (see `iam-github-oidc` instead), permission boundaries, res
 | <a name="input_inline_policy_json"></a> [inline\_policy\_json](#input\_inline\_policy\_json) | Optional inline policy JSON for permissions with no suitable managed policy. Prefer managed\_policy\_arns when one exists. | `string` | `null` | no |
 | <a name="input_managed_policy_arns"></a> [managed\_policy\_arns](#input\_managed\_policy\_arns) | Managed policy ARNs to attach | `list(string)` | `[]` | no |
 | <a name="input_name"></a> [name](#input\_name) | Role name | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the IAM role | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | n/a |
-| <a name="output_role_name"></a> [role\_name](#output\_role\_name) | n/a |
+| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN of the created IAM role |
+| <a name="output_role_name"></a> [role\_name](#output\_role\_name) | Name of the created IAM role |
 <!-- END_TF_DOCS -->

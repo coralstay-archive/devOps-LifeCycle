@@ -34,23 +34,23 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_cluster_log_types"></a> [cluster\_log\_types](#input\_cluster\_log\_types) | Control plane log types to enable (e.g. ["api", "audit", "authenticator", "controllerManager", "scheduler"]). Defaults to none — enabling any incurs ongoing CloudWatch Logs cost. | `list(string)` | `[]` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | n/a | yes |
-| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | n/a | `string` | `"1.31"` | no |
-| <a name="input_node_desired_size"></a> [node\_desired\_size](#input\_node\_desired\_size) | n/a | `number` | `2` | no |
-| <a name="input_node_instance_types"></a> [node\_instance\_types](#input\_node\_instance\_types) | n/a | `list(string)` | <pre>[<br/>  "t3.medium"<br/>]</pre> | no |
-| <a name="input_node_max_size"></a> [node\_max\_size](#input\_node\_max\_size) | n/a | `number` | `4` | no |
-| <a name="input_node_min_size"></a> [node\_min\_size](#input\_node\_min\_size) | n/a | `number` | `2` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster. | `string` | n/a | yes |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | EKS control plane Kubernetes version. | `string` | `"1.31"` | no |
+| <a name="input_node_desired_size"></a> [node\_desired\_size](#input\_node\_desired\_size) | Desired node count for the default managed node group. Must satisfy node\_min\_size <= node\_desired\_size <= node\_max\_size. | `number` | `2` | no |
+| <a name="input_node_instance_types"></a> [node\_instance\_types](#input\_node\_instance\_types) | EC2 instance types available to the default managed node group. | `list(string)` | <pre>[<br/>  "t3.medium"<br/>]</pre> | no |
+| <a name="input_node_max_size"></a> [node\_max\_size](#input\_node\_max\_size) | Maximum node count the managed node group will scale up to. | `number` | `4` | no |
+| <a name="input_node_min_size"></a> [node\_min\_size](#input\_node\_min\_size) | Minimum node count the managed node group will scale down to. | `number` | `2` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Needs >= 2 AZs; used for both the control plane ENIs and worker nodes | `list(string)` | n/a | yes |
 | <a name="input_public_access_cidrs"></a> [public\_access\_cidrs](#input\_public\_access\_cidrs) | CIDR blocks allowed to reach the public API endpoint. Defaults to open (0.0.0.0/0) to preserve out-of-the-box kubectl access — narrow this for anything beyond a scaffold. | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
 | <a name="input_secrets_kms_key_arn"></a> [secrets\_kms\_key\_arn](#input\_secrets\_kms\_key\_arn) | KMS key ARN to encrypt Kubernetes Secrets at rest (e.g. from the kms module). Leave null to skip envelope encryption of Secrets. | `string` | `null` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the cluster and node group. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_cluster_certificate_authority_data"></a> [cluster\_certificate\_authority\_data](#output\_cluster\_certificate\_authority\_data) | n/a |
-| <a name="output_cluster_endpoint"></a> [cluster\_endpoint](#output\_cluster\_endpoint) | n/a |
-| <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
-| <a name="output_node_role_arn"></a> [node\_role\_arn](#output\_node\_role\_arn) | n/a |
+| <a name="output_cluster_certificate_authority_data"></a> [cluster\_certificate\_authority\_data](#output\_cluster\_certificate\_authority\_data) | Base64-encoded cluster CA certificate, needed alongside cluster\_endpoint to configure a Kubernetes provider/kubeconfig. |
+| <a name="output_cluster_endpoint"></a> [cluster\_endpoint](#output\_cluster\_endpoint) | API server endpoint for kubectl/the Kubernetes provider to talk to. |
+| <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | Name of the EKS cluster. |
+| <a name="output_node_role_arn"></a> [node\_role\_arn](#output\_node\_role\_arn) | ARN of the IAM role assumed by worker nodes in the default managed node group. |
 <!-- END_TF_DOCS -->

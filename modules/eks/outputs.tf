@@ -1,15 +1,19 @@
 output "cluster_name" {
-  value = aws_eks_cluster.this.name
+  description = "Name of the EKS cluster."
+  value       = aws_eks_cluster.this.name
 }
 
 output "cluster_endpoint" {
-  value = aws_eks_cluster.this.endpoint
+  description = "API server endpoint for kubectl/the Kubernetes provider to talk to."
+  value       = aws_eks_cluster.this.endpoint
 }
 
 output "cluster_certificate_authority_data" {
-  value = aws_eks_cluster.this.certificate_authority[0].data
+  description = "Base64-encoded cluster CA certificate, needed alongside cluster_endpoint to configure a Kubernetes provider/kubeconfig."
+  value       = aws_eks_cluster.this.certificate_authority[0].data
 }
 
 output "node_role_arn" {
-  value = aws_iam_role.node.arn
+  description = "ARN of the IAM role assumed by worker nodes in the default managed node group."
+  value       = aws_iam_role.node.arn
 }

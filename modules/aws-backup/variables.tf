@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Base name used for the backup vault, plan, selection, and IAM role."
+  type        = string
 }
 
 variable "schedule" {
@@ -9,8 +10,9 @@ variable "schedule" {
 }
 
 variable "retention_days" {
-  type    = number
-  default = 35
+  description = "How long backups from the daily rule are kept before deletion. Must be at least 1 -- enforced by a precondition."
+  type        = number
+  default     = 35
 }
 
 variable "resource_arns" {
@@ -20,8 +22,9 @@ variable "resource_arns" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the vault, plan, and IAM role."
+  type        = map(string)
+  default     = {}
 }
 
 variable "kms_key_arn" {

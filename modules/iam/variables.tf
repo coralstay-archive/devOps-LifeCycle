@@ -21,6 +21,7 @@ variable "inline_policy_json" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to the IAM role"
+  type        = map(string)
+  default     = {}
 }

@@ -5,6 +5,7 @@ variable "organizational_units" {
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags applied to each created organizational unit"
+  type        = map(string)
+  default     = {}
 }

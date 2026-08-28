@@ -48,12 +48,12 @@ Prometheus/Grafana (AMP/AMG) for EKS scenarios, error-budget-burn-rate composite
 | <a name="input_alarms"></a> [alarms](#input\_alarms) | Map of CloudWatch alarms to create, keyed by a short name | <pre>map(object({<br/>    metric_name         = string<br/>    namespace           = string<br/>    statistic           = string<br/>    period              = number<br/>    evaluation_periods  = number<br/>    threshold           = number<br/>    comparison_operator = string<br/>    dimensions          = map(string)<br/>  }))</pre> | `{}` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key ARN for the alarms SNS topic. Leave null to use the AWS-managed alias/aws/sns key. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name prefix for the alarm SNS topic and dashboard | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the alarms SNS topic and CloudWatch alarms | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_alarm_topic_arn"></a> [alarm\_topic\_arn](#output\_alarm\_topic\_arn) | n/a |
-| <a name="output_dashboard_name"></a> [dashboard\_name](#output\_dashboard\_name) | n/a |
+| <a name="output_alarm_topic_arn"></a> [alarm\_topic\_arn](#output\_alarm\_topic\_arn) | ARN of the shared SNS topic every alarm notifies -- subscribe additional endpoints (Slack, PagerDuty) to it directly |
+| <a name="output_dashboard_name"></a> [dashboard\_name](#output\_dashboard\_name) | Name of the created CloudWatch dashboard |
 <!-- END_TF_DOCS -->
