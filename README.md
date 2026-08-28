@@ -1,5 +1,7 @@
 <div align="center">
 
+**🇺🇸 English** · [🇰🇷 한국어](README.ko.md)
+
 # 🚀 aws-launcher
 
 **Pick a scenario. Copy it. Ship it.**
@@ -149,10 +151,10 @@ What the tools above actually find when run against this repo right now — not 
 
 | Metric | Result |
 |---|---|
-| tflint (whole repo) | 0 errors/warnings; 322 `info`-level notices (missing `description` on variables/outputs — a real, separate cleanup item, not started yet) |
-| checkov (36 modules) | 301 passed / 45 failed (87.0%) — every remaining failure has a matching *"Not yet included"* note in that module's README |
-| trivy config (36 modules) | 40 misconfigurations flagged — same category as checkov, second-opinion scanner, same audit coverage |
-| `precondition`/`postcondition` blocks | 38 (35 precondition + 3 postcondition) — real AWS-API invariants enforced on every `plan`/`apply` |
+| tflint (whole repo) | 0 errors/warnings; 322 `info`-level notices (missing `description` on variables/outputs — tracked as [`TASK-175`](backlog/tasks), not started yet) |
+| checkov (36 modules) | 325 passed / 23 failed (93.4%) — every remaining failure has a matching *"Not yet included"* note in that module's README, and most are tracked as explicit backlog tasks (see below) |
+| trivy config (36 modules) | 31 misconfigurations flagged — same category as checkov, second-opinion scanner, same audit coverage |
+| `precondition`/`postcondition` blocks | 36 (33 precondition + 3 postcondition) — real AWS-API invariants enforced on every `plan`/`apply` |
 | `terraform test` files | 3 (`vpc`, `s3-bucket`, `iam-github-oidc`) |
 | Conftest policies (`policy/`) | 2 (1 `deny`, 1 `warn`) |
 | gitleaks (full git history) | 0 leaks |
@@ -169,6 +171,18 @@ The first pass of this table said "79 checkov / 52 trivy failures, not yet cross
 - **Left as documented trade-offs** (the rest): mostly "use a customer-managed KMS key" (encryption is already on everywhere via AWS-managed keys — this is about who manages the key) and things needing real new infrastructure (access-log buckets, enhanced monitoring's IAM role, VPC-attached Lambda). Every one of these has a specific note in its module's README, not just a generic "intentionally minimal" hand-wave.
 
 One thing this audit exposed about itself: `tflint`'s "0 findings" claim in an earlier version of this table was **wrong** — the `aws` plugin had silently failed to load (a stale plugin cache), so most of the repo was never actually being checked, and it looked clean by accident. Re-running `tflint --init` surfaced the real number (322 info-level notices, 0 real errors) plus the two `vpc_id` warnings above. Lesson kept for the record: a "0 findings" result is only as trustworthy as confirming the tool actually ran everywhere it was supposed to.
+
+A second `tflint --recursive` scan later turned up the same class of trap from a different angle: run from the repo root, it silently reported **0 issues** across the whole tree — but `tflint` doesn't walk up to find a parent directory's `.tflint.hcl`, it only looks in the exact working directory, so `--recursive` without an explicit `--config "$(pwd)/.tflint.hcl"` drops the custom ruleset the moment it descends into a subdirectory. The real 322 notices only reappeared once `--config` was passed explicitly. Tracked as [`TASK-175`](backlog/tasks) so this doesn't get "fixed" by someone re-running the misleading command and concluding there's nothing left to do.
+
+### Round two: closing the remaining findings (Security & Observability Hardening)
+
+Findings that were "left as documented trade-offs" above got revisited rather than left alone — checkov/trivy were re-run, every remaining failure was logged as an explicit `bug`-type task via the `backlog` CLI under a new milestone, **Security & Observability Hardening** (`m-17` — separate from the module/scenario *learning* milestones below, since these are engineering tasks meant to actually get fixed, not concepts left for a human to work through), and most were closed out in the same pass: **checkov 45→23 failures (93.4% passing)**, **trivy 40→31**. The remaining backlog under `m-17` is the honest list of what's still open — see [`backlog/tasks`](backlog/tasks) or run `backlog task list -m "Security & Observability Hardening" --plain`.
+
+What actually got fixed, in two groups:
+- **Optional customer-managed KMS keys** added to 15 modules (`dms`, `amazon-mq`, `dynamodb`, `ecr`, `secrets-manager`, `aws-backup`, `rds-postgres`, `redshift`, `sns-sqs`, `observability`, `s3-bucket`, `lambda`, `step-functions`, `elasticache-redis`, `glue`, `msk-kafka`) — every one is a nullable variable defaulting to the AWS-managed key (non-breaking, opt-in, no forced cost).
+- **Real capability gaps closed**, some free and unconditional (`amazon-mq` and `msk-kafka` broker logging, `redshift` enhanced VPC routing — all previously entirely absent, not just defaulted off) and some opt-in with a real cost when enabled (`eks` control-plane logging + `public_access_cidrs`, `elasticache-redis` AUTH token, `vpc` flow logs, `ec2` detailed monitoring, `ecs-service` Container Insights, `alb` deletion protection, `rds-postgres` log exports, `redshift` audit logging, `lambda` DLQ/concurrency limit/env-var KMS, `step-functions` log retention).
+
+Still open, deliberately: `ALB`/`CloudFront` access logging (needs a real S3 log bucket + bucket policy, not just a toggle), `CloudFront` WAF association (straightforward — wire in the existing `waf-shield` module — just not done yet), `API Gateway` route-level authorization (an actual design decision, not a one-line fix — forcing an authorizer on every route would be a breaking default for a scaffold), `Lambda` VPC attachment and code-signing (bigger architectural additions), and the 322 `tflint` description notices above.
 
 ## 🎯 SRE principles this repo aims for (and where it honestly falls short)
 
@@ -265,7 +279,12 @@ See [`specs/README.md`](specs/README.md) and [`specs/modules/README.md`](specs/m
 
 This repo doubles as a learning project, tracked with the [Backlog.md](https://github.com/MrLesk/Backlog.md) CLI in `backlog/` — not a plain markdown file, so status/relationships stay structured. Always go through the `backlog` CLI to read or change it (`backlog task list --plain`, `backlog board`, `backlog overview`), not by hand-editing files under `backlog/`.
 
-**Structure — Epic → Story → Task:**
+**Two different kinds of backlog live side by side under the same CLI** — worth distinguishing since they mean different things when you see them in `backlog board`:
+
+- **Milestones `m-0` through `m-16`** (below) are the *learning* backlog — `spike`/`task`/`docs`-type tasks meant to be worked through by a human, left `To Do` on purpose, never pre-completed on your behalf.
+- **Milestone `m-17`, "Security & Observability Hardening"**, is a *different* kind of backlog — `bug`-type engineering tasks logged from real checkov/trivy/tflint findings, meant to actually get fixed (see [Repo metrics](#-repo-metrics) above for what's closed vs. still open: 32/43 done as of the last pass).
+
+**Structure — Epic → Story → Task (the learning backlog, `m-0`–`m-16`):**
 
 - **17 milestones** (epics) — one per module tier / scenario category (e.g. "Foundation Modules", "Web/API Scenarios"), plus **Formal Specifications (TLA+)** covering all 30 scenario-level specs and all 36 module-level specs
 - **132 parent tasks** (stories), type `spike` — one per module (36), scenario (30), scenario-level TLA+ spec (30), and module-level TLA+ spec (36), each conceptual (what to understand, why it matters), left `To Do` for you to actually work through — nothing is pre-completed

@@ -10,8 +10,7 @@ Implemented (minimal). Cluster Mode (sharding) intentionally left out — this i
 
 Checkov/Trivy findings that are real, accepted trade-offs:
 - **`auth_token` is now a variable** (previously there was no way to require a password at all) — plain `sensitive` variable, same pattern as `dms`'s `source_password`: simple, but the caller is responsible for generating/rotating it and reading it from `secrets-manager` rather than a bare tfvar. `null` (default) keeps the replication group AUTH-free, matching prior behavior.
-- **`kms_key_arn`** for at-rest encryption (already on via the AWS-managed key) is also now a variable — `null` keeps using the AWS-managed key.
-- **Customer-managed KMS key** — encrypted at rest with the AWS-managed key by default. Add a `kms_key_id` variable if a scenario needs key rotation control/audit.
+- **`kms_key_arn`** for at-rest encryption (already on via the AWS-managed key) is also now a variable — `null` keeps using the AWS-managed key, set it for key rotation control/audit.
 - **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
 
 ## Inputs / Outputs
