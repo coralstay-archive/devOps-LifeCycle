@@ -16,3 +16,15 @@ variable "route_key" {
   type        = string
   default     = "$default"
 }
+
+variable "log_retention_days" {
+  description = "CloudWatch retention for the stage's access log group."
+  type        = number
+  default     = 14
+}
+
+variable "tags" {
+  description = "Tags applied to the access-log group."
+  type        = map(string)
+  default     = {}
+}

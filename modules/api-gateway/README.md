@@ -8,8 +8,9 @@ Implemented (minimal). One route only — add more `aws_apigatewayv2_route`/`aws
 
 ## Not yet included
 
+**Access logging is now on unconditionally** — a `aws_cloudwatch_log_group` (`log_retention_days`, default 14) plus `access_log_settings` on the `$default` stage, logging request ID/IP/method/route/status/latency-relevant fields as JSON. This was a total gap before (no log group existed at all), not just a defaulted-off feature, and the CloudWatch cost here is minor.
+
 Checkov/Trivy findings that are real, accepted trade-offs:
-- **Access logging not configured** — needs a CloudWatch log group + `access_log_settings` block on the stage; add when a scenario needs request-level audit trails.
 - **No route-level authorization** (`authorization_type`) — this module's `$default` route accepts unauthenticated requests by design (the Lambda behind it does its own auth if needed). Add a `authorizer_id`/Cognito or IAM authorizer when a scenario needs gateway-level auth.
 
 ## 런타임 불변식 (precondition/postcondition)
@@ -28,8 +29,10 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_lambda_function_name"></a> [lambda\_function\_name](#input\_lambda\_function\_name) | n/a | `string` | n/a | yes |
 | <a name="input_lambda_invoke_arn"></a> [lambda\_invoke\_arn](#input\_lambda\_invoke\_arn) | invoke\_arn output from the lambda module | `string` | n/a | yes |
+| <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | CloudWatch retention for the stage's access log group. | `number` | `14` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_route_key"></a> [route\_key](#input\_route\_key) | e.g. "GET /items" or "$default" | `string` | `"$default"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the access-log group. | `map(string)` | `{}` | no |
 
 ## Outputs
 

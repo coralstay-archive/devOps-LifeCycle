@@ -33,6 +33,16 @@ resource "aws_apigatewayv2_route" "this" {
   }
 }
 
+# Unconditional, not opt-in — access logging was a total gap (no log group
+# at all), not just a defaulted-off feature, and the CloudWatch ingestion
+# cost here is minor (JSON access-log lines, not full request/response
+# bodies).
+resource "aws_cloudwatch_log_group" "access_logs" {
+  name              = "/aws/apigateway/${var.name}"
+  retention_in_days = var.log_retention_days
+  tags              = var.tags
+}
+
 # auto_deploy means every change to routes/integrations goes live
 # immediately — no separate "deploy" step to remember, appropriate for a
 # module meant to stay simple.
@@ -40,6 +50,21 @@ resource "aws_apigatewayv2_stage" "default" {
   api_id      = aws_apigatewayv2_api.this.id
   name        = "$default"
   auto_deploy = true
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.access_logs.arn
+    format = jsonencode({
+      requestId        = "$context.requestId"
+      ip               = "$context.identity.sourceIp"
+      requestTime      = "$context.requestTime"
+      httpMethod       = "$context.httpMethod"
+      routeKey         = "$context.routeKey"
+      status           = "$context.status"
+      protocol         = "$context.protocol"
+      responseLength   = "$context.responseLength"
+      integrationError = "$context.integrationErrorMessage"
+    })
+  }
 }
 
 # Without this, API Gateway can build the route/integration just fine but
