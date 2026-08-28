@@ -30,13 +30,51 @@ resource "aws_cloudfront_distribution" "this" {
     origin_access_control_id = aws_cloudfront_origin_access_control.this.id
   }
 
+  # Second origin, only added when a failover target is configured — reuses
+  # the same OAC (it's just a generic SigV4 signing config, not tied to a
+  # specific bucket) since the failover origin is assumed to be another S3
+  # bucket set up the same way as the primary.
+  dynamic "origin" {
+    for_each = var.failover_origin_domain_name == null ? [] : [1]
+    content {
+      domain_name              = var.failover_origin_domain_name
+      origin_id                = "${var.name}-failover"
+      origin_access_control_id = aws_cloudfront_origin_access_control.this.id
+    }
+  }
+
+  # origin_group ties the two origins together with the status codes that
+  # trigger failover — 403/404 (object missing, e.g. bucket not replicated
+  # yet) as well as 5xx (origin unreachable/erroring).
+  dynamic "origin_group" {
+    for_each = var.failover_origin_domain_name == null ? [] : [1]
+    content {
+      origin_id = "${var.name}-failover-group"
+
+      failover_criteria {
+        status_codes = [403, 404, 500, 502, 503, 504]
+      }
+
+      member {
+        origin_id = var.name
+      }
+
+      member {
+        origin_id = "${var.name}-failover"
+      }
+    }
+  }
+
   # GET/HEAD only, cookies/query strings not forwarded — appropriate for
   # static content where every visitor gets the same response for the same
   # URL, which is the point of caching in the first place.
   default_cache_behavior {
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = var.name
+    allowed_methods = ["GET", "HEAD"]
+    cached_methods  = ["GET", "HEAD"]
+    # Points at the origin_group (not the plain origin) once a failover
+    # target is configured -- that's what actually activates failover
+    # behavior instead of just having an unused second origin sitting there.
+    target_origin_id       = var.failover_origin_domain_name == null ? var.name : "${var.name}-failover-group"
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {

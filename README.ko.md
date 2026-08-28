@@ -176,7 +176,7 @@ cd modules/vpc && terraform init -backend=false && terraform test
 
 ### 2라운드: 남은 findings 마무리 (Security & Observability Hardening)
 
-위에서 "문서화된 트레이드오프로 남긴 것"들도 그냥 놔두지 않고 다시 들여다봤다 — checkov/trivy를 재실행하고, 남은 실패 하나하나를 `backlog` CLI로 새 마일스톤 **Security & Observability Hardening**(`m-17` — 아래의 모듈/시나리오 *학습* 마일스톤들과는 별개다, 이건 사람이 풀어나갈 개념이 아니라 실제로 고쳐야 할 엔지니어링 태스크이기 때문) 아래 명시적인 `bug` 타입 태스크로 기록했다. 최근 기준 43개 중 **41개**가 닫혔다: **checkov 45→19건 실패(94.7% 통과)**, **trivy 40→30건**. `m-17` 아래 남은 백로그가 지금 아직 열려 있는 것들의 정직한 목록이다 — [`backlog/tasks`](backlog/tasks)를 보거나 `backlog task list -m "Security & Observability Hardening" --plain`을 실행할 것.
+위에서 "문서화된 트레이드오프로 남긴 것"들도 그냥 놔두지 않고 다시 들여다봤다 — checkov/trivy를 재실행하고, 남은 실패 하나하나를 `backlog` CLI로 새 마일스톤 **Security & Observability Hardening**(`m-17` — 아래의 모듈/시나리오 *학습* 마일스톤들과는 별개다, 이건 사람이 풀어나갈 개념이 아니라 실제로 고쳐야 할 엔지니어링 태스크이기 때문) 아래 명시적인 `bug` 타입 태스크로 기록했다. 최근 기준 43개 중 **42개**가 닫혔다: **checkov 45→19건 실패(94.7% 통과)**, **trivy 40→30건**. `m-17` 아래 남은 백로그가 지금 아직 열려 있는 것들의 정직한 목록이다 — [`backlog/tasks`](backlog/tasks)를 보거나 `backlog task list -m "Security & Observability Hardening" --plain`을 실행할 것.
 
 실제로 고친 것은 대략 진행된 순서대로:
 - **선택적 고객 관리형 KMS 키**를 15개 모듈에 추가(`dms`, `amazon-mq`, `dynamodb`, `ecr`, `secrets-manager`, `aws-backup`, `rds-postgres`, `redshift`, `sns-sqs`, `observability`, `s3-bucket`, `lambda`, `step-functions`, `elasticache-redis`, `glue`, `msk-kafka`) — 전부 기본값이 `null`인 변수라 AWS 관리형 키로 폴백한다(하위 호환, 옵트인, 강제 비용 없음).
@@ -184,7 +184,7 @@ cd modules/vpc && terraform init -backend=false && terraform test
 - **옵트인으로 메꾼 진짜 기능 공백**(켜면 실제 비용이 듦, 기본은 꺼짐): `eks`의 컨트롤 플레인 로깅 + `public_access_cidrs`, `elasticache-redis`의 AUTH 토큰, `vpc`의 flow logs, `ec2`의 상세 모니터링, `ecs-service`의 Container Insights, `alb`/`cloudfront`의 삭제 보호/액세스 로깅/WAF 연결/지역 제한, `rds-postgres`의 log exports + enhanced monitoring(켤 때만 만들어지는 자체 IAM 역할 포함), `redshift`의 감사 로깅, `lambda`의 DLQ/동시성 제한/환경변수 KMS/VPC 연결/코드 서명, `step-functions`의 로그 보관 기간, `api-gateway`의 라우트 단위 인가(`authorization_type`/`authorizer_id`, 기본값 `"NONE"`/`null` — 강제로 켜지 않았다, 모든 라우트에 authorizer를 기본으로 강제하면 기존 호출자 전부에게 breaking change가 되기 때문).
 - **가는 길에 발견하고 고친 백로그 기록 버그**: 이번 세션 자체의 fork 지시문에서 태스크 ID가 하나씩 밀린 실수 몇 개 때문에 태스크 4개의 상태가 틀려 있었다(`rds-postgres` enhanced monitoring, `lambda` code-signing은 실제로 만들지도 않았는데 "Done"으로 표시돼 있었고, `rds-postgres` log exports, `lambda` DLQ는 이미 배포됐는데 "To Do"로 남아 있었다). fork 리포트나 태스크 ID를 그대로 믿는 대신 각 태스크의 제목을 실제 코드와 대조해서 발견했고, "Done"으로 잘못 표시된 두 항목을 실제로 만들어버리기 전에 바로잡았다.
 
-아직 의도적으로 열어둔 것: `CloudFront`의 오리진 페일오버(두 번째 오리진 + `origin_group`이 필요한 진짜 아키텍처 추가 작업 — 이 모듈은 설계상 단일 오리진이다), 그리고 위의 `tflint` description 알림 322건.
+아직 열려 있는 것: 위의 `tflint` description 알림 322건 — `m-17`의 마지막 항목, [`TASK-175`](backlog/tasks)로 추적 중.
 
 ## 🎯 이 리포가 지향하는 SRE 원칙 (그리고 솔직히 부족한 부분)
 
@@ -284,7 +284,7 @@ TLC는 스타일 지적이 아니라 진짜 버그를 이런 식으로 잡아냈
 **같은 CLI 아래에 서로 다른 종류의 백로그 두 가지가 공존한다** — `backlog board`에서 볼 때 의미가 다르므로 구분해둘 가치가 있다:
 
 - **마일스톤 `m-0`부터 `m-16`까지**(아래)는 *학습용* 백로그다 — 사람이 직접 풀어나가도록 만든 `spike`/`task`/`docs` 타입 태스크로, 일부러 `To Do` 상태로 남겨뒀고 대신 완료해주지 않는다.
-- **마일스톤 `m-17`, "Security & Observability Hardening"**은 *다른 종류*의 백로그다 — 실제 checkov/trivy/tflint findings에서 나온 `bug` 타입 엔지니어링 태스크로, 실제로 고치는 게 목적이다(뭐가 닫혔고 뭐가 아직 열려 있는지는 위의 [리포 지표](#-리포-지표)에서 — 최근 기준 43개 중 41개 완료).
+- **마일스톤 `m-17`, "Security & Observability Hardening"**은 *다른 종류*의 백로그다 — 실제 checkov/trivy/tflint findings에서 나온 `bug` 타입 엔지니어링 태스크로, 실제로 고치는 게 목적이다(뭐가 닫혔고 뭐가 아직 열려 있는지는 위의 [리포 지표](#-리포-지표)에서 — 최근 기준 43개 중 42개 완료).
 
 **구조 — Epic → Story → Task (학습 백로그, `m-0`–`m-16`):**
 

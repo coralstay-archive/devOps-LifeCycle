@@ -47,6 +47,12 @@ variable "logging_bucket_domain_name" {
   default     = null
 }
 
+variable "failover_origin_domain_name" {
+  description = "Domain name of a second S3 origin (e.g. bucket_regional_domain_name of a cross-region-replicated bucket) to fail over to on 403/404/5xx from the primary origin. Null (default) keeps this a single-origin distribution."
+  type        = string
+  default     = null
+}
+
 variable "logging_prefix" {
   description = "S3 key prefix for access logs, used only when logging_bucket_domain_name is set."
   type        = string
