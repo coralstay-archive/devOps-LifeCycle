@@ -65,6 +65,8 @@ resource "aws_db_instance" "this" {
   # instance classes that support it.
   iam_database_authentication_enabled = true
   performance_insights_enabled        = true
+  performance_insights_kms_key_id     = var.performance_insights_kms_key_id
+  enabled_cloudwatch_logs_exports     = var.log_exports
   # deletion_protection tracks skip_final_snapshot's inverse deliberately:
   # if you've said "it's fine to skip the final snapshot," you've already
   # accepted losing this data, so there's no reason deletion_protection

@@ -46,6 +46,12 @@ variable "alb_security_group_id" {
   default     = null
 }
 
+variable "enable_container_insights" {
+  description = "Per-container CPU/memory metrics beyond task-level. Real per-cluster cost when enabled."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

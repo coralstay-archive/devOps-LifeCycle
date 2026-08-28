@@ -25,6 +25,18 @@ variable "policy_arns" {
   default     = []
 }
 
+variable "log_retention_days" {
+  description = "State machine execution log group retention. Checkov wants >= 365 for compliance; defaults to 14 here to match this repo's cost-conscious convention (see lambda's log_retention_days) — raise it per caller when needed."
+  type        = number
+  default     = 14
+}
+
+variable "log_kms_key_arn" {
+  description = "Customer-managed KMS key for the execution log group. Defaults to null, which uses CloudWatch Logs' default encryption."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

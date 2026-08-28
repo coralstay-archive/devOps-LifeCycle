@@ -20,3 +20,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "kms_key_arn" {
+  description = "Customer-managed KMS key ARN for bucket encryption. Leave null to use SSE-S3 (AES256, current default)."
+  type        = string
+  default     = null
+}

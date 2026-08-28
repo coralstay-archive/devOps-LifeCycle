@@ -12,3 +12,9 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "kms_key_arn" {
+  description = "Customer-managed KMS key for image encryption. Defaults to null, which uses AES256 (Amazon S3-managed) encryption instead."
+  type        = string
+  default     = null
+}

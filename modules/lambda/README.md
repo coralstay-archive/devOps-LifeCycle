@@ -10,12 +10,14 @@ Implemented (minimal). No VPC attachment, no layers, no provisioned concurrency 
 
 Checkov/Trivy findings that are real, accepted trade-offs:
 - **Not attached to a VPC** — intentional: most Lambda use cases here (serverless-api, event-driven-microservices) don't need to reach anything VPC-private, and VPC attachment adds cold-start latency + needs its own subnets/NAT. Add `vpc_config` when a scenario's function needs to reach an RDS/ElastiCache instance directly.
-- **No Dead Letter Queue** — needs an `sns-sqs` (or plain SQS) queue wired to `dead_letter_config`; add when a scenario needs to inspect failed async invocations instead of just retrying/dropping them.
-- **No reserved concurrency limit** — unbounded by default, which is the right default for most cases (don't want one function's traffic starving others via account-level concurrency); set `reserved_concurrent_executions` when a scenario specifically needs a ceiling (see `specs/serverless-api/spec.tla`'s `MaxConcurrency` for why this matters).
 - **No code-signing validation** — needs an AWS Signer profile; add for scenarios with a supply-chain-integrity requirement.
-- **CloudWatch Log Group not encrypted with KMS** — uses CloudWatch's default encryption. Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
 - **Log retention is a variable, not fixed at "1 year+"** (`log_retention_days` defaults to 14) — deliberately configurable per caller rather than a fixed compliance-driven minimum.
-- **Environment variables not KMS-encrypted with a customer key** — Lambda always encrypts environment variables at rest with an AWS-managed key; this finding wants a customer-managed one specifically.
+
+Now configurable via opt-in variables (all default to off/unset, matching prior behavior exactly):
+- **Dead Letter Queue** — set `dead_letter_target_arn` (an `sns-sqs` or plain SQS queue ARN) to capture failed async invocations instead of just retrying/dropping them.
+- **Reserved concurrency limit** — `reserved_concurrent_executions` (default `null` = unbounded, the right default for most cases so one function's traffic doesn't starve others via account-level concurrency; see `specs/serverless-api/spec.tla`'s `MaxConcurrency` for why this matters when it *is* set).
+- **CloudWatch Log Group KMS encryption** — `log_kms_key_arn` (default `null` = CloudWatch's default encryption).
+- **Environment variable KMS encryption** — `kms_key_arn` (default `null` = Lambda's AWS-managed key; set to a CMK for key rotation control/audit).
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -31,12 +33,16 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_dead_letter_target_arn"></a> [dead\_letter\_target\_arn](#input\_dead\_letter\_target\_arn) | SNS topic or SQS queue ARN to send failed async invocations to. Leave null to just retry/drop them. | `string` | `null` | no |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | n/a | `map(string)` | `{}` | no |
 | <a name="input_filename"></a> [filename](#input\_filename) | Path to the deployment package zip | `string` | n/a | yes |
 | <a name="input_function_name"></a> [function\_name](#input\_function\_name) | n/a | `string` | n/a | yes |
 | <a name="input_handler"></a> [handler](#input\_handler) | n/a | `string` | `"index.handler"` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key to encrypt environment variables with. Defaults to null, which uses Lambda's AWS-managed key. | `string` | `null` | no |
+| <a name="input_log_kms_key_arn"></a> [log\_kms\_key\_arn](#input\_log\_kms\_key\_arn) | Customer-managed KMS key for the function's log group. Defaults to null, which uses CloudWatch Logs' default encryption. | `string` | `null` | no |
 | <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | n/a | `number` | `14` | no |
 | <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | n/a | `number` | `128` | no |
+| <a name="input_reserved_concurrent_executions"></a> [reserved\_concurrent\_executions](#input\_reserved\_concurrent\_executions) | Ceiling on concurrent executions for this function. Leave null for unreserved (Lambda's default — bounded only by the account-level limit). | `number` | `null` | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | n/a | `string` | `"python3.13"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | n/a | `number` | `10` | no |

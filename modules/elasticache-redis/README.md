@@ -9,7 +9,8 @@ Implemented (minimal). Cluster Mode (sharding) intentionally left out — this i
 ## Not yet included
 
 Checkov/Trivy findings that are real, accepted trade-offs:
-- **No `auth_token` (Redis AUTH)** — transit encryption is on (`transit_encryption_enabled = true`), but there's no password required to connect. Adding one properly means generating a random token and storing it in `secrets-manager` (never as a plain output, same pattern as this repo's other password-bearing modules) — a real feature addition, not a one-line flip.
+- **`auth_token` is now a variable** (previously there was no way to require a password at all) — plain `sensitive` variable, same pattern as `dms`'s `source_password`: simple, but the caller is responsible for generating/rotating it and reading it from `secrets-manager` rather than a bare tfvar. `null` (default) keeps the replication group AUTH-free, matching prior behavior.
+- **`kms_key_arn`** for at-rest encryption (already on via the AWS-managed key) is also now a variable — `null` keeps using the AWS-managed key.
 - **Customer-managed KMS key** — encrypted at rest with the AWS-managed key by default. Add a `kms_key_id` variable if a scenario needs key rotation control/audit.
 - **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
 
@@ -33,6 +34,8 @@ See `variables.tf` / `outputs.tf`.
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_allowed_security_group_ids"></a> [allowed\_security\_group\_ids](#input\_allowed\_security\_group\_ids) | n/a | `list(string)` | `[]` | no |
+| <a name="input_auth_token"></a> [auth\_token](#input\_auth\_token) | Redis AUTH token (16-128 chars). Plain sensitive variable for simplicity, same pattern as modules/dms's source\_password — read it from modules/secrets-manager instead of a bare tfvar in practice. Null disables AUTH. | `string` | `null` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for at-rest encryption (already on via the AWS-managed key). Leave null to keep using the AWS-managed key. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for the Redis replication group | `string` | n/a | yes |
 | <a name="input_node_type"></a> [node\_type](#input\_node\_type) | n/a | `string` | `"cache.t4g.micro"` | no |
 | <a name="input_num_cache_nodes"></a> [num\_cache\_nodes](#input\_num\_cache\_nodes) | Number of nodes (1 primary + N-1 replicas) | `number` | `2` | no |

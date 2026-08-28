@@ -49,6 +49,8 @@ resource "aws_elasticache_replication_group" "this" {
   automatic_failover_enabled = var.num_cache_nodes > 1
   at_rest_encryption_enabled = true
   transit_encryption_enabled = true
+  auth_token                 = var.auth_token
+  kms_key_id                 = var.kms_key_arn
 
   tags = var.tags
 

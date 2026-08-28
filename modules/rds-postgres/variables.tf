@@ -61,6 +61,18 @@ variable "skip_final_snapshot" {
   default     = false
 }
 
+variable "performance_insights_kms_key_id" {
+  description = "Customer-managed KMS key for Performance Insights encryption. Leave null to use the AWS-managed key."
+  type        = string
+  default     = null
+}
+
+variable "log_exports" {
+  description = "PostgreSQL log types to export to CloudWatch Logs (has a real CloudWatch ingestion cost)"
+  type        = list(string)
+  default     = ["postgresql", "upgrade"]
+}
+
 variable "tags" {
   description = "Tags applied to all resources"
   type        = map(string)

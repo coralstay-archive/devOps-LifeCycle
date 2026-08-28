@@ -33,7 +33,13 @@ resource "aws_eks_cluster" "this" {
     # public access (see this module's README for that trade-off) — just
     # adds a second, private path.
     endpoint_private_access = true
+    public_access_cidrs     = var.public_access_cidrs
   }
+
+  # Empty list (the default) means no logging — enabling any of these is a
+  # real, ongoing CloudWatch Logs cost, so this stays opt-in rather than on
+  # by default.
+  enabled_cluster_log_types = var.cluster_log_types
 
   # Only set when a KMS key is provided — encrypting Kubernetes Secrets at
   # rest is valuable but needs a real key (customer-managed or from the

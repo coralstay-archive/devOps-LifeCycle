@@ -9,7 +9,7 @@ Implemented (minimal). One target group only — for multiple services behind on
 ## Not yet included
 
 Checkov/Trivy findings that are real, accepted trade-offs, not gaps that slipped through unnoticed:
-- **Deletion protection off** — deliberately, so `terraform destroy` works cleanly for a scaffold/demo stack. Flip on for anything real.
+- **Deletion protection off by default** — `enable_deletion_protection` (default `false`) so `terraform destroy` works cleanly for a scaffold/demo stack. Flip on for anything real.
 - **Access logging not configured** — needs an S3 bucket + bucket policy to receive logs; add when a scenario needs request-level audit trails.
 - **HTTP allowed / not forced to HTTPS-only** — intentional: without `certificate_arn`, HTTP forwards directly so `live/example-dev`-style testing doesn't require a cert. This is a real gap only if you deploy without `certificate_arn` in production.
 - **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
@@ -29,6 +29,7 @@ Checkov/Trivy findings that are real, accepted trade-offs, not gaps that slipped
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ACM certificate ARN. If set, adds an HTTPS listener and redirects HTTP to it. If null, HTTP forwards directly. | `string` | `null` | no |
+| <a name="input_enable_deletion_protection"></a> [enable\_deletion\_protection](#input\_enable\_deletion\_protection) | Blocks accidental/automated deletion of the load balancer. Off by default so terraform destroy works cleanly for a scaffold/demo stack — flip on for anything real. | `bool` | `false` | no |
 | <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | n/a | `string` | `"/"` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_public_subnet_ids"></a> [public\_subnet\_ids](#input\_public\_subnet\_ids) | n/a | `list(string)` | n/a | yes |

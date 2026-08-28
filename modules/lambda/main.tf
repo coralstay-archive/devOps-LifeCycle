@@ -37,6 +37,7 @@ resource "aws_iam_role_policy_attachment" "xray" {
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/lambda/${var.function_name}"
   retention_in_days = var.log_retention_days
+  kms_key_id        = var.log_kms_key_arn
   tags              = var.tags
 }
 
@@ -53,6 +54,9 @@ resource "aws_lambda_function" "this" {
   memory_size      = var.memory_size
   timeout          = var.timeout
 
+  reserved_concurrent_executions = var.reserved_concurrent_executions
+  kms_key_arn                    = var.kms_key_arn
+
   environment {
     variables = var.environment_variables
   }
@@ -61,6 +65,15 @@ resource "aws_lambda_function" "this" {
   # code changes needed, as long as the xray policy attachment above exists.
   tracing_config {
     mode = "Active"
+  }
+
+  # Only added when the caller wants failed async invocations captured
+  # somewhere inspectable instead of just retried/dropped.
+  dynamic "dead_letter_config" {
+    for_each = var.dead_letter_target_arn == null ? [] : [1]
+    content {
+      target_arn = var.dead_letter_target_arn
+    }
   }
 
   tags = var.tags

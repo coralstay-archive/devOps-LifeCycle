@@ -35,6 +35,7 @@ resource "aws_dms_replication_instance" "this" {
   vpc_security_group_ids      = [aws_security_group.this.id]
   publicly_accessible         = false
   auto_minor_version_upgrade  = true
+  kms_key_arn                 = var.kms_key_arn
 
   tags = var.tags
 }
@@ -51,6 +52,7 @@ resource "aws_dms_endpoint" "source" {
   database_name = var.source_database_name
   username      = var.source_username
   password      = var.source_password
+  kms_key_arn   = var.kms_key_arn
 
   tags = var.tags
 
@@ -72,6 +74,7 @@ resource "aws_dms_endpoint" "target" {
   endpoint_id   = "${var.name}-target"
   endpoint_type = "target"
   engine_name   = var.target_engine_name
+  kms_key_arn   = var.kms_key_arn
 
   kafka_settings {
     broker                  = var.target_kafka_broker

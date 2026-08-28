@@ -16,7 +16,9 @@ See `variables.tf`. Key ones: `bucket_name`, `versioning_enabled`, `force_destro
 
 ## Not yet included
 
-Lifecycle rules, replication, access logging, KMS (currently SSE-S3/AES256, not SSE-KMS). Add when a scenario needs them.
+Lifecycle rules, replication, access logging. Add when a scenario needs them.
+
+**Customer-managed KMS key** — `kms_key_arn` variable (default `null`, keeps the current SSE-S3/AES256 default). Set it to switch to SSE-KMS with that key.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -34,6 +36,7 @@ Lifecycle rules, replication, access logging, KMS (currently SSE-S3/AES256, not 
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | Globally unique S3 bucket name | `string` | n/a | yes |
 | <a name="input_force_destroy"></a> [force\_destroy](#input\_force\_destroy) | Allow bucket deletion even if it still contains objects (keep false for anything holding real data) | `bool` | `false` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key ARN for bucket encryption. Leave null to use SSE-S3 (AES256, current default). | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to the bucket | `map(string)` | `{}` | no |
 | <a name="input_versioning_enabled"></a> [versioning\_enabled](#input\_versioning\_enabled) | Enable object versioning (required for safe Terraform state buckets) | `bool` | `true` | no |
 

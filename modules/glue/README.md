@@ -8,7 +8,7 @@ Implemented (minimal). ETL jobs (`aws_glue_job`) not included — add when `etl-
 
 ## Not yet included
 
-**No security configuration** (`aws_glue_security_configuration`) — the crawler doesn't have an associated one, so job bookmarks/logs/S3 output aren't encrypted with a specific KMS key. Needs a security configuration resource + KMS key; add when a scenario needs encrypted Glue job artifacts.
+**Security configuration is now attached, but encryption is opt-in** — `aws_glue_security_configuration` is now always created and wired into the crawler, but all three modes (CloudWatch logs, job bookmarks, S3) default to `DISABLED` (Glue's own default) unless `kms_key_arn` is set. Pass a CMK once a scenario needs encrypted Glue job artifacts.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -26,6 +26,7 @@ Implemented (minimal). ETL jobs (`aws_glue_job`) not included — add when `etl-
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_crawler_schedule"></a> [crawler\_schedule](#input\_crawler\_schedule) | cron() expression. Leave null to run on-demand only. | `string` | `null` | no |
 | <a name="input_database_name"></a> [database\_name](#input\_database\_name) | n/a | `string` | n/a | yes |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the crawler's security configuration (CloudWatch logs, job bookmarks, S3 reads). Leave null to leave all three encryption modes DISABLED (Glue's own default). | `string` | `null` | no |
 | <a name="input_s3_target_path"></a> [s3\_target\_path](#input\_s3\_target\_path) | e.g. s3://my-bucket/raw/ | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
 

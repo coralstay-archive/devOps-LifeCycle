@@ -21,7 +21,8 @@ resource "aws_dynamodb_table" "this" {
   }
 
   server_side_encryption {
-    enabled = true
+    enabled     = true
+    kms_key_arn = var.kms_key_arn
   }
 
   tags = var.tags

@@ -25,6 +25,9 @@ resource "aws_instance" "this" {
   # optimization is already the API default for them, this just makes it
   # explicit instead of relying on that default silently holding.
   ebs_optimized = true
+  # Real per-instance cost when on (1-minute metrics vs. the free 5-minute
+  # default) — off by default so this scaffold doesn't silently bill for it.
+  monitoring = var.enable_detailed_monitoring
 
   # Encrypted by default — there's no reason a fresh EC2 instance's root
   # volume should ever be unencrypted, and AWS doesn't default to encrypted

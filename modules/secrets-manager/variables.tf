@@ -13,3 +13,9 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "kms_key_arn" {
+  description = "Customer-managed KMS key for the secret. Defaults to null, which falls back to the AWS-managed aws/secretsmanager key."
+  type        = string
+  default     = null
+}

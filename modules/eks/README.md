@@ -13,8 +13,8 @@ Implemented (minimal): base cluster + managed node group only.
 IRSA, multiple node groups: also not included.
 
 Checkov/Trivy findings that are real, accepted trade-offs:
-- **Public API endpoint open to 0.0.0.0/0** — this is the actual AWS default when `endpoint_public_access`/`public_access_cidrs` aren't set, which is what lets you run `kubectl`/`terraform` from a laptop without a VPN into the VPC. `endpoint_private_access = true` is now on too (free, lets in-VPC traffic use a private path), but disabling public access entirely means every cluster interaction has to go through something inside the VPC (bastion, VPN, Cloud9) — a real operational cost this minimal module doesn't force on you. Set `public_access_cidrs` to your own IP range, or add a variable to disable public access entirely, once a scenario needs it.
-- **Control plane logging not enabled** (`enabled_cluster_log_types`) — a real cost trade-off: CloudWatch Logs ingestion for `api`/`audit`/`authenticator`/`controllerManager`/`scheduler` logs isn't free at scale. Add when a scenario needs control-plane audit trails.
+- **Public API endpoint still defaults to 0.0.0.0/0** — `public_access_cidrs` is now a variable (previously there was no way to restrict this at all), but it still defaults open so `kubectl`/`terraform` work from a laptop without a VPN into the VPC. `endpoint_private_access = true` is on too (free, lets in-VPC traffic use a private path). Set `public_access_cidrs` to your own IP range once a scenario needs it locked down; disabling public access entirely is a bigger step (every cluster interaction then needs something inside the VPC — bastion, VPN, Cloud9) and isn't wired up as a toggle here.
+- **Control plane logging off by default** (`cluster_log_types`, now a variable — previously not configurable at all) — a real cost trade-off: CloudWatch Logs ingestion for `api`/`audit`/`authenticator`/`controllerManager`/`scheduler` logs isn't free at scale, so the default stays `[]`. Pass the full list once a scenario needs control-plane audit trails.
 - **Secrets encryption available but opt-in** — pass `secrets_kms_key_arn` (e.g. from the `kms` module) to encrypt Kubernetes Secrets at rest with envelope encryption. Left off by default because it needs a real KMS key this module won't silently create on your behalf.
 
 ## 런타임 불변식 (precondition/postcondition)
@@ -33,6 +33,7 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_cluster_log_types"></a> [cluster\_log\_types](#input\_cluster\_log\_types) | Control plane log types to enable (e.g. ["api", "audit", "authenticator", "controllerManager", "scheduler"]). Defaults to none — enabling any incurs ongoing CloudWatch Logs cost. | `list(string)` | `[]` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | n/a | yes |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | n/a | `string` | `"1.31"` | no |
 | <a name="input_node_desired_size"></a> [node\_desired\_size](#input\_node\_desired\_size) | n/a | `number` | `2` | no |
@@ -40,8 +41,9 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 | <a name="input_node_max_size"></a> [node\_max\_size](#input\_node\_max\_size) | n/a | `number` | `4` | no |
 | <a name="input_node_min_size"></a> [node\_min\_size](#input\_node\_min\_size) | n/a | `number` | `2` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Needs >= 2 AZs; used for both the control plane ENIs and worker nodes | `list(string)` | n/a | yes |
+| <a name="input_public_access_cidrs"></a> [public\_access\_cidrs](#input\_public\_access\_cidrs) | CIDR blocks allowed to reach the public API endpoint. Defaults to open (0.0.0.0/0) to preserve out-of-the-box kubectl access — narrow this for anything beyond a scaffold. | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
+| <a name="input_secrets_kms_key_arn"></a> [secrets\_kms\_key\_arn](#input\_secrets\_kms\_key\_arn) | KMS key ARN to encrypt Kubernetes Secrets at rest (e.g. from the kms module). Leave null to skip envelope encryption of Secrets. | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | n/a | yes |
 
 ## Outputs
 

@@ -26,6 +26,12 @@ variable "certificate_arn" {
   default     = null
 }
 
+variable "enable_deletion_protection" {
+  description = "Blocks accidental/automated deletion of the load balancer. Off by default so terraform destroy works cleanly for a scaffold/demo stack — flip on for anything real."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

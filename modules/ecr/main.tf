@@ -10,6 +10,11 @@ resource "aws_ecr_repository" "this" {
     scan_on_push = true
   }
 
+  encryption_configuration {
+    encryption_type = var.kms_key_arn == null ? "AES256" : "KMS"
+    kms_key         = var.kms_key_arn
+  }
+
   tags = var.tags
 
   # untagged images accumulate fast (every build that doesn't get tagged

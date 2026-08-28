@@ -8,7 +8,7 @@ Implemented (minimal). No rotation configured — add `aws_secretsmanager_secret
 
 ## Not yet included
 
-**Customer-managed KMS key** — encrypted with the AWS-managed `aws/secretsmanager` key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_id` variable if a scenario needs key rotation control/audit.
+**Customer-managed KMS key** — encrypted with the AWS-managed `aws/secretsmanager` key by default. Pass `kms_key_arn` if a scenario needs key rotation control/audit — falls back to the AWS-managed key when left `null`.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -24,6 +24,7 @@ Implemented (minimal). No rotation configured — add `aws_secretsmanager_secret
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the secret. Defaults to null, which falls back to the AWS-managed aws/secretsmanager key. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_secret_string"></a> [secret\_string](#input\_secret\_string) | Initial secret value. Leave null to create an empty secret and fill it in outside Terraform (recommended for anything rotated). | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |

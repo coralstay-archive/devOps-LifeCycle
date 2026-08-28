@@ -44,6 +44,10 @@ resource "aws_lb" "this" {
   # invalid header fields instead of passing them through.
   drop_invalid_header_fields = true
 
+  # Off by default so `terraform destroy` works cleanly for a scaffold/demo
+  # stack — flip on for anything real.
+  enable_deletion_protection = var.enable_deletion_protection
+
   tags = var.tags
 
   # Not a style preference — the ALB API itself refuses to create a load

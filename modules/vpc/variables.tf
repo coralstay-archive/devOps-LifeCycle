@@ -20,6 +20,12 @@ variable "enable_nat_gateway" {
   default     = true
 }
 
+variable "enable_flow_logs" {
+  description = "Create VPC Flow Logs (REJECT traffic only) to a CloudWatch log group. Defaults to false — real ongoing CloudWatch Logs cost when on."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "Tags applied to all resources"
   type        = map(string)

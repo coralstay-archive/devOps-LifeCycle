@@ -8,7 +8,7 @@ Implemented (minimal). No dead-letter queue yet — add `aws_sqs_queue` with `re
 
 ## Not yet included
 
-**Customer-managed KMS key** — both the topic and queue use the AWS-managed `alias/aws/sns` / `alias/aws/sqs` keys (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+**Customer-managed KMS key** — `kms_key_arn` variable (default `null`, falls back to the AWS-managed `alias/aws/sns` / `alias/aws/sqs` keys for both the topic and queue). Encryption at rest is always on either way; this is about who manages the key.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -25,6 +25,7 @@ Implemented (minimal). No dead-letter queue yet — add `aws_sqs_queue` with `re
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key ARN for both the topic and queue. Leave null to use the AWS-managed alias/aws/sns and alias/aws/sqs keys. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
 

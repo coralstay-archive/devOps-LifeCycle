@@ -21,15 +21,17 @@ resource "aws_s3_bucket_versioning" "this" {
   }
 }
 
-# SSE-S3 (AES256): AWS-managed keys, no extra IAM/KMS setup needed. Encrypts
-# everything at rest by default, even though nothing else in this module
-# forces callers to opt in.
+# SSE-S3 (AES256) by default: AWS-managed keys, no extra IAM/KMS setup
+# needed. Encrypts everything at rest by default, even though nothing else
+# in this module forces callers to opt in. Set kms_key_arn to switch to
+# SSE-KMS with a customer-managed key instead.
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   bucket = aws_s3_bucket.this.id
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      sse_algorithm     = var.kms_key_arn == null ? "AES256" : "aws:kms"
+      kms_master_key_id = var.kms_key_arn
     }
     bucket_key_enabled = true
   }

@@ -28,3 +28,9 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "kms_key_arn" {
+  description = "Customer-managed KMS key ARN for the alarms SNS topic. Leave null to use the AWS-managed alias/aws/sns key."
+  type        = string
+  default     = null
+}

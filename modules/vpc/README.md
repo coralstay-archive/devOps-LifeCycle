@@ -16,7 +16,9 @@ See `variables.tf`. Key ones: `name`, `cidr_block`, `availability_zones`, `enabl
 
 ## Not yet included
 
-VPC endpoints (S3/ECR gateway/interface endpoints — see the `vpc-endpoints` module), flow logs, IPv6. Add when a scenario needs them.
+VPC endpoints (S3/ECR gateway/interface endpoints — see the `vpc-endpoints` module), IPv6. Add when a scenario needs them.
+
+**Flow logs are opt-in** (`enable_flow_logs`, default `false`) — when on, logs REJECT-only traffic to a CloudWatch log group via a dedicated IAM role. REJECT-only (not ALL) is the cheapest useful default: it surfaces misconfigured security groups/NACLs without the volume/cost of logging every accepted packet too.
 
 One Trivy finding that's intentional, not a gap: **"instances in a subnet receive a public IP by default"** — that's `map_public_ip_on_launch = true` on the *public* subnets specifically (the private subnets don't set this). A public subnet whose instances don't get public IPs isn't really public — this is the point of the subnet, not an oversight.
 
@@ -36,6 +38,7 @@ One Trivy finding that's intentional, not a gap: **"instances in a subnet receiv
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones to spread subnets across (multi-AZ by default for spike resilience) | `list(string)` | n/a | yes |
 | <a name="input_cidr_block"></a> [cidr\_block](#input\_cidr\_block) | CIDR block for the VPC | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_enable_flow_logs"></a> [enable\_flow\_logs](#input\_enable\_flow\_logs) | Create VPC Flow Logs (REJECT traffic only) to a CloudWatch log group. Defaults to false — real ongoing CloudWatch Logs cost when on. | `bool` | `false` | no |
 | <a name="input_enable_nat_gateway"></a> [enable\_nat\_gateway](#input\_enable\_nat\_gateway) | Create one NAT gateway per AZ so private subnets have outbound internet access | `bool` | `true` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name prefix applied to all resources created by this module | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to all resources | `map(string)` | `{}` | no |

@@ -51,6 +51,12 @@ variable "root_volume_size" {
   default     = 20
 }
 
+variable "enable_detailed_monitoring" {
+  description = "1-minute CloudWatch metrics instead of the free 5-minute default. Real per-instance cost when enabled."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

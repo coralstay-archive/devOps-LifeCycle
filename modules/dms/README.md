@@ -12,7 +12,7 @@ Implemented (minimal): one source, one target, one task, capturing all tables by
 
 ## Not yet included
 
-**Customer-managed KMS key** — both the replication instance and endpoints are encrypted with the AWS-managed `aws/dms` key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+**Customer-managed KMS key** — both the replication instance and endpoints are encrypted with the AWS-managed `aws/dms` key by default. Pass `kms_key_arn` if a scenario needs key rotation control/audit — falls back to the AWS-managed key when left `null`.
 
 **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment for why (the replication instance only ever makes outbound connections, to arbitrary source/target endpoints).
 
@@ -31,7 +31,8 @@ Implemented (minimal): one source, one target, one task, capturing all tables by
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the replication instance and both endpoints. Defaults to null, which falls back to the AWS-managed aws/dms key. | `string` | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name used as the base for the replication instance, task, and endpoint identifiers. | `string` | n/a | yes |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | n/a | `list(string)` | n/a | yes |
 | <a name="input_replication_instance_class"></a> [replication\_instance\_class](#input\_replication\_instance\_class) | n/a | `string` | `"dms.t3.micro"` | no |
 | <a name="input_source_database_name"></a> [source\_database\_name](#input\_source\_database\_name) | n/a | `string` | n/a | yes |

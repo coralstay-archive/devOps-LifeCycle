@@ -10,7 +10,7 @@ Implemented (minimal).
 
 Auto Scaling Group (this is a single fixed instance, not a fleet), additional EBS volumes, EIP association, launch template. For anything that needs to scale, consider `ecs-service`/`eks` instead — this module exists for the cases that genuinely need a plain VM (bastion hosts, self-hosted tools, legacy lift-and-shift).
 
-**Detailed monitoring not enabled** — a real cost trade-off, not a free flip: 1-minute CloudWatch metrics cost extra per instance versus the free 5-minute default. Set `monitoring = true` on the resource when a scenario actually needs finer-grained metrics.
+**Detailed monitoring off by default** — a real cost trade-off, not a free flip: 1-minute CloudWatch metrics cost extra per instance versus the free 5-minute default. Set `enable_detailed_monitoring = true` when a scenario actually needs finer-grained metrics.
 
 ## Security note
 
@@ -34,6 +34,7 @@ Auto Scaling Group (this is a single fixed instance, not a fleet), additional EB
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_ami_id"></a> [ami\_id](#input\_ami\_id) | Leave null to use the latest Amazon Linux 2023 AMI | `string` | `null` | no |
 | <a name="input_associate_public_ip_address"></a> [associate\_public\_ip\_address](#input\_associate\_public\_ip\_address) | n/a | `bool` | `false` | no |
+| <a name="input_enable_detailed_monitoring"></a> [enable\_detailed\_monitoring](#input\_enable\_detailed\_monitoring) | 1-minute CloudWatch metrics instead of the free 5-minute default. Real per-instance cost when enabled. | `bool` | `false` | no |
 | <a name="input_iam_instance_profile"></a> [iam\_instance\_profile](#input\_iam\_instance\_profile) | Instance profile name (e.g. from the iam module + an aws\_iam\_instance\_profile) | `string` | `null` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | n/a | `string` | `"t3.micro"` | no |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | EC2 key pair name for SSH access. Leave null to rely on SSM Session Manager instead (recommended). | `string` | `null` | no |

@@ -1,8 +1,9 @@
 # The secret container itself — creating this doesn't require knowing the
 # secret value yet, which is what makes the version resource below optional.
 resource "aws_secretsmanager_secret" "this" {
-  name = var.name
-  tags = var.tags
+  name       = var.name
+  kms_key_id = var.kms_key_arn
+  tags       = var.tags
 
   # Same "does this ARN look real" sanity check pattern as s3-bucket's
   # bucket_arn and sns-sqs's queue ARN — cheap, catches nothing in practice,

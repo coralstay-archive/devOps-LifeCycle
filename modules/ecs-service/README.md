@@ -11,7 +11,7 @@ Implemented (minimal). Pair with the `alb` module for `target_group_arn`.
 Service auto scaling policy, blue/green (CodeDeploy) — see `codedeploy` module for `scenarios/blue-green-deployment`.
 
 Checkov/Trivy findings that are real, accepted trade-offs:
-- **Container Insights not enabled** — a real cost trade-off, not a free flip: extra per-container CloudWatch metrics cost money at scale. Set `setting { name = "containerInsights", value = "enabled" }` on the cluster when a scenario needs per-container CPU/memory visibility beyond task-level metrics.
+- **Container Insights off by default** — a real cost trade-off, not a free flip: extra per-container CloudWatch metrics cost money at scale. Set `enable_container_insights = true` when a scenario needs per-container CPU/memory visibility beyond task-level metrics.
 - **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment. Ingress *is* scoped to the ALB's security group when one is provided (`alb_security_group_id`).
 
 ## 런타임 불변식 (precondition/postcondition)
@@ -28,10 +28,12 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_alb_security_group_id"></a> [alb\_security\_group\_id](#input\_alb\_security\_group\_id) | ALB's security group ID (the alb module's security\_group\_id output). If set, container\_port ingress is scoped to only the ALB instead of 0.0.0.0/0. Leave null if there's no ALB in front of this service. | `string` | `null` | no |
 | <a name="input_container_image"></a> [container\_image](#input\_container\_image) | n/a | `string` | n/a | yes |
 | <a name="input_container_port"></a> [container\_port](#input\_container\_port) | n/a | `number` | `8080` | no |
 | <a name="input_cpu"></a> [cpu](#input\_cpu) | n/a | `number` | `256` | no |
 | <a name="input_desired_count"></a> [desired\_count](#input\_desired\_count) | n/a | `number` | `2` | no |
+| <a name="input_enable_container_insights"></a> [enable\_container\_insights](#input\_enable\_container\_insights) | Per-container CPU/memory metrics beyond task-level. Real per-cluster cost when enabled. | `bool` | `false` | no |
 | <a name="input_memory"></a> [memory](#input\_memory) | n/a | `number` | `512` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | n/a | `list(string)` | n/a | yes |

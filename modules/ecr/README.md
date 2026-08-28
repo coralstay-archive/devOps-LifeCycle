@@ -8,7 +8,7 @@ Implemented (minimal).
 
 ## Not yet included
 
-**Customer-managed KMS key** — encrypted with the AWS-managed key (`AES256`) by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable (`encryption_configuration { encryption_type = "KMS", kms_key = ... }`) if a scenario needs key rotation control/audit.
+**Customer-managed KMS key** — encrypted with `AES256` by default. Pass `kms_key_arn` if a scenario needs key rotation control/audit — switches `encryption_type` to `KMS` automatically when set.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -24,6 +24,7 @@ Implemented (minimal).
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for image encryption. Defaults to null, which uses AES256 (Amazon S3-managed) encryption instead. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Repository name | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
 | <a name="input_untagged_image_expiry_days"></a> [untagged\_image\_expiry\_days](#input\_untagged\_image\_expiry\_days) | n/a | `number` | `14` | no |

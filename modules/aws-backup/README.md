@@ -8,7 +8,7 @@ Implemented (minimal): one schedule/rule. Add tag-based selection (`selection_ta
 
 ## Not yet included
 
-**Customer-managed KMS key for the vault** — encrypted with the AWS-managed `aws/backup` key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+**Customer-managed KMS key for the vault** — encrypted with the AWS-managed `aws/backup` key by default. Pass `kms_key_arn` if a scenario needs key rotation control/audit — falls back to the AWS-managed key when left `null`.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -24,6 +24,7 @@ Implemented (minimal): one schedule/rule. Add tag-based selection (`selection_ta
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the backup vault. Defaults to null, which falls back to the AWS-managed aws/backup key. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_resource_arns"></a> [resource\_arns](#input\_resource\_arns) | ARNs to back up | `list(string)` | `[]` | no |
 | <a name="input_retention_days"></a> [retention\_days](#input\_retention\_days) | n/a | `number` | `35` | no |

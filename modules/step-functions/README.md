@@ -8,9 +8,9 @@ Implemented (minimal). Execution logging (`logging_configuration`, ERROR level) 
 
 ## Not yet included
 
-Checkov/Trivy findings on the log group added above:
-- **Retention is 14 days, not 1+ year** — matches this repo's convention elsewhere (`lambda`'s `log_retention_days` also defaults to 14) rather than a longer compliance-driven minimum; make it a variable if a scenario needs longer retention.
-- **Log group not encrypted with a customer-managed KMS key** — uses CloudWatch's default encryption. Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+Checkov/Trivy findings on the log group added above, now both configurable via opt-in variables (defaults preserve prior behavior exactly):
+- **Retention is 14 days, not 1+ year** — `log_retention_days` (default `14`, matching `lambda`'s convention) rather than a fixed compliance-driven minimum. Checkov wants >= 365; raise the variable per caller if that's a real requirement.
+- **Log group not encrypted with a customer-managed KMS key** — `log_kms_key_arn` (default `null` = CloudWatch's default encryption).
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -27,6 +27,8 @@ Checkov/Trivy findings on the log group added above:
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_definition"></a> [definition](#input\_definition) | Amazon States Language JSON. Defaults to a trivial single-Pass-state machine so this module works with zero required config beyond `name`. | `string` | `"{\n  \"Comment\": \"Placeholder state machine - replace with a real definition\",\n  \"StartAt\": \"Placeholder\",\n  \"States\": {\n    \"Placeholder\": {\n      \"Type\": \"Pass\",\n      \"End\": true\n    }\n  }\n}\n"` | no |
+| <a name="input_log_kms_key_arn"></a> [log\_kms\_key\_arn](#input\_log\_kms\_key\_arn) | Customer-managed KMS key for the execution log group. Defaults to null, which uses CloudWatch Logs' default encryption. | `string` | `null` | no |
+| <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | State machine execution log group retention. Checkov wants >= 365 for compliance; defaults to 14 here to match this repo's cost-conscious convention (see lambda's log\_retention\_days) — raise it per caller when needed. | `number` | `14` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_policy_arns"></a> [policy\_arns](#input\_policy\_arns) | Managed policy ARNs to attach (e.g. to let it invoke Lambda/Glue) | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |

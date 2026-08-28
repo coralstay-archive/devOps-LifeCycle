@@ -16,9 +16,9 @@ Implemented (minimal): cluster + TLS encryption in transit, no topics.
 
 MSK Serverless option, SASL/IAM auth, per-topic partition/retention management, auto-scaling storage policy.
 
+Fixed: broker logging now ships to a CloudWatch log group (`/aws/msk/<cluster_name>`, 14-day retention) unconditionally — this was a total gap before, not a cost trade-off. At-rest encryption now takes an optional `encryption_at_rest_kms_key_arn` (default `null` — MSK always encrypts at rest and applies its own AWS-managed key automatically when this is left unset, so the default behavior is unchanged, just now overridable with a CMK).
+
 Checkov/Trivy findings that are real, accepted trade-offs:
-- **Customer-managed KMS key for at-rest encryption** — MSK always encrypts data at rest (this can't be disabled), using an AWS-managed key by default. Add an `encryption_at_rest_kms_key_arn` variable if a scenario needs key rotation control/audit.
-- **Broker logging not enabled** (`logging_info`) — needs a CloudWatch log group (or Firehose/S3) destination; add when a scenario needs broker-level log access instead of relying on client/consumer-side observability.
 - **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
 
 ## 런타임 불변식 (precondition/postcondition)
@@ -39,6 +39,7 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 | <a name="input_broker_instance_type"></a> [broker\_instance\_type](#input\_broker\_instance\_type) | n/a | `string` | `"kafka.t3.small"` | no |
 | <a name="input_broker_volume_size"></a> [broker\_volume\_size](#input\_broker\_volume\_size) | n/a | `number` | `100` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | n/a | yes |
+| <a name="input_encryption_at_rest_kms_key_arn"></a> [encryption\_at\_rest\_kms\_key\_arn](#input\_encryption\_at\_rest\_kms\_key\_arn) | Customer-managed KMS key for broker EBS storage at rest. Defaults to null, which lets MSK apply its own AWS-managed key automatically. | `string` | `null` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | n/a | `string` | `"3.7.x"` | no |
 | <a name="input_number_of_broker_nodes"></a> [number\_of\_broker\_nodes](#input\_number\_of\_broker\_nodes) | Must be a multiple of the number of subnets (AZs) | `number` | `2` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Needs >= 2 AZs | `list(string)` | n/a | yes |

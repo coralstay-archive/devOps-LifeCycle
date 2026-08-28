@@ -43,13 +43,27 @@ resource "aws_redshift_cluster" "this" {
   cluster_subnet_group_name = aws_redshift_subnet_group.this.name
   vpc_security_group_ids    = [aws_security_group.this.id]
   encrypted                 = true
+  # kms_key_id defaults to null, which makes AWS fall back to the
+  # AWS-managed aws/redshift key — same "encrypted either way, this is just
+  # about who manages the key" pattern used elsewhere in this repo.
+  kms_key_id = var.kms_key_arn
   # Redshift's actual default is TRUE if left unset — unlike RDS, which
   # defaults to false in a VPC. This isn't a style preference: an unset
   # publicly_accessible here would put the cluster on a public IP despite
   # already being scoped to private subnets and a locked-down security group.
   publicly_accessible       = false
+  enhanced_vpc_routing      = var.enhanced_vpc_routing
   skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.cluster_identifier}-final"
+
+  dynamic "logging" {
+    for_each = var.logging_bucket_name == null ? [] : [1]
+    content {
+      enable        = true
+      bucket_name   = var.logging_bucket_name
+      s3_key_prefix = var.logging_s3_key_prefix
+    }
+  }
 
   tags = var.tags
 

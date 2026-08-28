@@ -2,8 +2,9 @@
 # (schedule/retention rules) below, since one vault could receive backups
 # from multiple plans.
 resource "aws_backup_vault" "this" {
-  name = "${var.name}-vault"
-  tags = var.tags
+  name        = "${var.name}-vault"
+  kms_key_arn = var.kms_key_arn
+  tags        = var.tags
 }
 
 resource "aws_backup_plan" "this" {

@@ -8,7 +8,7 @@ Implemented (minimal). No range key, no GSIs/LSIs — add when a scenario's acce
 
 ## Not yet included
 
-**Customer-managed KMS key** — encrypted with the AWS-owned default key (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable (`server_side_encryption { kms_key_arn = ... }`) if a scenario needs key rotation control/audit.
+**Customer-managed KMS key** — encrypted with the AWS-owned default key by default. Pass `kms_key_arn` if a scenario needs key rotation control/audit — falls back to the AWS-owned key when left `null`.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -26,6 +26,7 @@ Implemented (minimal). No range key, no GSIs/LSIs — add when a scenario's acce
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_hash_key"></a> [hash\_key](#input\_hash\_key) | n/a | `string` | `"id"` | no |
 | <a name="input_hash_key_type"></a> [hash\_key\_type](#input\_hash\_key\_type) | S, N, or B | `string` | `"S"` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the table. Defaults to null, which falls back to the AWS-owned default key (aws/dynamodb). | `string` | `null` | no |
 | <a name="input_table_name"></a> [table\_name](#input\_table\_name) | n/a | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
 

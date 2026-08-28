@@ -27,7 +27,7 @@ alarms = {
 
 Prometheus/Grafana (AMP/AMG) for EKS scenarios, error-budget-burn-rate composite alarms. Add when an EKS-based scenario needs them.
 
-**Customer-managed KMS key for the SNS topic** — encrypted with the AWS-managed `alias/aws/sns` key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
+**Customer-managed KMS key for the SNS topic** — `kms_key_arn` variable (default `null`, falls back to the AWS-managed `alias/aws/sns` key). Encryption at rest is always on either way; this is about who manages the key.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -46,6 +46,7 @@ Prometheus/Grafana (AMP/AMG) for EKS scenarios, error-budget-burn-rate composite
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_alarm_email"></a> [alarm\_email](#input\_alarm\_email) | Email to subscribe to the alarm SNS topic. Leave null to skip (wire Slack/PagerDuty separately). | `string` | `null` | no |
 | <a name="input_alarms"></a> [alarms](#input\_alarms) | Map of CloudWatch alarms to create, keyed by a short name | <pre>map(object({<br/>    metric_name         = string<br/>    namespace           = string<br/>    statistic           = string<br/>    period              = number<br/>    evaluation_periods  = number<br/>    threshold           = number<br/>    comparison_operator = string<br/>    dimensions          = map(string)<br/>  }))</pre> | `{}` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key ARN for the alarms SNS topic. Leave null to use the AWS-managed alias/aws/sns key. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name prefix for the alarm SNS topic and dashboard | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
 

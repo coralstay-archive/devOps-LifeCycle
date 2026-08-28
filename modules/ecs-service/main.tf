@@ -3,6 +3,14 @@
 # service below.
 resource "aws_ecs_cluster" "this" {
   name = "${var.name}-cluster"
+
+  # Real per-container cost when enabled (extra CloudWatch metrics beyond
+  # task-level) — off by default so this scaffold doesn't silently bill for it.
+  setting {
+    name  = "containerInsights"
+    value = var.enable_container_insights ? "enabled" : "disabled"
+  }
+
   tags = var.tags
 }
 

@@ -9,9 +9,10 @@ Implemented (minimal): single-instance, no active/standby HA (use `deployment_mo
 ## Not yet included
 
 Checkov/Trivy findings that are real, accepted trade-offs:
-- **Customer-managed KMS key** — broker is encrypted with the AWS-managed key by default (encryption at rest is always on; this is about who manages the key). Add a `kms_key_arn` variable if a scenario needs key rotation control/audit.
-- **Audit and general logging to CloudWatch Logs not enabled** — needs a log group + `logs { audit = true, general = true }` block; add when a scenario needs broker-level audit trails.
+- **Customer-managed KMS key** — broker is encrypted with the AWS-managed key by default. Pass `kms_key_arn` if a scenario needs key rotation control/audit — falls back to the AWS-owned key when left `null`.
 - **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
+
+General and audit logging to CloudWatch Logs are enabled unconditionally (`logs { general = true, audit = ... }`) — audit is ActiveMQ-only (RabbitMQ, the default engine, rejects it at broker-creation time), so it's gated on `var.engine_type == "ActiveMQ"` rather than always on.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -31,6 +32,7 @@ Checkov/Trivy findings that are real, accepted trade-offs:
 | <a name="input_engine_type"></a> [engine\_type](#input\_engine\_type) | RabbitMQ or ActiveMQ — pick this only if you need protocol compatibility with an existing broker; otherwise use sns-sqs | `string` | `"RabbitMQ"` | no |
 | <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | n/a | `string` | `"3.13"` | no |
 | <a name="input_host_instance_type"></a> [host\_instance\_type](#input\_host\_instance\_type) | n/a | `string` | `"mq.t3.micro"` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | Customer-managed KMS key for the broker. Defaults to null, which falls back to the AWS-owned default key. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_password"></a> [password](#input\_password) | n/a | `string` | n/a | yes |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Only the first subnet is used (single-instance deployment) | `list(string)` | n/a | yes |

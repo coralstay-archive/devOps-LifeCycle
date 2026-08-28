@@ -37,6 +37,12 @@ variable "broker_volume_size" {
   default = 100
 }
 
+variable "encryption_at_rest_kms_key_arn" {
+  description = "Customer-managed KMS key for broker EBS storage at rest. Defaults to null, which lets MSK apply its own AWS-managed key automatically."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

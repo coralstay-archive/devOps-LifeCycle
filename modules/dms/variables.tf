@@ -1,5 +1,6 @@
 variable "name" {
-  type = string
+  description = "Name used as the base for the replication instance, task, and endpoint identifiers."
+  type        = string
 }
 
 variable "vpc_id" {
@@ -73,4 +74,10 @@ variable "table_mappings" {
 variable "tags" {
   type    = map(string)
   default = {}
+}
+
+variable "kms_key_arn" {
+  description = "Customer-managed KMS key for the replication instance and both endpoints. Defaults to null, which falls back to the AWS-managed aws/dms key."
+  type        = string
+  default     = null
 }

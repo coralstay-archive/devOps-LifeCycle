@@ -26,6 +26,15 @@ resource "aws_vpc_security_group_egress_rule" "all" {
   description       = "Unrestricted egress — brokers need to reach AWS APIs"
 }
 
+# Broker-level logging had no destination at all before this — client/consumer
+# side observability doesn't cover broker-internal events (e.g. controller
+# elections, ISR shrink/expand).
+resource "aws_cloudwatch_log_group" "broker" {
+  name              = "/aws/msk/${var.cluster_name}"
+  retention_in_days = 14
+  tags              = var.tags
+}
+
 resource "aws_msk_cluster" "this" {
   cluster_name           = var.cluster_name
   kafka_version          = var.kafka_version
@@ -50,6 +59,16 @@ resource "aws_msk_cluster" "this" {
     encryption_in_transit {
       client_broker = "TLS"
       in_cluster    = true
+    }
+    encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn
+  }
+
+  logging_info {
+    broker_logs {
+      cloudwatch_logs {
+        enabled   = true
+        log_group = aws_cloudwatch_log_group.broker.name
+      }
     }
   }
 

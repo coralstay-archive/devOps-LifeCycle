@@ -13,6 +13,12 @@ variable "crawler_schedule" {
   default     = null
 }
 
+variable "kms_key_arn" {
+  description = "Customer-managed KMS key for the crawler's security configuration (CloudWatch logs, job bookmarks, S3 reads). Leave null to leave all three encryption modes DISABLED (Glue's own default)."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

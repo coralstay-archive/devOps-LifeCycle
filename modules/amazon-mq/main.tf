@@ -39,6 +39,19 @@ resource "aws_mq_broker" "this" {
   publicly_accessible        = false
   auto_minor_version_upgrade = true
 
+  encryption_options {
+    kms_key_id        = var.kms_key_arn
+    use_aws_owned_key = var.kms_key_arn == null
+  }
+
+  # general logging is supported by both engines; audit logging is
+  # ActiveMQ-only (RabbitMQ rejects it at broker-creation time), hence the
+  # engine check rather than always-on like general.
+  logs {
+    general = true
+    audit   = var.engine_type == "ActiveMQ"
+  }
+
   user {
     username = var.username
     password = var.password

@@ -60,7 +60,8 @@ resource "aws_iam_role_policy" "logging" {
 
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/vendedlogs/states/${var.name}"
-  retention_in_days = 14
+  retention_in_days = var.log_retention_days
+  kms_key_id        = var.log_kms_key_arn
   tags              = var.tags
 }
 

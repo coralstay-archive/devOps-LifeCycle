@@ -43,14 +43,40 @@ resource "aws_iam_role_policy_attachment" "s3_read" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
+# Encrypts the crawler's own S3 reads, job bookmarks, and CloudWatch logs.
+# Modes flip to DISABLED (Glue's own default) when no key is supplied —
+# opt-in rather than silently creating a key this module didn't ask
+# permission to own.
+resource "aws_glue_security_configuration" "this" {
+  name = "${var.database_name}-security-config"
+
+  encryption_configuration {
+    cloudwatch_encryption {
+      cloudwatch_encryption_mode = var.kms_key_arn == null ? "DISABLED" : "SSE-KMS"
+      kms_key_arn                = var.kms_key_arn
+    }
+
+    job_bookmarks_encryption {
+      job_bookmarks_encryption_mode = var.kms_key_arn == null ? "DISABLED" : "CSE-KMS"
+      kms_key_arn                   = var.kms_key_arn
+    }
+
+    s3_encryption {
+      s3_encryption_mode = var.kms_key_arn == null ? "DISABLED" : "SSE-KMS"
+      kms_key_arn        = var.kms_key_arn
+    }
+  }
+}
+
 # Scans the S3 path, infers a schema, and writes table definitions into the
 # catalog database above. schedule is optional (null = on-demand only) since
 # most data doesn't need continuous re-crawling.
 resource "aws_glue_crawler" "this" {
-  name          = "${var.database_name}-crawler"
-  database_name = aws_glue_catalog_database.this.name
-  role          = aws_iam_role.crawler.arn
-  schedule      = var.crawler_schedule
+  name                   = "${var.database_name}-crawler"
+  database_name          = aws_glue_catalog_database.this.name
+  role                   = aws_iam_role.crawler.arn
+  schedule               = var.crawler_schedule
+  security_configuration = aws_glue_security_configuration.this.name
 
   s3_target {
     path = var.s3_target_path
