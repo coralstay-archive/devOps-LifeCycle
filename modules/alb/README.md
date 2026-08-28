@@ -10,9 +10,10 @@ Implemented (minimal). One target group only — for multiple services behind on
 
 Checkov/Trivy findings that are real, accepted trade-offs, not gaps that slipped through unnoticed:
 - **Deletion protection off by default** — `enable_deletion_protection` (default `false`) so `terraform destroy` works cleanly for a scaffold/demo stack. Flip on for anything real.
-- **Access logging not configured** — needs an S3 bucket + bucket policy to receive logs; add when a scenario needs request-level audit trails.
 - **HTTP allowed / not forced to HTTPS-only** — intentional: without `certificate_arn`, HTTP forwards directly so `live/example-dev`-style testing doesn't require a cert. This is a real gap only if you deploy without `certificate_arn` in production.
 - **Egress not scoped down (0.0.0.0/0)** — see the security group resource's inline comment.
+
+**Access logging is now configurable via `access_logs_bucket`/`access_logs_prefix`** (both default `null`, i.e. off) — this module still doesn't create the destination bucket itself, since the bucket needs the ELB service account's specific log-delivery bucket policy attached and is naturally shared account-level infrastructure rather than something one ALB should own the lifecycle of. Point it at an existing properly-configured bucket (e.g. from `modules/s3-bucket` plus that bucket policy, wired up separately) to enable it.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -28,6 +29,8 @@ Checkov/Trivy findings that are real, accepted trade-offs, not gaps that slipped
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_access_logs_bucket"></a> [access\_logs\_bucket](#input\_access\_logs\_bucket) | Name of an existing S3 bucket to receive ALB access logs (must already have the ELB service account's log-delivery bucket policy attached -- this module doesn't create that bucket). Null disables access logging. | `string` | `null` | no |
+| <a name="input_access_logs_prefix"></a> [access\_logs\_prefix](#input\_access\_logs\_prefix) | S3 key prefix for access logs, used only when access\_logs\_bucket is set. | `string` | `null` | no |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ACM certificate ARN. If set, adds an HTTPS listener and redirects HTTP to it. If null, HTTP forwards directly. | `string` | `null` | no |
 | <a name="input_enable_deletion_protection"></a> [enable\_deletion\_protection](#input\_enable\_deletion\_protection) | Blocks accidental/automated deletion of the load balancer. Off by default so terraform destroy works cleanly for a scaffold/demo stack — flip on for anything real. | `bool` | `false` | no |
 | <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | n/a | `string` | `"/"` | no |

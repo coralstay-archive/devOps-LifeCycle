@@ -48,6 +48,20 @@ resource "aws_lb" "this" {
   # stack — flip on for anything real.
   enable_deletion_protection = var.enable_deletion_protection
 
+  # Requires an existing bucket with the ELB service account's log-delivery
+  # bucket policy already attached — this module doesn't create that bucket
+  # itself (same pattern as redshift's audit-logging bucket_name variable),
+  # since it's a shared, account-level piece of infrastructure, not
+  # something one ALB should own the lifecycle of.
+  dynamic "access_logs" {
+    for_each = var.access_logs_bucket == null ? [] : [1]
+    content {
+      bucket  = var.access_logs_bucket
+      prefix  = var.access_logs_prefix
+      enabled = true
+    }
+  }
+
   tags = var.tags
 
   # Not a style preference — the ALB API itself refuses to create a load

@@ -36,3 +36,15 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "access_logs_bucket" {
+  description = "Name of an existing S3 bucket to receive ALB access logs (must already have the ELB service account's log-delivery bucket policy attached -- this module doesn't create that bucket). Null disables access logging."
+  type        = string
+  default     = null
+}
+
+variable "access_logs_prefix" {
+  description = "S3 key prefix for access logs, used only when access_logs_bucket is set."
+  type        = string
+  default     = null
+}
