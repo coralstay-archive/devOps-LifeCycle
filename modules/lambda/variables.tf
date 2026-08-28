@@ -61,6 +61,24 @@ variable "kms_key_arn" {
   default     = null
 }
 
+variable "subnet_ids" {
+  description = "Private subnet IDs to attach the function to (e.g. to reach rds-postgres/elasticache-redis). Empty list (default) keeps the function off any VPC, on the Lambda service network -- attaching to a VPC is a real cold-start latency trade-off, not just a toggle, so only set this when the function actually needs to reach something private."
+  type        = list(string)
+  default     = []
+}
+
+variable "security_group_ids" {
+  description = "Security group IDs for the function's ENIs. Only used when subnet_ids is non-empty."
+  type        = list(string)
+  default     = []
+}
+
+variable "code_signing_config_arn" {
+  description = "ARN of an aws_signer_signing_profile-backed code signing config. Requires an AWS Signer profile set up out-of-band (this module doesn't create one) -- leave null to skip code-signing enforcement entirely."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

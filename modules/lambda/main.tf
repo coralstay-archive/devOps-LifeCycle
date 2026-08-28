@@ -31,6 +31,16 @@ resource "aws_iam_role_policy_attachment" "xray" {
   policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
 }
 
+# Only needed when the function is VPC-attached below — Lambda has to
+# create/manage ENIs in the given subnets, which requires this specific
+# managed policy beyond basic execution.
+resource "aws_iam_role_policy_attachment" "vpc_access" {
+  count = length(var.subnet_ids) > 0 ? 1 : 0
+
+  role       = aws_iam_role.this.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+
 # Declared explicitly (with a real retention period) instead of letting
 # Lambda auto-create it — Lambda's auto-created log group defaults to never
 # expiring, which quietly accumulates cost forever.
@@ -56,9 +66,24 @@ resource "aws_lambda_function" "this" {
 
   reserved_concurrent_executions = var.reserved_concurrent_executions
   kms_key_arn                    = var.kms_key_arn
+  code_signing_config_arn        = var.code_signing_config_arn
 
   environment {
     variables = var.environment_variables
+  }
+
+  # Attaches the function to a VPC only when subnet_ids is non-empty — this
+  # is a real trade-off, not just a toggle: a VPC-attached function's
+  # network path goes through an ENI instead of the Lambda service network,
+  # which adds cold-start latency (mitigated but not eliminated by AWS's
+  # Hyperplane ENI model). Only set this when the function actually needs to
+  # reach something private (e.g. rds-postgres, elasticache-redis).
+  dynamic "vpc_config" {
+    for_each = length(var.subnet_ids) > 0 ? [1] : []
+    content {
+      subnet_ids         = var.subnet_ids
+      security_group_ids = var.security_group_ids
+    }
   }
 
   # Free observability win: samples and records request traces with no
@@ -90,5 +115,9 @@ resource "aws_lambda_function" "this" {
   # Explicit dependency: the log group should exist before the function
   # starts writing to it, even though nothing in the function's own
   # arguments references the log group to make that ordering implicit.
-  depends_on = [aws_cloudwatch_log_group.this]
+  # aws_iam_role_policy_attachment.vpc_access is included too — when
+  # subnet_ids is set, Lambda needs that permission in place before it can
+  # create the function's ENIs, and nothing in the function's own arguments
+  # references the policy attachment to make that ordering implicit either.
+  depends_on = [aws_cloudwatch_log_group.this, aws_iam_role_policy_attachment.vpc_access]
 }

@@ -4,13 +4,11 @@ One function from a local zip (`filename`), basic-execution IAM role, explicit l
 
 ## Status
 
-Implemented (minimal). No VPC attachment, no layers, no provisioned concurrency — add when a scenario needs them.
+Implemented (minimal). No layers, no provisioned concurrency — add when a scenario needs them.
 
 ## Not yet included
 
 Checkov/Trivy findings that are real, accepted trade-offs:
-- **Not attached to a VPC** — intentional: most Lambda use cases here (serverless-api, event-driven-microservices) don't need to reach anything VPC-private, and VPC attachment adds cold-start latency + needs its own subnets/NAT. Add `vpc_config` when a scenario's function needs to reach an RDS/ElastiCache instance directly.
-- **No code-signing validation** — needs an AWS Signer profile; add for scenarios with a supply-chain-integrity requirement.
 - **Log retention is a variable, not fixed at "1 year+"** (`log_retention_days` defaults to 14) — deliberately configurable per caller rather than a fixed compliance-driven minimum.
 
 Now configurable via opt-in variables (all default to off/unset, matching prior behavior exactly):
@@ -18,6 +16,8 @@ Now configurable via opt-in variables (all default to off/unset, matching prior 
 - **Reserved concurrency limit** — `reserved_concurrent_executions` (default `null` = unbounded, the right default for most cases so one function's traffic doesn't starve others via account-level concurrency; see `specs/serverless-api/spec.tla`'s `MaxConcurrency` for why this matters when it *is* set).
 - **CloudWatch Log Group KMS encryption** — `log_kms_key_arn` (default `null` = CloudWatch's default encryption).
 - **Environment variable KMS encryption** — `kms_key_arn` (default `null` = Lambda's AWS-managed key; set to a CMK for key rotation control/audit).
+- **VPC attachment** — set `subnet_ids` (and optionally `security_group_ids`) to reach something VPC-private (RDS, ElastiCache) directly. Empty `subnet_ids` (default) keeps the function on the Lambda service network — attaching to a VPC is a real cold-start latency trade-off (mitigated but not eliminated by AWS's Hyperplane ENI model), not just a toggle, so only set this when the function genuinely needs private network access. The module handles the extra IAM policy (`AWSLambdaVPCAccessExecutionRole`) automatically when subnets are set.
+- **Code-signing** — set `code_signing_config_arn` to an existing AWS Signer profile-backed config to enforce signature validation on deployment. This module doesn't create the Signer profile itself (that requires a real code-signing certificate/CA setup done out-of-band); add for scenarios with a supply-chain-integrity requirement.
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -33,6 +33,7 @@ Now configurable via opt-in variables (all default to off/unset, matching prior 
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_code_signing_config_arn"></a> [code\_signing\_config\_arn](#input\_code\_signing\_config\_arn) | ARN of an aws\_signer\_signing\_profile-backed code signing config. Requires an AWS Signer profile set up out-of-band (this module doesn't create one) -- leave null to skip code-signing enforcement entirely. | `string` | `null` | no |
 | <a name="input_dead_letter_target_arn"></a> [dead\_letter\_target\_arn](#input\_dead\_letter\_target\_arn) | SNS topic or SQS queue ARN to send failed async invocations to. Leave null to just retry/drop them. | `string` | `null` | no |
 | <a name="input_environment_variables"></a> [environment\_variables](#input\_environment\_variables) | n/a | `map(string)` | `{}` | no |
 | <a name="input_filename"></a> [filename](#input\_filename) | Path to the deployment package zip | `string` | n/a | yes |
@@ -44,6 +45,8 @@ Now configurable via opt-in variables (all default to off/unset, matching prior 
 | <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | n/a | `number` | `128` | no |
 | <a name="input_reserved_concurrent_executions"></a> [reserved\_concurrent\_executions](#input\_reserved\_concurrent\_executions) | Ceiling on concurrent executions for this function. Leave null for unreserved (Lambda's default — bounded only by the account-level limit). | `number` | `null` | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | n/a | `string` | `"python3.13"` | no |
+| <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | Security group IDs for the function's ENIs. Only used when subnet\_ids is non-empty. | `list(string)` | `[]` | no |
+| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | Private subnet IDs to attach the function to (e.g. to reach rds-postgres/elasticache-redis). Empty list (default) keeps the function off any VPC, on the Lambda service network -- attaching to a VPC is a real cold-start latency trade-off, not just a toggle, so only set this when the function actually needs to reach something private. | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | n/a | `number` | `10` | no |
 

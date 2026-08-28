@@ -36,3 +36,6 @@ tools/loadtest/*.json
 .tla-tools/
 *.tla.out
 states/
+
+# Claude Code harness state (session locks, not project content)
+.claude/
