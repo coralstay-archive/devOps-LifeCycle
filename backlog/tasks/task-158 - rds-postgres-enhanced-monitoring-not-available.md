@@ -4,7 +4,7 @@ title: 'rds-postgres: enhanced monitoring not available'
 status: Done
 assignee: []
 created_date: '2026-08-28 04:31'
-updated_date: '2026-08-28 04:40'
+updated_date: '2026-08-28 09:20'
 labels: []
 milestone: m-17
 dependencies: []
@@ -21,5 +21,5 @@ checkov CKV_AWS_118 — no monitoring_interval/monitoring_role_arn. Needs a new 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added enable_detailed_monitoring variable (default false), wired to aws_instance.this.monitoring.
+Added monitoring_interval variable (default 0, disabled) plus a new aws_iam_role + AmazonRDSEnhancedMonitoringRole policy attachment (count-gated on monitoring_interval > 0), wired into aws_db_instance.monitoring_interval/monitoring_role_arn.
 <!-- SECTION:FINAL_SUMMARY:END -->

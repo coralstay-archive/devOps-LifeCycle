@@ -14,8 +14,9 @@ See `variables.tf` / `outputs.tf`. Pass in security group IDs (e.g. from `ecs-se
 
 Read replicas, Aurora option, parameter group tuning, cross-region backup. Add when a scenario needs them.
 
+**Enhanced monitoring is now available via `monitoring_interval`** (default `0`, disabled — RDS's own default) — set it to `1`/`5`/`10`/`15`/`30`/`60` seconds and the module creates its own IAM role (`monitoring.rds.amazonaws.com` + the `AmazonRDSEnhancedMonitoringRole` managed policy) automatically. Real per-instance CloudWatch cost when enabled, so it stays off by default.
+
 Checkov/Trivy findings that are real, accepted trade-offs:
-- **Enhanced monitoring not enabled** (`monitoring_interval`) — needs its own IAM role (`monitoring.rds.amazonaws.com`) and has a real per-instance cost at 1-15 second granularity. Add when a scenario needs finer-grained OS-level metrics than the default CloudWatch instance metrics.
 - **Customer-managed KMS key for Performance Insights** — `performance_insights_kms_key_id` defaults to `null` (AWS-managed key). Pass a `performance_insights_kms_key_id` if a scenario needs key rotation control/audit.
 
 **Log exports to CloudWatch** are now on by default (`log_exports = ["postgresql", "upgrade"]`) — this does have a real CloudWatch ingestion cost, so pass `log_exports = []` to opt back out if that matters for a cost-sensitive scenario.
@@ -44,6 +45,7 @@ One finding that's a checkov false-positive, not a gap: **"deletion protection n
 | <a name="input_instance_class"></a> [instance\_class](#input\_instance\_class) | RDS instance class | `string` | `"db.t4g.micro"` | no |
 | <a name="input_log_exports"></a> [log\_exports](#input\_log\_exports) | PostgreSQL log types to export to CloudWatch Logs (has a real CloudWatch ingestion cost) | `list(string)` | <pre>[<br/>  "postgresql",<br/>  "upgrade"<br/>]</pre> | no |
 | <a name="input_master_username"></a> [master\_username](#input\_master\_username) | Master username | `string` | `"app_admin"` | no |
+| <a name="input_monitoring_interval"></a> [monitoring\_interval](#input\_monitoring\_interval) | Enhanced Monitoring granularity in seconds (0, 1, 5, 10, 15, 30, 60). 0 disables it (RDS's default) -- creates its own IAM role and has a real per-instance cost when > 0. | `number` | `0` | no |
 | <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Enable Multi-AZ failover (spike/availability default: on) | `bool` | `true` | no |
 | <a name="input_performance_insights_kms_key_id"></a> [performance\_insights\_kms\_key\_id](#input\_performance\_insights\_kms\_key\_id) | Customer-managed KMS key for Performance Insights encryption. Leave null to use the AWS-managed key. | `string` | `null` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | Private subnet IDs for the DB subnet group (needs >= 2 AZs) | `list(string)` | n/a | yes |

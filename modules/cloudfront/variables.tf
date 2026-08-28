@@ -22,3 +22,21 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "web_acl_id" {
+  description = "ARN of a CLOUDFRONT-scope WAF web ACL (e.g. from modules/waf-shield) to associate with this distribution. Null means no WAF in front."
+  type        = string
+  default     = null
+}
+
+variable "geo_restriction_type" {
+  description = "CloudFront geo restriction mode: \"none\", \"whitelist\", or \"blacklist\"."
+  type        = string
+  default     = "none"
+}
+
+variable "geo_restriction_locations" {
+  description = "ISO 3166-1-alpha-2 country codes for geo_restriction_type whitelist/blacklist. Ignored when geo_restriction_type is \"none\"."
+  type        = list(string)
+  default     = []
+}

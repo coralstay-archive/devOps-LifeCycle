@@ -47,9 +47,15 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
 
+  # web_acl_id is optional — associate an existing waf-shield distribution
+  # scope WAF ACL when one is passed in; CloudFront has no ACL of its own by
+  # default.
+  web_acl_id = var.web_acl_id
+
   restrictions {
     geo_restriction {
-      restriction_type = "none"
+      restriction_type = var.geo_restriction_type
+      locations        = var.geo_restriction_locations
     }
   }
 

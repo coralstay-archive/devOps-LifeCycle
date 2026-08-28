@@ -37,6 +37,34 @@ resource "aws_vpc_security_group_egress_rule" "all" {
   description       = "Unrestricted egress — the instance needs to reach AWS APIs (e.g. Secrets Manager for the managed password)"
 }
 
+# Enhanced Monitoring needs its own IAM role — RDS assumes it to publish OS
+# metrics to CloudWatch Logs at up to 1-second granularity. Only created when
+# monitoring_interval > 0, since it's meaningless (and an extra unused
+# resource) otherwise.
+resource "aws_iam_role" "enhanced_monitoring" {
+  count = var.monitoring_interval > 0 ? 1 : 0
+
+  name = "${var.identifier}-rds-enhanced-monitoring"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "monitoring.rds.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+
+  tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "enhanced_monitoring" {
+  count = var.monitoring_interval > 0 ? 1 : 0
+
+  role       = aws_iam_role.enhanced_monitoring[0].name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+}
+
 resource "aws_db_instance" "this" {
   identifier     = var.identifier
   engine         = "postgres"
@@ -67,6 +95,10 @@ resource "aws_db_instance" "this" {
   performance_insights_enabled        = true
   performance_insights_kms_key_id     = var.performance_insights_kms_key_id
   enabled_cloudwatch_logs_exports     = var.log_exports
+  # 0 disables enhanced monitoring entirely (RDS's own default) — no role,
+  # no per-second CloudWatch charge, unless a scenario opts in.
+  monitoring_interval = var.monitoring_interval
+  monitoring_role_arn = var.monitoring_interval > 0 ? aws_iam_role.enhanced_monitoring[0].arn : null
   # deletion_protection tracks skip_final_snapshot's inverse deliberately:
   # if you've said "it's fine to skip the final snapshot," you've already
   # accepted losing this data, so there's no reason deletion_protection

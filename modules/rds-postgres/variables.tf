@@ -73,6 +73,12 @@ variable "log_exports" {
   default     = ["postgresql", "upgrade"]
 }
 
+variable "monitoring_interval" {
+  description = "Enhanced Monitoring granularity in seconds (0, 1, 5, 10, 15, 30, 60). 0 disables it (RDS's default) -- creates its own IAM role and has a real per-instance cost when > 0."
+  type        = number
+  default     = 0
+}
+
 variable "tags" {
   description = "Tags applied to all resources"
   type        = map(string)
