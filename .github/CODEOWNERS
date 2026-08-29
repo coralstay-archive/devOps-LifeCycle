@@ -1,0 +1,15 @@
+# Default owner for everything not matched below.
+* @amosQP
+
+# CI/CD pipeline definitions -- these control what runs, what secrets are
+# exposed to it, and what gets applied to real AWS infrastructure. Changes
+# here get narrower ownership than the repo default on purpose.
+/.github/workflows/ @amosQP
+/policy/ @amosQP
+/modules/iam-github-oidc/ @amosQP
+
+# Note: main's ruleset currently requires 0 approving reviews (solo
+# maintainer stage -- see repo history), so this file establishes routing
+# and a paper trail, not an enforced gate yet. Turn on "Require review from
+# Code Owners" on the main ruleset once a second trusted collaborator with
+# write access exists, so these paths actually get gated.
