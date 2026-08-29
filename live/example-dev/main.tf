@@ -16,3 +16,6 @@ module "bucket" {
 }
 
 data "aws_caller_identity" "current" {}
+
+# CI verification no-op: confirms terraform-ci.yml (incl. Infracost) still
+# triggers correctly on a live/** change. Safe to close/discard this PR.
