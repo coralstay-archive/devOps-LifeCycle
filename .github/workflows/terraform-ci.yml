@@ -87,7 +87,7 @@ jobs:
       # the reasoning, and flip to blocking per-project once a scenario
       # graduates from scaffold to a real workload.
       - name: Trivy config scan
-        uses: aquasecurity/trivy-action@v0.29.0
+        uses: aquasecurity/trivy-action@v0.36.0
         continue-on-error: true
         with:
           scan-type: config
