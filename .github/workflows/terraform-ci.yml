@@ -96,7 +96,7 @@ jobs:
           exit-code: "1"
 
       - name: Checkov scan
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@5659ddea96102e16d8f221b3d8402453c0b1c150 # v12.3121.0 (was `master`, same commit at pin time -- see commit message)
         continue-on-error: true
         with:
           config_file: .checkov.yaml
@@ -124,7 +124,7 @@ jobs:
         run: terraform show -json tfplan.binary > plan.json
 
       - name: Conftest policy check
-        uses: instrumenta/conftest-action@master
+        uses: instrumenta/conftest-action@ae9212d5c0c26e21eedf359e2889d0d5d39dabd4 # master @ 2026-08-29, same commit at pin time (no tag newer than v0.4.0) -- see commit message
         with:
           files: ${{ env.TF_WORKING_DIR }}/plan.json
           policy: policy
