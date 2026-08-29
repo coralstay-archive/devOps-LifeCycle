@@ -16,3 +16,6 @@ module "bucket" {
 }
 
 data "aws_caller_identity" "current" {}
+
+# CI verification no-op: confirms SHA-pinned actions + the new
+# allowed_actions allow-list don't break terraform-ci.yml. Safe to close.
