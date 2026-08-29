@@ -4,6 +4,7 @@ title: Verify plan/apply end-to-end through real CI
 status: To Do
 assignee: []
 created_date: '2026-08-29 12:14'
+updated_date: '2026-08-29 12:32'
 labels: []
 milestone: m-19
 dependencies:
@@ -15,11 +16,5 @@ ordinal: 352000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Same verify-by-real-execution discipline used earlier this session for
-Infracost and the CI hardening work -- don't trust it until a real PR/merge
-proves it. Also the first point where real AWS cost becomes possible
-(NAT Gateway x2 in live/example-dev's default vpc config, ~$60-90/mo
-combined -- confirmed this session via modules/vpc's enable_nat_gateway
-default), so the apply step needs a deliberate, informed approval click,
-not a reflexive one.
+Don't trust this milestone's setup until a real PR (plan) and a real merge (apply) actually exercise it end to end -- verifying via real execution, not just reading the YAML, has repeatedly caught bugs elsewhere in this repo's CI config that looked correct on paper. This story is also the first point where real AWS cost becomes possible: live/example-dev's default vpc config creates 2 NAT Gateways (modules/vpc's enable_nat_gateway defaults to true, one per AZ), roughly $60-90/month combined. The apply approval click needs to be deliberate and informed, not reflexive.
 <!-- SECTION:DESCRIPTION:END -->

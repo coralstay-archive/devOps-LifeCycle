@@ -4,6 +4,7 @@ title: Apply bootstrap/ to create the Terraform state backend
 status: To Do
 assignee: []
 created_date: '2026-08-29 12:13'
+updated_date: '2026-08-29 12:32'
 labels: []
 milestone: m-19
 dependencies:
@@ -15,8 +16,5 @@ ordinal: 342000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Creates the S3 bucket every other stack's backend.tf points at (S3-native
-locking, no DynamoDB table needed). Effectively free (empty-bucket S3
-storage). Must happen before the IAM-role story below, since that root
-module's own state also needs somewhere to live.
+Creates the S3 bucket every other stack's backend.tf points at (S3-native locking, no DynamoDB table needed). Effectively free (empty-bucket S3 storage). Must happen before TASK-179 (IAM roles) below, since that root module's own Terraform state also needs somewhere to live.
 <!-- SECTION:DESCRIPTION:END -->
