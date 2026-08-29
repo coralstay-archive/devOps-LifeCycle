@@ -23,13 +23,13 @@ vpc, rds-postgres, msk-kafka, dms
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"cdc-pipeline"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones for the vpc module to spread subnets across (multi-AZ by default). | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix passed through to every module this scenario composes (vpc, rds-postgres, msk-kafka, dms). | `string` | `"cdc-pipeline"` | no |
 | <a name="input_source_db_password"></a> [source\_db\_password](#input\_source\_db\_password) | Password for a dedicated DMS read user on the source DB (not the RDS master password, which is Secrets-Manager-managed and not exposed as plaintext) | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_replication_task_arn"></a> [replication\_task\_arn](#output\_replication\_task\_arn) | n/a |
+| <a name="output_replication_task_arn"></a> [replication\_task\_arn](#output\_replication\_task\_arn) | ARN of the DMS full-load-and-CDC replication task moving changes from the source DB to the target Kafka cluster. |
 <!-- END_TF_DOCS -->

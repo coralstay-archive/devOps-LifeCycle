@@ -20,11 +20,11 @@ organizations-landing-zone
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | n/a | `list(string)` | <pre>[<br/>  "Security",<br/>  "Workloads"<br/>]</pre> | no |
+| <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | OU names to create under the Organizations root -- passed straight through to modules/organizations-landing-zone. | `list(string)` | <pre>[<br/>  "Security",<br/>  "Workloads"<br/>]</pre> | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_ou_ids"></a> [ou\_ids](#output\_ou\_ids) | n/a |
+| <a name="output_ou_ids"></a> [ou\_ids](#output\_ou\_ids) | Map of OU name to its Organizations OU ID, one per entry in organizational\_units. |
 <!-- END_TF_DOCS -->

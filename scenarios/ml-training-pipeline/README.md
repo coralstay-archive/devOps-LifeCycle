@@ -20,12 +20,12 @@ s3-bucket, step-functions
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"ml-training-pipeline"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name used as the prefix/tag for the artifacts bucket and the Step Functions state machine orchestrating the training pipeline. | `string` | `"ml-training-pipeline"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_artifacts_bucket_id"></a> [artifacts\_bucket\_id](#output\_artifacts\_bucket\_id) | n/a |
-| <a name="output_state_machine_arn"></a> [state\_machine\_arn](#output\_state\_machine\_arn) | n/a |
+| <a name="output_artifacts_bucket_id"></a> [artifacts\_bucket\_id](#output\_artifacts\_bucket\_id) | S3 bucket holding training artifacts (model outputs, checkpoints). |
+| <a name="output_state_machine_arn"></a> [state\_machine\_arn](#output\_state\_machine\_arn) | Step Functions state machine ARN that orchestrates the training pipeline -- use to trigger/monitor runs. |
 <!-- END_TF_DOCS -->

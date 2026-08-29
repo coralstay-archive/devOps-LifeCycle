@@ -21,13 +21,13 @@ vpc, alb, waf-shield
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"zero-trust-edge"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones to spread subnets across (multi-AZ by default for spike resilience) | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name for the VPC, ALB, and the WAF web ACL protecting it. | `string` | `"zero-trust-edge"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | n/a |
-| <a name="output_web_acl_arn"></a> [web\_acl\_arn](#output\_web\_acl\_arn) | n/a |
+| <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | Public DNS name of the ALB, protected by the associated WAF web ACL. |
+| <a name="output_web_acl_arn"></a> [web\_acl\_arn](#output\_web\_acl\_arn) | ARN of the REGIONAL-scope WAF web ACL associated with the ALB. |
 <!-- END_TF_DOCS -->

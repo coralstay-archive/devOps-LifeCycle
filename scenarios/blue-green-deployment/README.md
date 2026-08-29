@@ -23,14 +23,14 @@ vpc, alb, ecs-service, codedeploy (+ 원시 `aws_lb_target_group.green`, 이유�
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_container_image"></a> [container\_image](#input\_container\_image) | n/a | `string` | `"public.ecr.aws/nginx/nginx:1.27"` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"blue-green-deployment"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones for the vpc module to spread subnets across (multi-AZ by default). | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_container_image"></a> [container\_image](#input\_container\_image) | Container image URI for the ecs-service task definition (e.g. from the ecr module's repository\_url output). | `string` | `"public.ecr.aws/nginx/nginx:1.27"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix passed through to every module this scenario composes (vpc, alb, ecs-service, codedeploy) and the green target group. | `string` | `"blue-green-deployment"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | n/a |
-| <a name="output_codedeploy_app_name"></a> [codedeploy\_app\_name](#output\_codedeploy\_app\_name) | n/a |
+| <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | Public DNS name of the ALB fronting both the blue and green target groups. |
+| <a name="output_codedeploy_app_name"></a> [codedeploy\_app\_name](#output\_codedeploy\_app\_name) | Name of the CodeDeploy application that shifts traffic between the blue and green target groups. |
 <!-- END_TF_DOCS -->

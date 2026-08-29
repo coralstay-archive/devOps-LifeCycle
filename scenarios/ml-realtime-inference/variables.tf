@@ -1,6 +1,7 @@
 variable "name" {
-  type    = string
-  default = "ml-realtime-inference"
+  description = "Base name used as the prefix/tag for the SageMaker model/endpoint resources."
+  type        = string
+  default     = "ml-realtime-inference"
 }
 
 variable "container_image" {

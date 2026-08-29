@@ -1,4 +1,5 @@
 variable "name" {
-  type    = string
-  default = "llm-rag-service"
+  description = "Base name used as the prefix/tag for the Bedrock/OpenSearch RAG resources."
+  type        = string
+  default     = "llm-rag-service"
 }

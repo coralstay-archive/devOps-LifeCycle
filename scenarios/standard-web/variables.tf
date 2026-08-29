@@ -1,11 +1,13 @@
 variable "name" {
-  type    = string
-  default = "standard-web"
+  description = "Base name for every module in the stack (VPC, ECR, ALB, ECS service, RDS, observability)."
+  type        = string
+  default     = "standard-web"
 }
 
 variable "availability_zones" {
-  type    = list(string)
-  default = ["ap-northeast-2a", "ap-northeast-2c"]
+  description = "Availability zones to spread subnets across (multi-AZ by default for spike resilience)"
+  type        = list(string)
+  default     = ["ap-northeast-2a", "ap-northeast-2c"]
 }
 
 variable "container_image" {

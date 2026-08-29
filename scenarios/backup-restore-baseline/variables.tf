@@ -1,9 +1,11 @@
 variable "name" {
-  type    = string
-  default = "backup-restore-baseline"
+  description = "Name prefix passed through to every module this scenario composes (vpc, rds-postgres, aws-backup)."
+  type        = string
+  default     = "backup-restore-baseline"
 }
 
 variable "availability_zones" {
-  type    = list(string)
-  default = ["ap-northeast-2a", "ap-northeast-2c"]
+  description = "Availability zones for the vpc module to spread subnets across (multi-AZ by default)."
+  type        = list(string)
+  default     = ["ap-northeast-2a", "ap-northeast-2c"]
 }

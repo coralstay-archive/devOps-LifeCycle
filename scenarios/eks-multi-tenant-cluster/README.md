@@ -21,13 +21,13 @@ vpc, eks, observability
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"eks-multi-tenant-cluster"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | AZs the VPC's public/private subnets span -- needs >= 2 for the ALB/NAT gateway/EKS per-AZ requirements enforced by the modules this scenario composes. | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name used as the prefix for the VPC and as the EKS cluster\_name. | `string` | `"eks-multi-tenant-cluster"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_cluster_endpoint"></a> [cluster\_endpoint](#output\_cluster\_endpoint) | n/a |
-| <a name="output_node_role_arn"></a> [node\_role\_arn](#output\_node\_role\_arn) | n/a |
+| <a name="output_cluster_endpoint"></a> [cluster\_endpoint](#output\_cluster\_endpoint) | EKS control plane API endpoint -- used to configure kubectl/tenant access. |
+| <a name="output_node_role_arn"></a> [node\_role\_arn](#output\_node\_role\_arn) | IAM role ARN assumed by the shared worker nodes -- grant additional per-tenant permissions here if needed. |
 <!-- END_TF_DOCS -->

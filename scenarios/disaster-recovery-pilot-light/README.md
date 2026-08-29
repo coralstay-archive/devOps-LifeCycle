@@ -21,13 +21,13 @@ vpc, rds-postgres, s3-bucket, aws-backup
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"disaster-recovery-pilot-light"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones for the vpc module to spread subnets across (multi-AZ by default). | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix passed through to every module this scenario composes (vpc, rds-postgres, s3-bucket, aws-backup). | `string` | `"disaster-recovery-pilot-light"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_backup_vault_name"></a> [backup\_vault\_name](#output\_backup\_vault\_name) | n/a |
-| <a name="output_rds_endpoint"></a> [rds\_endpoint](#output\_rds\_endpoint) | n/a |
+| <a name="output_backup_vault_name"></a> [backup\_vault\_name](#output\_backup\_vault\_name) | Name of the AWS Backup vault holding recovery points for the standby RDS instance. |
+| <a name="output_rds_endpoint"></a> [rds\_endpoint](#output\_rds\_endpoint) | Connection endpoint for the pilot-light standby RDS instance (deliberately undersized -- see instance\_class override in main.tf). |
 <!-- END_TF_DOCS -->

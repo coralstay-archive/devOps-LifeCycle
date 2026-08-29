@@ -21,13 +21,13 @@ vpc, eks, rds-postgres, observability
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"multi-tenant-saas"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones to spread the VPC's subnets across. | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix applied to the VPC, EKS cluster, and RDS instance. | `string` | `"multi-tenant-saas"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_eks_cluster_endpoint"></a> [eks\_cluster\_endpoint](#output\_eks\_cluster\_endpoint) | n/a |
-| <a name="output_rds_endpoint"></a> [rds\_endpoint](#output\_rds\_endpoint) | n/a |
+| <a name="output_eks_cluster_endpoint"></a> [eks\_cluster\_endpoint](#output\_eks\_cluster\_endpoint) | EKS cluster API endpoint tenant workloads run against. |
+| <a name="output_rds_endpoint"></a> [rds\_endpoint](#output\_rds\_endpoint) | Connection endpoint (host:port) for the shared RDS Postgres instance. |
 <!-- END_TF_DOCS -->

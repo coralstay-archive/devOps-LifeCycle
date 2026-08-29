@@ -22,13 +22,13 @@ vpc, ecs-service
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_container_image"></a> [container\_image](#input\_container\_image) | n/a | `string` | `"public.ecr.aws/nginx/nginx:1.27"` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"cost-optimized-spot-fleet"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones for the vpc module to spread subnets across (multi-AZ by default). | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_container_image"></a> [container\_image](#input\_container\_image) | Container image URI for the ecs-service task definition (e.g. from the ecr module's repository\_url output). | `string` | `"public.ecr.aws/nginx/nginx:1.27"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix passed through to every module this scenario composes (vpc, ecs-service). | `string` | `"cost-optimized-spot-fleet"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | n/a |
+| <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | ECS cluster ID -- currently plain on-demand Fargate (see this scenario's README for why Spot/FARGATE\_SPOT isn't wired in yet). |
 <!-- END_TF_DOCS -->

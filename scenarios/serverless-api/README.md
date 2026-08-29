@@ -21,11 +21,11 @@ dynamodb, lambda, api-gateway
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"serverless-api"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name for the DynamoDB table, Lambda function, and API Gateway HTTP API. | `string` | `"serverless-api"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_api_endpoint"></a> [api\_endpoint](#output\_api\_endpoint) | n/a |
+| <a name="output_api_endpoint"></a> [api\_endpoint](#output\_api\_endpoint) | Invoke URL for the HTTP API's auto-deployed $default stage. |
 <!-- END_TF_DOCS -->

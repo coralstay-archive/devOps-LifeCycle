@@ -3,9 +3,10 @@ id: TASK-176
 title: >-
   scenarios/bootstrap/live: 112 tflint info-level notices for missing
   variable/output descriptions
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-08-28 14:51'
+updated_date: '2026-08-29 10:54'
 labels: []
 milestone: m-18
 dependencies: []

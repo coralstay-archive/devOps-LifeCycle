@@ -20,13 +20,13 @@ observability
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_alarm_email"></a> [alarm\_email](#input\_alarm\_email) | n/a | `string` | `null` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"observability-only-baseline"` | no |
+| <a name="input_alarm_email"></a> [alarm\_email](#input\_alarm\_email) | Email address to subscribe to the alarm SNS topic. Null skips the subscription -- the topic still exists, just with no email endpoint. | `string` | `null` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix applied to the observability module's alarms and dashboard. | `string` | `"observability-only-baseline"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_alarm_topic_arn"></a> [alarm\_topic\_arn](#output\_alarm\_topic\_arn) | n/a |
-| <a name="output_dashboard_name"></a> [dashboard\_name](#output\_dashboard\_name) | n/a |
+| <a name="output_alarm_topic_arn"></a> [alarm\_topic\_arn](#output\_alarm\_topic\_arn) | SNS topic ARN that all CloudWatch alarms publish to. |
+| <a name="output_dashboard_name"></a> [dashboard\_name](#output\_dashboard\_name) | Name of the CloudWatch dashboard created for this baseline. |
 <!-- END_TF_DOCS -->

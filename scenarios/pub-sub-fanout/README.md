@@ -20,13 +20,13 @@ composed — 1개 토픽이 `queue_names` 변수(기본값: orders, notification
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"pub-sub-fanout"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix applied to the SNS topic. | `string` | `"pub-sub-fanout"` | no |
 | <a name="input_queue_names"></a> [queue\_names](#input\_queue\_names) | One SQS queue per subscriber, all fed by the same SNS topic | `list(string)` | <pre>[<br/>  "orders",<br/>  "notifications"<br/>]</pre> | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_queue_urls"></a> [queue\_urls](#output\_queue\_urls) | n/a |
-| <a name="output_topic_arn"></a> [topic\_arn](#output\_topic\_arn) | n/a |
+| <a name="output_queue_urls"></a> [queue\_urls](#output\_queue\_urls) | Map of queue\_names entry to its SQS queue URL, one per subscriber. |
+| <a name="output_topic_arn"></a> [topic\_arn](#output\_topic\_arn) | SNS topic ARN publishers send to -- fans out to every queue in queue\_names. |
 <!-- END_TF_DOCS -->

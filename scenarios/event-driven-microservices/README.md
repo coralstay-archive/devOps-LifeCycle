@@ -20,12 +20,12 @@ sns-sqs, lambda
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"event-driven-microservices"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name used as the prefix/tag for the SNS/SQS messaging resources and the consumer Lambda. | `string` | `"event-driven-microservices"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_consumer_function_name"></a> [consumer\_function\_name](#output\_consumer\_function\_name) | n/a |
-| <a name="output_topic_arn"></a> [topic\_arn](#output\_topic\_arn) | n/a |
+| <a name="output_consumer_function_name"></a> [consumer\_function\_name](#output\_consumer\_function\_name) | Name of the Lambda function consuming events off the topic's subscribed queue. |
+| <a name="output_topic_arn"></a> [topic\_arn](#output\_topic\_arn) | SNS topic ARN producers publish events to. |
 <!-- END_TF_DOCS -->

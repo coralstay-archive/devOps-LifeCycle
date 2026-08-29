@@ -24,17 +24,17 @@ vpc (x2, 리전별), route53
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Real domain you own — no sensible default | `string` | n/a | yes |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"multi-region-active-active"` | no |
-| <a name="input_primary_azs"></a> [primary\_azs](#input\_primary\_azs) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | n/a | `string` | `"ap-northeast-2"` | no |
-| <a name="input_secondary_azs"></a> [secondary\_azs](#input\_secondary\_azs) | n/a | `list(string)` | <pre>[<br/>  "us-east-1a",<br/>  "us-east-1b"<br/>]</pre> | no |
-| <a name="input_secondary_region"></a> [secondary\_region](#input\_secondary\_region) | n/a | `string` | `"us-east-1"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix applied to resources in both regions. | `string` | `"multi-region-active-active"` | no |
+| <a name="input_primary_azs"></a> [primary\_azs](#input\_primary\_azs) | Availability zones to spread the primary region's VPC subnets across. | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | Primary AWS region -- where the active-active pair's first VPC and its resources are provisioned. | `string` | `"ap-northeast-2"` | no |
+| <a name="input_secondary_azs"></a> [secondary\_azs](#input\_secondary\_azs) | Availability zones to spread the secondary region's VPC subnets across. | `list(string)` | <pre>[<br/>  "us-east-1a",<br/>  "us-east-1b"<br/>]</pre> | no |
+| <a name="input_secondary_region"></a> [secondary\_region](#input\_secondary\_region) | Secondary AWS region -- where the active-active pair's second, independent VPC and its resources are provisioned. | `string` | `"us-east-1"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_primary_vpc_id"></a> [primary\_vpc\_id](#output\_primary\_vpc\_id) | n/a |
-| <a name="output_secondary_vpc_id"></a> [secondary\_vpc\_id](#output\_secondary\_vpc\_id) | n/a |
-| <a name="output_zone_id"></a> [zone\_id](#output\_zone\_id) | n/a |
+| <a name="output_primary_vpc_id"></a> [primary\_vpc\_id](#output\_primary\_vpc\_id) | VPC ID of the primary region's VPC. |
+| <a name="output_secondary_vpc_id"></a> [secondary\_vpc\_id](#output\_secondary\_vpc\_id) | VPC ID of the secondary region's VPC. |
+| <a name="output_zone_id"></a> [zone\_id](#output\_zone\_id) | Route53 hosted zone ID for domain\_name -- a single zone shared by both regions, since Route53 itself isn't region-scoped. |
 <!-- END_TF_DOCS -->

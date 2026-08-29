@@ -20,13 +20,13 @@ lambda, eventbridge
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"scheduled-batch-jobs"` | no |
-| <a name="input_schedule_expression"></a> [schedule\_expression](#input\_schedule\_expression) | n/a | `string` | `"rate(1 hour)"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name for the Lambda job function and its EventBridge schedule rule. | `string` | `"scheduled-batch-jobs"` | no |
+| <a name="input_schedule_expression"></a> [schedule\_expression](#input\_schedule\_expression) | EventBridge schedule expression (rate(...) or cron(...)) controlling how often the job runs. | `string` | `"rate(1 hour)"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_function_name"></a> [function\_name](#output\_function\_name) | n/a |
-| <a name="output_rule_arn"></a> [rule\_arn](#output\_rule\_arn) | n/a |
+| <a name="output_function_name"></a> [function\_name](#output\_function\_name) | Name of the Lambda function running the scheduled job. |
+| <a name="output_rule_arn"></a> [rule\_arn](#output\_rule\_arn) | ARN of the EventBridge rule that triggers the job on schedule\_expression. |
 <!-- END_TF_DOCS -->

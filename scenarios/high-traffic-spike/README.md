@@ -23,14 +23,14 @@ vpc, eks, elasticache-redis, msk-kafka, observability
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"high-traffic-spike"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | AZs the VPC's public/private subnets span -- needs >= 2 for the EKS/Redis/Kafka per-AZ requirements enforced by the modules this scenario composes. | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name used as the prefix/tag for the VPC, EKS cluster, Redis replication group, and Kafka cluster. | `string` | `"high-traffic-spike"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_eks_cluster_endpoint"></a> [eks\_cluster\_endpoint](#output\_eks\_cluster\_endpoint) | n/a |
-| <a name="output_kafka_bootstrap_brokers_tls"></a> [kafka\_bootstrap\_brokers\_tls](#output\_kafka\_bootstrap\_brokers\_tls) | n/a |
-| <a name="output_redis_primary_endpoint"></a> [redis\_primary\_endpoint](#output\_redis\_primary\_endpoint) | n/a |
+| <a name="output_eks_cluster_endpoint"></a> [eks\_cluster\_endpoint](#output\_eks\_cluster\_endpoint) | EKS control plane API endpoint -- used to configure kubectl access. |
+| <a name="output_kafka_bootstrap_brokers_tls"></a> [kafka\_bootstrap\_brokers\_tls](#output\_kafka\_bootstrap\_brokers\_tls) | MSK bootstrap broker list (TLS listener) for Kafka clients to connect with. |
+| <a name="output_redis_primary_endpoint"></a> [redis\_primary\_endpoint](#output\_redis\_primary\_endpoint) | ElastiCache Redis primary node endpoint for read/write traffic. |
 <!-- END_TF_DOCS -->

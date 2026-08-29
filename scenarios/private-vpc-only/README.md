@@ -21,15 +21,15 @@ vpc, vpc-endpoints
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"private-vpc-only"` | no |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `"ap-northeast-2"` | no |
-| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | n/a | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones to spread the VPC's subnets across. | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix applied to the VPC and its endpoints. | `string` | `"private-vpc-only"` | no |
+| <a name="input_region"></a> [region](#input\_region) | AWS region, used to build each VPC endpoint's service\_name (e.g. com.amazonaws.<region>.s3). | `string` | `"ap-northeast-2"` | no |
+| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR block for the VPC -- also passed to modules/vpc-endpoints so its endpoint security group can scope ingress to this range. | `string` | `"10.0.0.0/16"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_interface_endpoint_ids"></a> [interface\_endpoint\_ids](#output\_interface\_endpoint\_ids) | n/a |
-| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | n/a |
+| <a name="output_interface_endpoint_ids"></a> [interface\_endpoint\_ids](#output\_interface\_endpoint\_ids) | IDs of the interface VPC endpoints (e.g. ECR, CloudWatch Logs) created to fill the gaps a NAT gateway would otherwise cover. |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | VPC ID -- has no NAT gateway or internet route, only the VPC endpoints created below. |
 <!-- END_TF_DOCS -->

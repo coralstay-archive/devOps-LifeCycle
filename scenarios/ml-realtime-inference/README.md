@@ -22,11 +22,11 @@ sagemaker
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_container_image"></a> [container\_image](#input\_container\_image) | ECR image URI serving the model — no sensible default, fill in before apply | `string` | n/a | yes |
 | <a name="input_model_data_url"></a> [model\_data\_url](#input\_model\_data\_url) | S3 URI of the packaged model artifact — no sensible default, fill in before apply | `string` | n/a | yes |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"ml-realtime-inference"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name used as the prefix/tag for the SageMaker model/endpoint resources. | `string` | `"ml-realtime-inference"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_endpoint_name"></a> [endpoint\_name](#output\_endpoint\_name) | n/a |
+| <a name="output_endpoint_name"></a> [endpoint\_name](#output\_endpoint\_name) | SageMaker real-time inference endpoint name -- invoke it directly for predictions. |
 <!-- END_TF_DOCS -->

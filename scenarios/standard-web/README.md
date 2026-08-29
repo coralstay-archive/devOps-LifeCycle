@@ -25,15 +25,15 @@ vpc, ecr, alb, ecs-service, rds-postgres, observability
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones to spread subnets across (multi-AZ by default for spike resilience) | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
 | <a name="input_container_image"></a> [container\_image](#input\_container\_image) | Placeholder public image so this plans/applies out of the box. Swap for your app's image in modules.ecr's repository once you have one. | `string` | `"public.ecr.aws/nginx/nginx:1.27"` | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"standard-web"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name for every module in the stack (VPC, ECR, ALB, ECS service, RDS, observability). | `string` | `"standard-web"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | n/a |
-| <a name="output_ecr_repository_url"></a> [ecr\_repository\_url](#output\_ecr\_repository\_url) | n/a |
-| <a name="output_rds_endpoint"></a> [rds\_endpoint](#output\_rds\_endpoint) | n/a |
+| <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | Public DNS name of the ALB fronting the ECS service. |
+| <a name="output_ecr_repository_url"></a> [ecr\_repository\_url](#output\_ecr\_repository\_url) | URI to push the application's container image to before ecs\_service can pull it. |
+| <a name="output_rds_endpoint"></a> [rds\_endpoint](#output\_rds\_endpoint) | Connection endpoint (host:port) of the Postgres instance. |
 <!-- END_TF_DOCS -->

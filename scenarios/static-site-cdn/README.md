@@ -21,12 +21,12 @@ s3-bucket, cloudfront
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"static-site-cdn"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name for the S3 bucket (account ID gets appended for global uniqueness) and the CloudFront distribution. | `string` | `"static-site-cdn"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_bucket_id"></a> [bucket\_id](#output\_bucket\_id) | n/a |
-| <a name="output_cloudfront_domain_name"></a> [cloudfront\_domain\_name](#output\_cloudfront\_domain\_name) | n/a |
+| <a name="output_bucket_id"></a> [bucket\_id](#output\_bucket\_id) | Name of the S3 bucket holding the site's static assets, origin for the CloudFront distribution. |
+| <a name="output_cloudfront_domain_name"></a> [cloudfront\_domain\_name](#output\_cloudfront\_domain\_name) | CloudFront distribution's domain name -- what visitors actually hit. |
 <!-- END_TF_DOCS -->

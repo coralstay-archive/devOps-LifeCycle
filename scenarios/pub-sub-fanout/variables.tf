@@ -1,6 +1,7 @@
 variable "name" {
-  type    = string
-  default = "pub-sub-fanout"
+  description = "Name prefix applied to the SNS topic."
+  type        = string
+  default     = "pub-sub-fanout"
 }
 
 variable "queue_names" {

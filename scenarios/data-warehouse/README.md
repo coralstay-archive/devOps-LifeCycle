@@ -20,12 +20,12 @@ vpc, redshift
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | n/a | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"data-warehouse"` | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Availability zones for the vpc module to spread subnets across (multi-AZ by default). | `list(string)` | <pre>[<br/>  "ap-northeast-2a",<br/>  "ap-northeast-2c"<br/>]</pre> | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix passed through to every module this scenario composes (vpc, redshift). | `string` | `"data-warehouse"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_redshift_endpoint"></a> [redshift\_endpoint](#output\_redshift\_endpoint) | n/a |
+| <a name="output_redshift_endpoint"></a> [redshift\_endpoint](#output\_redshift\_endpoint) | Connection endpoint for the Redshift cluster. |
 <!-- END_TF_DOCS -->

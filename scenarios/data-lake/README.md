@@ -21,13 +21,13 @@ s3-bucket, glue, athena
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"data-lake"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name prefix passed through to every module this scenario composes (s3-bucket, glue, athena). | `string` | `"data-lake"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_athena_workgroup_name"></a> [athena\_workgroup\_name](#output\_athena\_workgroup\_name) | n/a |
-| <a name="output_bucket_id"></a> [bucket\_id](#output\_bucket\_id) | n/a |
-| <a name="output_glue_database_name"></a> [glue\_database\_name](#output\_glue\_database\_name) | n/a |
+| <a name="output_athena_workgroup_name"></a> [athena\_workgroup\_name](#output\_athena\_workgroup\_name) | Athena workgroup configured to write query results into the same bucket's athena-results/ prefix. |
+| <a name="output_bucket_id"></a> [bucket\_id](#output\_bucket\_id) | S3 bucket holding the lake's raw/ zone and Athena query results. |
+| <a name="output_glue_database_name"></a> [glue\_database\_name](#output\_glue\_database\_name) | Glue Catalog database the crawler populates from the bucket's raw/ prefix. |
 <!-- END_TF_DOCS -->

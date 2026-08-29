@@ -1,9 +1,11 @@
 variable "name" {
-  type    = string
-  default = "disaster-recovery-pilot-light"
+  description = "Name prefix passed through to every module this scenario composes (vpc, rds-postgres, s3-bucket, aws-backup)."
+  type        = string
+  default     = "disaster-recovery-pilot-light"
 }
 
 variable "availability_zones" {
-  type    = list(string)
-  default = ["ap-northeast-2a", "ap-northeast-2c"]
+  description = "Availability zones for the vpc module to spread subnets across (multi-AZ by default)."
+  type        = list(string)
+  default     = ["ap-northeast-2a", "ap-northeast-2c"]
 }

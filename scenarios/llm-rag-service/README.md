@@ -20,11 +20,11 @@ bedrock-opensearch
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"llm-rag-service"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name used as the prefix/tag for the Bedrock/OpenSearch RAG resources. | `string` | `"llm-rag-service"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_collection_endpoint"></a> [collection\_endpoint](#output\_collection\_endpoint) | n/a |
+| <a name="output_collection_endpoint"></a> [collection\_endpoint](#output\_collection\_endpoint) | OpenSearch Serverless collection endpoint holding the RAG vector index. |
 <!-- END_TF_DOCS -->

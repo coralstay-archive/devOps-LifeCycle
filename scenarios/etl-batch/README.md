@@ -20,12 +20,12 @@ s3-bucket, glue, step-functions
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"etl-batch"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Base name used as the prefix/tag for the Glue database/crawler and the Step Functions state machine orchestrating them. | `string` | `"etl-batch"` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_glue_database_name"></a> [glue\_database\_name](#output\_glue\_database\_name) | n/a |
-| <a name="output_state_machine_arn"></a> [state\_machine\_arn](#output\_state\_machine\_arn) | n/a |
+| <a name="output_glue_database_name"></a> [glue\_database\_name](#output\_glue\_database\_name) | Glue Data Catalog database name the crawler populates -- query it via Athena once crawled. |
+| <a name="output_state_machine_arn"></a> [state\_machine\_arn](#output\_state\_machine\_arn) | Step Functions state machine ARN that orchestrates the ETL job -- use to trigger/monitor runs. |
 <!-- END_TF_DOCS -->

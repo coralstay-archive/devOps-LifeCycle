@@ -1,11 +1,13 @@
 variable "name" {
-  type    = string
-  default = "cdc-pipeline"
+  description = "Name prefix passed through to every module this scenario composes (vpc, rds-postgres, msk-kafka, dms)."
+  type        = string
+  default     = "cdc-pipeline"
 }
 
 variable "availability_zones" {
-  type    = list(string)
-  default = ["ap-northeast-2a", "ap-northeast-2c"]
+  description = "Availability zones for the vpc module to spread subnets across (multi-AZ by default)."
+  type        = list(string)
+  default     = ["ap-northeast-2a", "ap-northeast-2c"]
 }
 
 variable "source_db_password" {

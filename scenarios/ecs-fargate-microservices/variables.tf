@@ -1,11 +1,13 @@
 variable "name" {
-  type    = string
-  default = "ecs-fargate-microservices"
+  description = "Base name used as the prefix/tag for every resource in this stack (VPC, ALBs, ECS services)."
+  type        = string
+  default     = "ecs-fargate-microservices"
 }
 
 variable "availability_zones" {
-  type    = list(string)
-  default = ["ap-northeast-2a", "ap-northeast-2c"]
+  description = "AZs the VPC's public/private subnets span -- needs >= 2 for the ALB/NAT gateway per-AZ requirements enforced by the modules this scenario composes."
+  type        = list(string)
+  default     = ["ap-northeast-2a", "ap-northeast-2c"]
 }
 
 variable "services" {
