@@ -38,4 +38,6 @@ tools/loadtest/*.json
 states/
 
 # Claude Code harness state (session locks, not project content)
-.claude/
+.claude/*
+# ...except custom project slash commands, which are project content
+!.claude/commands/
