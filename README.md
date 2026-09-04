@@ -68,14 +68,14 @@ flowchart LR
 3. Fill in `backend.tf` (bucket name from `bootstrap/`), `providers.tf` region, and `variables.tf` / a new `terraform.tfvars`.
 4. Fill in `SLO.md` with real availability/latency targets for this project.
 5. `terraform init && terraform plan` locally, then open a PR — `terraform-ci.yml` runs fmt/validate/tflint/trivy/checkov/conftest/terraform-test and posts a plan + cost diff as PR comments.
-6. Merge to `main` → `terraform-apply.yml` applies (gated behind manual approval on the `production` GitHub Environment).
+6. Merge to `main`, then apply for real from your own machine: `terraform apply`. CI never applies anything — see [`decision-5`](backlog/decisions) for why.
 
 ## ⚙️ One-time setup
 
 | Step | What to do |
 |---|---|
 | 🪣 State backend | Run `bootstrap/` once per AWS account/region to create the S3 state bucket. Locking is S3-native (`use_lockfile`, Terraform >= 1.11) — no DynamoDB table needed (see `bootstrap/README.md`) |
-| 🔑 CI credentials | Use `modules/iam-github-oidc` to create two roles — a narrow `plan` role (`AWS_PLAN_ROLE_ARN`) and a broader `apply` role restricted to `refs/heads/main` (`AWS_APPLY_ROLE_ARN`). No long-lived AWS keys in GitHub, ever |
+| 🔑 CI credentials | Use `modules/iam-github-oidc` to create a single narrow, read-only `plan` role (`AWS_PLAN_ROLE_ARN`) for PR checks. No apply role — CI never applies anything, and no long-lived AWS keys in GitHub, ever |
 | 💰 Infracost | Add an `INFRACOST_API_KEY` repo secret (free key from infracost.io) |
 | 💻 Local dev | `pip install pre-commit && pre-commit install`, then `brew install terraform-docs checkov conftest k6` for the tools that also run outside CI |
 
@@ -110,7 +110,7 @@ Organized by **scope**, not by "module vs scenario" — nearly every tool here r
 | State backend | S3 (versioned, encrypted) |
 | State locking | **S3-native locking** (`use_lockfile = true`, Terraform >= 1.11) — DynamoDB-based locking is upstream-deprecated; `bootstrap/` doesn't create a lock table anymore |
 | Version control | Git + GitHub (`gh` CLI for repo/PR management) |
-| CI/CD | GitHub Actions (`terraform-ci`, `terraform-apply`, `drift-detect`) |
+| CI/CD | GitHub Actions (`terraform-ci` for PR checks, `loadtest` for manual k6 runs) — no apply automation, see [`decision-5`](backlog/decisions) |
 | CI credentials | GitHub OIDC federation (`iam-github-oidc`) — no long-lived AWS keys ever hit GitHub |
 
 ### Module-scope verification (one module, no composition needed)
@@ -135,7 +135,6 @@ Organized by **scope**, not by "module vs scenario" — nearly every tool here r
 | Conftest (OPA/Rego), `policy/` | *This repo's own* rules, not generic ones (e.g. no public S3 buckets, no matter how a future scenario tries) | `deny` ✅ / `warn` ❌ |
 | Infracost | Cost diff — informational PR comment | ❌ not blocking |
 | k6 (`tools/loadtest/`, `.github/workflows/loadtest.yml`) | Rehearses traffic spikes against each stack's `SLO.md` thresholds | manual `workflow_dispatch` — no AWS credentials, see `tools/loadtest/README.md` |
-| Scheduled `terraform plan -detailed-exitcode` (drift detection) | Real infra silently diverging from code (driftctl is unmaintained — this is the practical current alternative) | opens a tracking issue, doesn't block PRs |
 
 > **Why Trivy/Checkov are non-blocking here:** this repo's modules are intentionally minimal (see each module's *"Not yet included"* section) — e.g. Redshift isn't KMS-encrypted, SNS/SQS aren't encrypted by default. Both scanners correctly flag these as real findings; they're accepted trade-offs at the scaffold stage, not bugs. They still run and report on every PR for visibility (`continue-on-error`). Flip a specific project to blocking once a scenario graduates from scaffold to a real production workload.
 
@@ -289,7 +288,7 @@ This repo doubles as a learning project, tracked with the [Backlog.md](https://g
 - **Milestones `m-0` through `m-16`** (below) are the *learning* backlog — `spike`/`task`/`docs`-type tasks meant to be worked through by a human, left `To Do` on purpose, never pre-completed on your behalf.
 - **Milestone `m-17`, "Security & Observability Hardening"**, is a *different* kind of backlog — `bug`-type engineering tasks logged from real checkov/trivy/tflint findings, meant to actually get fixed. **Complete: 43/43 done**, see [Repo metrics](#-repo-metrics) above for what actually got fixed.
 - **Milestone `m-18`, "Scenario & Root Documentation Hardening"**, is the same kind of backlog as `m-17` — a single follow-on `bug`-type task (`TASK-176`) for the 112 `tflint` documentation notices `m-17`'s `--recursive` scan found outside `modules/`. **Complete: 1/1 done**, see [Repo metrics](#-repo-metrics) above.
-- **Milestone `m-19`, "AWS Bootstrap & CI Credential Wiring"**, is the currently-open engineering backlog. `modules/iam-github-oidc` (the module CI needs for `AWS_PLAN_ROLE_ARN`/`AWS_APPLY_ROLE_ARN`, see [One-time setup](#-one-time-setup)) is written but never actually instantiated anywhere in this repo — there's no real AWS account behind it yet, so those two secrets don't exist and every CI run that needs AWS credentials still fails at that step by design. `m-19` is the real, ordered build-out: get local AWS access, apply `bootstrap/` for real, create the plan/apply IAM roles, register the secrets, then verify the whole chain end-to-end through an actual PR and an actual (human-approved) apply. Unlike `m-0`–`m-16`, this one is structured as a proper Epic (the milestone) → Story (`TASK-177`–`182`) → Task hierarchy rather than a flat list, since the steps have a real must-happen-in-this-order dependency chain — run `backlog task list -m "AWS Bootstrap & CI Credential Wiring" --plain` to see it. **Status: 0/6 stories done** (one, `TASK-177.1`, is partway — the AWS CLI itself is installed locally, but authenticating it against a real account needs the user's own AWS credentials and is intentionally left for them to do, not something to fake or skip).
+- **Milestone `m-19`, "AWS Bootstrap & CI Credential Wiring"**, is the currently-open engineering backlog. `modules/iam-github-oidc` (the module CI needs for `AWS_PLAN_ROLE_ARN`, see [One-time setup](#-one-time-setup)) is written but never actually instantiated anywhere in this repo — there's no real AWS account behind it yet, so that secret doesn't exist and every CI run that needs AWS credentials still fails at that step by design. `m-19` is the real, ordered build-out: get local AWS access, apply `bootstrap/` for real, create the plan IAM role, register the secret, then verify the whole chain end-to-end through an actual PR and an actual manual apply from a human's machine (CI itself never applies — see [`decision-5`](backlog/decisions)). Unlike `m-0`–`m-16`, this one is structured as a proper Epic (the milestone) → Story (`TASK-177`–`182`) → Task hierarchy rather than a flat list, since the steps have a real must-happen-in-this-order dependency chain — run `backlog task list -m "AWS Bootstrap & CI Credential Wiring" --plain` to see it. **Status: 0/6 stories done** (one, `TASK-177.1`, is partway — the AWS CLI itself is installed locally, but authenticating it against a real account needs the user's own AWS credentials and is intentionally left for them to do, not something to fake or skip).
 
 **Structure — Epic → Story → Task (the learning backlog, `m-0`–`m-16`):**
 

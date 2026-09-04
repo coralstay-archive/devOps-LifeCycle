@@ -68,14 +68,14 @@ flowchart LR
 3. `backend.tf`(버킷 이름은 `bootstrap/`에서), `providers.tf`의 리전, `variables.tf`/새 `terraform.tfvars`를 채운다.
 4. 이 프로젝트의 실제 가용성/지연시간 목표로 `SLO.md`를 채운다.
 5. 로컬에서 `terraform init && terraform plan`을 돌린 뒤 PR을 연다 — `terraform-ci.yml`이 fmt/validate/tflint/trivy/checkov/conftest/terraform-test를 돌리고 plan + 비용 diff를 PR 코멘트로 올려준다.
-6. `main`에 머지하면 → `terraform-apply.yml`이 적용한다(`production` GitHub Environment의 수동 승인 뒤에 게이트됨).
+6. `main`에 머지한 뒤, 실제 적용은 본인 로컬 머신에서 직접: `terraform apply`. CI는 아무것도 적용하지 않는다 — 이유는 [`decision-5`](backlog/decisions) 참고.
 
 ## ⚙️ 최초 1회 설정
 
 | 단계 | 할 일 |
 |---|---|
 | 🪣 상태 백엔드 | AWS 계정/리전당 한 번 `bootstrap/`을 실행해 S3 상태 버킷을 만든다. 락은 S3 네이티브 방식(`use_lockfile`, Terraform >= 1.11)이라 DynamoDB 테이블이 필요 없다(`bootstrap/README.md` 참고) |
-| 🔑 CI 자격증명 | `modules/iam-github-oidc`로 역할 두 개를 만든다 — 좁은 권한의 `plan` 역할(`AWS_PLAN_ROLE_ARN`)과 `refs/heads/main`에 한정된 더 넓은 `apply` 역할(`AWS_APPLY_ROLE_ARN`). GitHub에 장기 AWS 키가 절대 올라가지 않는다 |
+| 🔑 CI 자격증명 | `modules/iam-github-oidc`로 좁은 권한의 읽기 전용 `plan` 역할(`AWS_PLAN_ROLE_ARN`) 하나만 만든다. apply 역할은 없다 — CI는 아무것도 적용하지 않고, GitHub에 장기 AWS 키가 절대 올라가지 않는다 |
 | 💰 Infracost | `INFRACOST_API_KEY` 레포 시크릿을 추가한다(infracost.io에서 무료 키 발급) |
 | 💻 로컬 개발 | `pip install pre-commit && pre-commit install` 실행 후, CI 밖에서도 도는 도구들을 위해 `brew install terraform-docs checkov conftest k6` |
 
@@ -110,7 +110,7 @@ cd modules/vpc && terraform init -backend=false && terraform test
 | 상태 백엔드 | S3(버저닝, 암호화) |
 | 상태 락 | **S3 네이티브 락**(`use_lockfile = true`, Terraform >= 1.11) — DynamoDB 기반 락은 업스트림에서 deprecated됨; `bootstrap/`은 더 이상 락 테이블을 만들지 않는다 |
 | 버전 관리 | Git + GitHub(레포/PR 관리는 `gh` CLI) |
-| CI/CD | GitHub Actions(`terraform-ci`, `terraform-apply`, `drift-detect`) |
+| CI/CD | GitHub Actions(PR 검사용 `terraform-ci`, 수동 k6 실행용 `loadtest`) — apply 자동화는 없음, [`decision-5`](backlog/decisions) 참고 |
 | CI 자격증명 | GitHub OIDC 연동(`iam-github-oidc`) — 장기 AWS 키가 GitHub에 닿는 일이 절대 없음 |
 
 ### 모듈 스코프 검증 (조합 없이 모듈 하나만)
@@ -135,7 +135,6 @@ cd modules/vpc && terraform init -backend=false && terraform test
 | Conftest(OPA/Rego), `policy/` | *이 리포만의* 규칙, 일반적인 게 아니라(예: 미래의 시나리오가 뭘 하든 퍼블릭 S3 버킷 금지) | `deny` ✅ / `warn` ❌ |
 | Infracost | 비용 diff — 정보성 PR 코멘트 | ❌ 블로킹 아님 |
 | k6(`tools/loadtest/`, `.github/workflows/loadtest.yml`) | 각 스택의 `SLO.md` 임계값 기준으로 트래픽 스파이크를 재현 | 수동 `workflow_dispatch` — AWS 자격증명 불필요, `tools/loadtest/README.md` 참고 |
-| 스케줄된 `terraform plan -detailed-exitcode`(드리프트 탐지) | 실제 인프라가 코드와 조용히 어긋나는 것(driftctl은 더 이상 유지보수되지 않음 — 이게 현재로선 실질적인 대안) | 추적용 이슈를 열 뿐 PR을 막지는 않음 |
 
 > **왜 Trivy/Checkov가 여기서 논블로킹인가:** 이 리포의 모듈들은 의도적으로 최소한으로 만들어졌다(각 모듈의 *"아직 포함되지 않은 것"* 섹션 참고) — 예를 들어 Redshift는 KMS로 암호화되지 않고, SNS/SQS는 기본적으로 암호화되지 않는다. 두 스캐너 모두 이걸 정확하게 실제 findings로 잡아낸다; 이건 버그가 아니라 스캐폴드 단계에서 받아들인 트레이드오프다. 그래도 가시성을 위해 모든 PR에서 계속 돌고 리포트된다(`continue-on-error`). 특정 프로젝트가 스캐폴드에서 실제 프로덕션 워크로드로 졸업하면 그때 블로킹으로 전환하면 된다.
 

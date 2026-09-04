@@ -18,7 +18,7 @@ See `variables.tf`. Key ones: `github_org`, `github_repo`, `allowed_ref`, `role_
 
 ## Usage note
 
-Create two roles in practice: a narrow-permission `plan` role for PR checks and a broader `apply` role restricted to `allowed_ref = "refs/heads/main"`. Don't reuse one role for both.
+This repo only instantiates one role in practice: a narrow, read-only `plan` role for PR checks (`AWS_PLAN_ROLE_ARN`). There is no `apply` role — CI never applies anything; real deploys are `terraform apply` run manually from a human's machine (see `backlog/decisions/decision-5`).
 
 ## 런타임 불변식 (precondition/postcondition)
 
@@ -35,7 +35,7 @@ Create two roles in practice: a narrow-permission `plan` role for PR checks and 
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_allowed_ref"></a> [allowed\_ref](#input\_allowed\_ref) | Git ref allowed to assume this role, e.g. refs/heads/main. Use "*" to allow any branch/PR (not recommended for the apply role). | `string` | `"refs/heads/main"` | no |
+| <a name="input_allowed_ref"></a> [allowed\_ref](#input\_allowed\_ref) | Git ref allowed to assume this role, e.g. refs/heads/main. Use "*" to allow any branch/PR (not recommended for a role with write access). | `string` | `"refs/heads/main"` | no |
 | <a name="input_create_oidc_provider"></a> [create\_oidc\_provider](#input\_create\_oidc\_provider) | Whether to create the GitHub OIDC provider. Set to false if it already exists in this account (an AWS account can only have one). | `bool` | `true` | no |
 | <a name="input_github_org"></a> [github\_org](#input\_github\_org) | GitHub organization or user that owns the repo allowed to assume this role | `string` | n/a | yes |
 | <a name="input_github_repo"></a> [github\_repo](#input\_github\_repo) | Repository name (without org prefix) allowed to assume this role | `string` | n/a | yes |

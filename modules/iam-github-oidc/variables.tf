@@ -9,7 +9,7 @@ variable "github_repo" {
 }
 
 variable "allowed_ref" {
-  description = "Git ref allowed to assume this role, e.g. refs/heads/main. Use \"*\" to allow any branch/PR (not recommended for the apply role)."
+  description = "Git ref allowed to assume this role, e.g. refs/heads/main. Use \"*\" to allow any branch/PR (not recommended for a role with write access)."
   type        = string
   default     = "refs/heads/main"
 }
