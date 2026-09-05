@@ -1,10 +1,10 @@
 ---
 id: TASK-203
 title: README Learning backlog 섹션을 현재 백로그 상태와 동기화
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-09-05 04:43'
-updated_date: '2026-09-05 04:43'
+updated_date: '2026-09-05 08:33'
 labels: []
 dependencies:
   - TASK-189
@@ -21,9 +21,15 @@ README.md의 'Learning backlog' 섹션(약 291행)이 m-19의 실제 상태(TASK
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 README.md의 m-19 항목이 현재 story 구성(TASK-177~181, 188, 189)과 Status(2/7 done)를 정확히 반영한다
-- [ ] #2 README.md에 m-20, m-22, m-23 마일스톤 항목이 m-17/m-18과 같은 문체로 추가된다
-- [ ] #3 README.ko.md에 m-18, m-19(교정된 내용), m-20, m-22, m-23 항목이 모두 번역되어 추가된다
-- [ ] #4 README.ko.md의 마지막 표 아래 마일스톤 개수 문구가 stale하지 않도록 갱신된다
-- [ ] #5 backlog milestone list의 실제 done/total 숫자와 두 README에 적은 숫자가 일치한다
+- [x] #1 README.md의 m-19 항목이 현재 story 구성(TASK-177~181, 188, 189)과 Status(2/7 done)를 정확히 반영한다
+- [x] #2 README.md에 m-20, m-22, m-23 마일스톤 항목이 m-17/m-18과 같은 문체로 추가된다
+- [x] #3 README.ko.md에 m-18, m-19(교정된 내용), m-20, m-22, m-23 항목이 모두 번역되어 추가된다
+- [x] #4 README.ko.md의 마지막 표 아래 마일스톤 개수 문구가 stale하지 않도록 갱신된다
+- [x] #5 backlog milestone list의 실제 done/total 숫자와 두 README에 적은 숫자가 일치한다
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+README.md의 m-19 항목을 실제 상태(TASK-177~181 + 188/189, 2/7 done)로 교정하고 m-20/m-22/m-23 항목을 같은 문체로 추가. README.ko.md에는 빠져있던 m-18/m-19 항목까지 포함해 전부 번역 추가. 마지막 표의 decisions(4→5개, decision-5 반영)와 milestones 설명(고정 숫자 대신 'm-0~m-16은 거의 안 바뀌지만 m-17 이후는 계속 추가됨' 서술로 변경, 영/한 둘 다)도 같은 이유로 함께 교정. backlog milestone list 실제 수치와 두 README 모두 grep으로 대조 확인함.
+<!-- SECTION:FINAL_SUMMARY:END -->
