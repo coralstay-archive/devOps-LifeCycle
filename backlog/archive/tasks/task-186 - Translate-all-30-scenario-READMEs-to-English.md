@@ -4,10 +4,10 @@ title: Translate all 30 scenario READMEs to English
 status: To Do
 assignee: []
 created_date: '2026-08-29 12:39'
+updated_date: '2026-09-06 01:17'
 labels: []
 milestone: m-20
-dependencies:
-  - TASK-183
+dependencies: []
 type: task
 ordinal: 369000
 ---

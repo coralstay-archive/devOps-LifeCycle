@@ -4,10 +4,10 @@ title: Translate the m-0..m-16 learning backlog (294 tasks) to English
 status: To Do
 assignee: []
 created_date: '2026-08-29 12:40'
+updated_date: '2026-09-06 01:17'
 labels: []
 milestone: m-20
-dependencies:
-  - TASK-183
+dependencies: []
 type: task
 ordinal: 379000
 ---
