@@ -1,10 +1,10 @@
 ---
 id: TASK-205
 title: '루트 README를 한글 단일 문서로 통합, 영어판 제거'
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-09-06 01:01'
-updated_date: '2026-09-06 01:01'
+updated_date: '2026-09-06 01:02'
 labels: []
 dependencies: []
 ordinal: 443000
@@ -18,8 +18,14 @@ ordinal: 443000
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 README.md가 한글, 짧고 쉬운 내용(TASK-204의 README.ko.md와 동일한 수준의 분량/스타일)으로 바뀐다
-- [ ] #2 README.ko.md 파일이 삭제된다
-- [ ] #3 README.md 안의 언어 스위처 링크(영어/한국어)가 제거된다 (더 이상 영어판이 없으므로)
-- [ ] #4 모듈/시나리오 개별 README, 백로그 등 나머지 문서는 변경되지 않는다
+- [x] #1 README.md가 한글, 짧고 쉬운 내용(TASK-204의 README.ko.md와 동일한 수준의 분량/스타일)으로 바뀐다
+- [x] #2 README.ko.md 파일이 삭제된다
+- [x] #3 README.md 안의 언어 스위처 링크(영어/한국어)가 제거된다 (더 이상 영어판이 없으므로)
+- [x] #4 모듈/시나리오 개별 README, 백로그 등 나머지 문서는 변경되지 않는다
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+README.md를 TASK-204에서 만든 README.ko.md의 짧은 한글 내용으로 교체(언어 스위처 링크 제거)하고, 중복된 README.ko.md는 삭제. 모듈/시나리오 개별 문서와 나머지 백로그는 손대지 않음. README.ko.md를 참조하는 다른 곳은 backlog의 과거 기록(task-189/203/204, decision-5)뿐이라 그대로 둠.
+<!-- SECTION:FINAL_SUMMARY:END -->
