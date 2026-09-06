@@ -32,18 +32,20 @@ modules/ (부품, 36개)  →  scenarios/ (조합 레시피, 30개)  →  live/�
 - `scenarios/` 30개 중: 완전히 동작하는 것 약 20개, 문서화된 제약이 있는 것 7개, **이름만 그럴싸하고 사실상 비어있는 스텁** 3개(`canary-deployment`, `cost-optimized-spot-fleet`, `ml-training-pipeline`) — 이 3개는 이름이 약속하는 걸 아직 못한다.
 - GitHub Actions(CI)는 PR마다 코드 검사(`plan`)만 하고, **실제 배포(`apply`)는 절대 자동으로 하지 않는다** — 배포는 항상 사람이 로컬에서 손으로 실행한다.
 
-## 3. 시작하는 법 (이 순서대로)
+## 3. 시작하는 법 (이 순서대로 — 백로그 의존관계로 확정됨)
 
 > **가장 먼저 할 일은 "간단한 배포 한 번 끝까지 해보기"다.** 아래 4번(모듈 36개·시나리오 30개·TLA+ 명세)은 전부 나중에 필요할 때 하나씩 찾아보는 **학습 자료**일 뿐, 지금 다 볼 필요 없다.
 
-1. **로컬 AWS 자격증명 설정** — `aws configure`로 내 AWS 계정 연결 (백로그 `TASK-177`)
-2. **`bootstrap/` 한 번 적용** — Terraform 상태를 저장할 S3 버킷을 계정당 한 번만 생성 (`TASK-178`)
-3. **간단한 배포 연습** (백로그 마일스톤 `m-22`)
-   - Spring Boot 앱 하나 만들어서 로컬 `docker-compose`로 Postgres 붙여 `curl`로 확인
-   - `scenarios/standard-web`을 복사해 실제 AWS에 배포
-   - 배포된 주소에 `curl`로 진짜 되는지 확인
-   - `terraform destroy`로 지우고, AWS CLI로 정말 다 지워졌는지 재확인
-4. 여기까지 한 번 끝내면 그다음부터 원하는 시나리오를 골라 `live/내프로젝트`로 복사해서 나만의 프로젝트를 시작하면 된다.
+1. **`TASK-191`** — Spring Boot 앱 작성 + 로컬 `docker-compose`로 Postgres 붙여 `curl` 확인. AWS 자격증명이 필요 없어서 **지금 바로 시작 가능** (아래 2·3번과 순서 상관없이 병행해도 됨)
+2. **`TASK-177`** — `aws configure`로 실제 AWS 계정 연결. 본인 AWS 계정이 필요해서 직접 해야 하는 부분
+3. **`TASK-178`** — `bootstrap/` 한 번 적용 — Terraform 상태를 저장할 S3 버킷을 계정당 한 번만 생성 (2번이 끝나야 가능)
+4. **`TASK-192`** — `scenarios/standard-web`을 `live/spring-demo`로 복사하고, 만든 이미지를 ECR에 푸시 (1·2·3번이 다 끝나야 시작 가능)
+5. **`TASK-193`** — 실제 `terraform apply`, 배포된 주소에 `curl`로 진짜 되는지 확인
+6. **`TASK-194`** — `terraform destroy`로 지우고, AWS CLI로 정말 다 지워졌는지 재확인
+
+> 참고: `m-19`의 `TASK-179`→`180`→`181`(GitHub Actions가 PR마다 자동으로 `plan`을 돌리도록 CI 시크릿을 등록하는 것)은 **위 순서와 별개 트랙**이다 — 위 1~6번엔 필요 없다. CI 연동은 나중에 따로 해도 된다.
+
+여기까지 한 번 끝내면 그다음부터 원하는 시나리오를 골라 `live/내프로젝트`로 복사해서 나만의 프로젝트를 시작하면 된다.
 
 지금 뭘 해야 할지는 `backlog board` 또는 `backlog task list --plain`으로 확인할 것.
 
