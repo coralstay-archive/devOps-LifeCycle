@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "snippets": {
+    "practice/docs-podman-io-en-stable/01_기본_개념/01_페이지_핵심/main.py::solve_kata": {
+      "code_sha256": "523764912fce86e07abc914f12b15c8f398724442101bb8e7ecf911a7c7b1b05",
+      "description": "01_페이지_핵심",
+      "file_path": "practice/docs-podman-io-en-stable/01_기본_개념/01_페이지_핵심/main.py",
+      "language": "python",
+      "line_number": 1,
+      "reviewer": "",
+      "status": "PENDING_REVIEW",
+      "symbol": "solve_kata",
+      "verified_at": "",
+      "verified_sha256": ""
+    }
+  }
+}

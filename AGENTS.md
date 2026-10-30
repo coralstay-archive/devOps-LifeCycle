@@ -1,13 +1,13 @@
 
 <!-- BACKLOG.MD GUIDELINES START -->
-<!-- backlog.md-instructions-version: 1.50.1 -->
+<!-- backlog.md-instructions-version: 1.55.3 -->
 <CRITICAL_INSTRUCTION>
 
 ## Backlog.md Workflow
 
 This project uses Backlog.md for task and project management.
 
-**For every user request in this project, run `backlog instructions overview` before answering or taking action.**
+For every user request in this project, run `backlog instructions overview` before answering or taking action.
 
 Use the overview to decide whether to search, read, create, or update Backlog tasks.
 

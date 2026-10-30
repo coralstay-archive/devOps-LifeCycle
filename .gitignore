@@ -41,3 +41,10 @@ states/
 .claude/*
 # ...except custom project slash commands, which are project content
 !.claude/commands/
+
+# Copyright contents & external references
+/contents/
+/content_data/
+practice/**/README.md
+practice/**/assets/
+practice/**/.skeleton/

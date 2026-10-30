@@ -1,1 +1,12 @@
 nodejs lts
+# @oss infra   terraform        v1.16.0
+# @oss infra   tflint           v0.64.0
+# @oss infra   terraform-docs   v0.24.0
+# @oss infra   trivy            v0.74.0
+# @oss infra   checkov          3.3.10
+# @oss infra   gitleaks         v8.30.1
+# @oss infra   infracost        v0.10.47
+# @oss infra   conftest         v0.69.0
+# @oss infra   k6               v2.2.0
+# @oss sh      actionlint       v1.7.12
+# @oss sh      shellcheck       v0.11.0
