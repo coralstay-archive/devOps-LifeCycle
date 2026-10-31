@@ -47,4 +47,4 @@ modules/ (부품)  →  scenarios/ (조합 레시피)  →  live/ (실제 배포
 
 ## 라이선스
 
-MIT
+[GNU AGPL-3.0-only](./LICENSE) — 2026-10-31 MIT에서 변경했습니다(저작권자 단독, amosQP·cpu-once·coralstay는 같은 계정). 변경 전 커밋까지의 사본은 계속 MIT입니다.
