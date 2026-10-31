@@ -4,7 +4,7 @@ title: 'source-header 적용: freeride/devOps-LifeCycle'
 status: In Progress
 assignee: []
 created_date: '2026-10-31T11:08:00Z'
-updated_date: '2026-10-31T12:45:00Z'
+updated_date: '2026-10-31T12:46:00Z'
 labels:
   - source-header
   - rollout
@@ -39,7 +39,7 @@ tf·tla·rego는 source-header가 아직 모르는 확장자 → 접두사(# , \
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [ ] #1 .mailmap(전역 ~/.mailmap과 같은 매핑)을 저장소에 커밋해 다른 클론·CI에서도 authors가 coralstay로 나온다
-- [ ] #2 라이선스 조치를 마친다: MIT(저작권자 amosQP=본인) → AGPL-3.0-only로 전환: LICENSE 교체, README 라이선스 절 수정
+- [x] #2 라이선스 조치를 마친다: MIT(저작권자 amosQP=본인) → AGPL-3.0-only로 전환: LICENSE 교체, README 라이선스 절 수정
 - [ ] #3 .source-header.json을 확정하고(제외 대상 재확인) source-header init으로 헤더를 넣고, 서브에이전트가 description 초안을 쓴다. source-header lint 오류 0
 - [ ] #4 git-commit-tool --plugins source-header로 .githooks를 설치하고(core.hooksPath=.githooks) 헤더 없는 파일 커밋이 막히는 것을 실측한다
 <!-- AC:END -->
@@ -70,3 +70,9 @@ TASK-3 조사 결과는 Description 참고. source-header(init/lint/fix/hook)와
 4. (해당 시) 생성기 수정
 5. .githooks 설치(--plugins source-header) → 실측
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+AC #2 (2026-10-31): LICENSE를 AGPL-3.0 전문으로 교체, README 라이선스 절 수정(이전 사본은 MIT 유지 안내), .gitignore에 .opensource/·*.pdf 추가(전에는 .git/info/exclude에만 있었음). 로컬 정리: tmp_obj 쓰레기 7개(831MB) 삭제 + reflog expire + gc --prune=now → .git 1.2G → 1.1M. 정리 전후 fsck --connectivity-only 통과. 지워진 고아 blob(책 PDF 등)은 어떤 커밋도 참조하지 않던 것이고 원본은 무시된 contents/에 남아 있음.
+<!-- SECTION:NOTES:END -->
